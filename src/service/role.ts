@@ -84,7 +84,6 @@ export const deleteRole = (id: number) => {
 
 // 创建角色
 export const postRole = (params: IRole) => {
-  console.log(params);
   return fly.post("admin/role", params).then(data => data.data);
 };
 
