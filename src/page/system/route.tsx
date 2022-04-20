@@ -17,7 +17,7 @@ export default defineComponent({
         title: "ID",
       },
       {
-        dataIndex: "title",
+        dataIndex: "name",
         title: "标题",
       },
       {
