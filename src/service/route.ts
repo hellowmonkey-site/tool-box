@@ -2,15 +2,17 @@ import { NumberBoolean } from "@/config/type";
 import flyio from "flyio";
 
 export interface IRoute {
-  child?: IRoute[];
+  children?: IRoute[];
   deep: NumberBoolean;
-  id?: number;
+  id: number;
   is_menu: NumberBoolean;
   key: string;
   parent_id: number;
   sort: number;
-  title: string;
-  // url?: string;
+  name: string;
+  url: string;
+  module_id: string;
+  title: string | undefined;
 }
 
 export const defaultRoute: IRoute = {
@@ -19,31 +21,39 @@ export const defaultRoute: IRoute = {
   key: "",
   parent_id: 0,
   sort: 0,
+  name: "",
+  url: "",
+  module_id: "0",
+  id: 0,
   title: "",
-  // url: "",
 };
 
-// 获取路由列表
+// 获取父级路由列表
 export const getRouterList = (parent_id = 0) => {
-  return flyio.get<IRoute[]>("router", { parent_id }).then(data => data.data);
+  return flyio.get<IRoute[]>("admin/router", { parent_id }).then(data => data.data);
 };
 
-// 获取路由列表
+// 获取路由详情
 export const getRouterDetail = (id: number) => {
-  return flyio.get<IRoute>(`router/${id}`).then(data => data.data);
+  return flyio.get<IRoute>(`admin/router/${id}`).then(data => data.data);
 };
 
 // 删除路由
 export const deleteRouter = (id: number) => {
-  return flyio.delete(`router/${id}`).then(data => data.data);
+  return flyio.delete(`admin/router/${id}`).then(data => data.data);
 };
 
 // 创建路由
 export const postRouter = (params: IRoute) => {
-  return flyio.post("router", params).then(data => data.data);
+  return flyio.post("admin/router", params).then(data => data.data);
 };
 
 // 编辑路由
 export const putRouter = ({ id, ...params }: IRoute) => {
-  return flyio.put(`router/${id}`, params).then(data => data.data);
+  return flyio.put(`admin/router/${id}`, params).then(data => data.data);
+};
+
+// 获取所有路由
+export const getAllRouterList = () => {
+  return flyio.get<IRoute[]>("admin/router", {}).then(data => data.data);
 };
