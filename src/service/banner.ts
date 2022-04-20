@@ -43,13 +43,3 @@ export const postBanner = (params: IBananer) => {
 export const putBanner = ({ id, ...params }: IBananer) => {
   return fly.put(`admin/banner/${id}`, params).then(data => data.data);
 };
-
-// banner上线
-export function onlineBanner(id: number) {
-  return fly.get<IBananer>(`admin/onlineBanner/${id}`).then(data => data.data);
-}
-
-// banner下线
-export function offlineBanner(id: number) {
-  return fly.get<IBananer>(`admin/offlineBanner/${id}`).then(data => data.data);
-}

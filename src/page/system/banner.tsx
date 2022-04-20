@@ -1,7 +1,7 @@
 import OperationTip from "@/component/OperationTip";
 import { TableData } from "@/config/type";
 import router from "@/router";
-import { deleteBanner, IBananer, offlineBanner, onlineBanner } from "@/service/banner";
+import { deleteBanner, IBananer, putBanner } from "@/service/banner";
 import { PlusOutlined } from "@ant-design/icons-vue";
 import { Button, message, Modal, Table, Breadcrumb, BreadcrumbItem, Pagination, Tabs, TabPane, Input, Form, DatePicker } from "ant-design-vue";
 import { defineComponent, onMounted, ref } from "vue";
@@ -71,7 +71,7 @@ export default defineComponent({
                   Modal.confirm({
                     title: `确认要上线${record.title}吗？`,
                     onOk: () => {
-                      return onlineBanner(record.id).then(() => {
+                      return putBanner(record.id).then(() => {
                         fetchData();
                       });
                     },
@@ -87,7 +87,7 @@ export default defineComponent({
                   Modal.confirm({
                     title: `确认要下线${record.title}吗？`,
                     onOk: () => {
-                      return offlineBanner(record.id).then(() => {
+                      return putBanner(record.id).then(() => {
                         fetchData();
                       });
                     },
