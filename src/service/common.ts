@@ -12,7 +12,7 @@ export function uploadImage(file: File, compressImageOpts = defaultCompressImage
   return compressImage(file, compressImageOpts).then(file => {
     const formData = new FormData();
     formData.append("file", file);
-    return fly.post("common/upload", formData).then(data => data.data);
+    return fly.post("admin/common/upload", formData).then(data => data.data);
   });
 }
 
