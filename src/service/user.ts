@@ -40,7 +40,7 @@ function setUserInfo(params: { info: IUser; menu_tree: IRoute[]; permissions: st
 // 登录
 export const postLogin = (params: any) => {
   return flyio
-    .post("login", params)
+    .post("admin/login", params)
     .then((data: any) => {
       message.success(data.msg);
       return data.data;
@@ -56,7 +56,7 @@ export const postLogin = (params: any) => {
 // 获取用户信息
 export const getUserInfo = () => {
   return flyio
-    .get("info")
+    .get("admin/userInfo")
     .then((data: any) => data.data)
     .then(data => {
       setUserInfo(data);
