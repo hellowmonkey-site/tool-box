@@ -2,7 +2,7 @@ import { StorageType } from "@/config/type";
 import { imagePreview } from "@/helper/viewer";
 import { uploadImage } from "@/service/common";
 import { DeleteOutlined, EyeOutlined, LoadingOutlined, PlusOutlined } from "@ant-design/icons-vue";
-import { message, Tooltip } from "ant-design-vue";
+import { Form, message, Tooltip } from "ant-design-vue";
 import { computed, defineComponent, PropType, ref } from "vue";
 
 export default defineComponent({
@@ -29,6 +29,8 @@ export default defineComponent({
     const loading = ref(false);
     const fileRef = ref<HTMLElement | null>(null);
 
+    const forItemContext = Form.useInjectFormItemContext();
+
     const images = computed(() => {
       return (props.images || []).filter(v => v.path);
     });
@@ -42,6 +44,7 @@ export default defineComponent({
         "change",
         images.value.filter(v => v.id !== item.id)
       );
+      // forItemContext.onFieldChange();
     }
 
     // 上传
@@ -58,6 +61,7 @@ export default defineComponent({
       Promise.all(data.map(file => uploadImage(file)))
         .then(e => {
           ctx.emit("change", [...images.value, ...e]);
+          forItemContext.onFieldChange();
         })
         .finally(() => {
           loading.value = false;
