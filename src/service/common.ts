@@ -22,7 +22,9 @@ export const pushTab = (data: RouteLocationNormalizedLoaded) => {
   if (tabList.value.some(v => v.name === data.name)) {
     return;
   }
-  tabList.value.push(data);
+  if (data.name !== "login") {
+    tabList.value.push(data);
+  }
 };
 
 export const removeTab = (name: string) => {
