@@ -73,6 +73,9 @@ export default defineComponent({
             if (e && e.length > 0) {
               form.img_path = e[0].id
               imgPath.value = e[0].path
+            } else {
+              form.img_path = 0
+              imgPath.value = ""
             }
           }}></UploadImageList>
         </FormItem>

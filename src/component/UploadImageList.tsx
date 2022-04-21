@@ -44,7 +44,7 @@ export default defineComponent({
         "change",
         images.value.filter(v => v.id !== item.id)
       );
-      // forItemContext.onFieldChange();
+      forItemContext.onFieldChange();
     }
 
     // 上传
