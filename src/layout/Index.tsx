@@ -1,5 +1,5 @@
 import { removeTab, tabList } from "@/service/common";
-import { ConsoleSqlOutlined, DownOutlined, UnorderedListOutlined, UpCircleFilled } from "@ant-design/icons-vue";
+import { ConsoleSqlOutlined, DownOutlined, LeftOutlined, RightOutlined, UnorderedListOutlined, UpCircleFilled } from "@ant-design/icons-vue";
 import {
   Avatar,
   Button,
@@ -33,7 +33,7 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const collapsed = ref(false);
-    let homeStatus = ref(false);
+    const currentName = ref<string>("");
     const activeCurrentTab = () => {
       const prev = tabList.value[tabList.value.length - 1];
       if (!prev) {
@@ -113,7 +113,7 @@ export default defineComponent({
           key: 'system-banner'
         },{
           name: '服务网点',
-          key: 'fwwd'
+          key: 'system-netAddress-index'
         },{
           name: '模块管理',
           key: 'system-module-index'
@@ -144,7 +144,13 @@ export default defineComponent({
     return () => (
       <div class="d-flex app-layout full-height-vh direction-column">
         <div>
-          <LayoutSider theme="dark" collapsible class="app-sider overflow-y-auto pad-b-5 slider" v-model={[collapsed.value, "collapsed"]}>
+          <LayoutSider 
+            theme="dark" 
+            collapsible
+            class="app-sider overflow-y-auto slider" 
+            v-model={[collapsed.value, "collapsed"]}
+            trigger={<div class="font-light ant-layout-sider">{collapsed.value?<RightOutlined />:<LeftOutlined />}</div>}
+          >
               <div class="text-center pad-5 font-light ant-layout-sider">国元经纪在线保险综合服务平台</div>
               <Menu
                 theme="dark"
@@ -158,17 +164,18 @@ export default defineComponent({
                             default: () => {
                               return mItem(item.subItems)
                             },
-                            icon: () => { 
-                              return <UnorderedListOutlined /> 
-                            }
+                            // icon: () => { 
+                            //   return <UnorderedListOutlined /> 
+                            // }
                         }}
                       </SubMenu>))
                   )
                 }
               </Menu>
+            <div class="ant-layout-sider" style="height: 50px;"></div>
           </LayoutSider>
         </div>
-        <LayoutHeader class="d-flex justify-end align-items-center app-header">
+        <LayoutHeader class="d-flex justify-between align-items-center app-header">
           {/* <img src={Logo} alt="logo" class="app-logo mar-r-5" /> */}
           {/* <Menu theme="dark" mode="horizontal" selectedKeys={["1"]} onSelect={e => console.log(e)} class="flex-item-extend">
             {["1", "2", "3", "4"].map(item => (
@@ -177,6 +184,9 @@ export default defineComponent({
               </MenuItem>
             ))}
           </Menu> */}
+          <div class={["font-light d-flex app-router", collapsed.value ? "collapsed" : ""]}>
+            {currentName.value}
+          </div>
           <Dropdown>
             {{
               default: () => (
