@@ -144,8 +144,8 @@ export default defineComponent({
     return () => (
       <div class="d-flex app-layout full-height-vh direction-column">
         <div>
-          <LayoutSider theme="dark" collapsible class="app-sider overflow-y-auto pad-b-5" v-model={[collapsed.value, "collapsed"]}>
-              <div class="text-center pad-5">国元经纪在线保险综合服务平台</div>
+          <LayoutSider theme="dark" collapsible class="app-sider overflow-y-auto pad-b-5 slider" v-model={[collapsed.value, "collapsed"]}>
+              <div class="text-center pad-5 font-light ant-layout-sider">国元经纪在线保险综合服务平台</div>
               <Menu
                 theme="dark"
                 mode="inline"
