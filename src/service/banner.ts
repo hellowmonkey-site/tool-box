@@ -32,7 +32,7 @@ export function getBannerList() {
 }
 
 // 获取banner详情
-export function getBannerDetail(id: number) {
+export function getBannerDetail(id: any) {
   return fly.get<IBananer>(`admin/banners/${id}`).then(data => data.data);
 }
 
