@@ -5,6 +5,8 @@ import { defaultRoute, getRouterDetail, IRoute, postRouter, putRouter } from "@/
 import { Button, Form, FormItem, Input, Modal, Select, SelectOption, Switch } from "ant-design-vue";
 import { defineComponent, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
+import AMapLoader from '@amap/amap-jsapi-loader';
+import config from "@/config";
 
 interface moudle {
   name: string;
@@ -68,10 +70,15 @@ export default defineComponent({
       getModuleList().then(data=>{
         dataSource.value = moduleList.value
       });
+
+      AMapLoader.load({ key: config.amapKey,version:'2.0' }).then(AMap=>{
+        new AMap.Map('map')
+      })
     });
 
     return () => (
       <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
+        <div id="map" style={{height: '300px'}}></div>
         <FormItem name="name" label="标题" rules={[{ required: true, message: "请先输入标题" }]}>
           <Input placeholder="请输入标题" v-model={[form.name, "value"]}></Input>
         </FormItem>

@@ -11,6 +11,7 @@
     "stylelint": "stylelint --fix src/**/*.{scss,sass,css,less}"
   },
   "dependencies": {
+    "@amap/amap-jsapi-loader": "^1.0.1",
     "@ant-design/icons-vue": "^6.0.1",
     "ant-design-vue": "^3.1.1",
     "compressorjs": "^1.1.1",
