@@ -95,7 +95,6 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/banner/add",
     meta: {
       title: "添加幻灯",
-      keepAlive: true,
     },
     component: () => import("@/page/system/banner-detail"),
   },
@@ -105,7 +104,6 @@ const systemRoutes: RouteRecordRaw[] = [
     props: true,
     meta: {
       title: "幻灯编辑",
-      keepAlive: true,
     },
     component: () => import("@/page/system/banner-detail"),
   },
@@ -189,6 +187,33 @@ const systemRoutes: RouteRecordRaw[] = [
       keepAlive: true,
     },
     component: () => import("@/page/system/app-detail"),
+  },
+  {
+    name: "system-netAddress-index",
+    path: "/system/netAddress",
+    meta: {
+      title: "服务网点",
+    },
+    component: () => import("@/page/system/netAddress"),
+  },
+  {
+    name: "system-netAddress-add",
+    path: "/system/netAddress/add",
+    meta: {
+      title: "添加服务网点",
+      keepAlive: true,
+    },
+    component: () => import("@/page/system/netAddress-detail"),
+  },
+  {
+    name: "system-netAddress-edit",
+    path: "/system/netAddress/:id(\\d+)",
+    props: true,
+    meta: {
+      title: "服务网点编辑",
+      keepAlive: true,
+    },
+    component: () => import("@/page/system/netAddress-detail"),
   },
 ];
 export default systemRoutes;
