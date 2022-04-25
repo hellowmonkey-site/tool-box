@@ -74,11 +74,9 @@ export default defineComponent({
     });
 
     return () => (
-      <div>
-        <div class="d-flex direction-row justify-around align-items-stretch">
+      <div class="d-flex direction-row justify-around align-items-stretch">
           <Card title="页面权限管理" style="width:49%;">
             <Tree
-              class="flex-item-extend"
               checkable
               treeData = {routeTreeData.value}
               v-model={[routeCheckedKeys.value, "checkedKeys"]}
@@ -87,14 +85,12 @@ export default defineComponent({
           </Card>
           <Card title="操作权限管理" style="width:49%;">
             <Tree
-              class="flex-item-extend"
               checkable
               treeData = {permissionTreeData.value}
               v-model={[permissionCheckedKeys.value, "checkedKeys"]}
             >
             </Tree>
           </Card>
-        </div>
       </div>
     );
   },
