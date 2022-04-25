@@ -1,10 +1,9 @@
 import UploadImageList from "@/component/UploadImageList";
-import { StorageType } from "@/config/type";
 import router from "@/router";
 import { defaultBanner, getBannerDetail, IBananer, postBanner, putBanner } from "@/service/banner";
 import { removeTab } from "@/service/common";
 import { Button, Form, FormItem, Input, Modal, Radio, RadioGroup } from "ant-design-vue";
-import { defineComponent, onMounted, reactive, ref } from "vue";
+import { defineComponent, onMounted, reactive, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -16,12 +15,11 @@ export default defineComponent({
   },
   emits: [],
   setup: (props, ctx) => {
-    const form = reactive<IBananer>({
+    let form = reactive<IBananer>({
       ...defaultBanner,
     });
-    const isAddPage = props.id === null;
+    let isAddPage = props.id === null;
     const route = useRoute();
-
     const imgPath = ref<string>("");
 
     const handleSubmit = (params: IBananer) => {
@@ -62,6 +60,34 @@ export default defineComponent({
       }
       return Promise.reject(new Error('请先上传图片!'));
     }
+
+    // 编辑和添加同一个路由页面相互切换 数据不刷新 加上route watch  重新刷新页面数据  
+    // 问题是： 添加页面数据会被清空   编辑页面数据需要重新请求
+    watch(route, (to, from)=>{
+      isAddPage = route.params.id?false:true;
+      if (!isAddPage) {
+        getBannerDetail(route.params.id).then(data => {
+          form.id = data.id;
+          form.name = data.name;
+          form.status = data.status;
+          form.url = data.url;
+          if (data.img_id) {
+            form.img_path = data.img_id
+          }
+          imgPath.value = data.img_path.toString()
+        });
+      }
+      else {
+        form.id = defaultBanner.id;
+        form.name = defaultBanner.name;
+        form.status = defaultBanner.status;
+        form.url = defaultBanner.url;
+        form.img_path = defaultBanner.img_path
+        form.img_id = defaultBanner.img_id
+        imgPath.value = defaultBanner.img_path.toString()
+      }
+    })
+
 
     return () => (
       <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
