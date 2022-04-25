@@ -6,6 +6,7 @@ import Index from "@/layout/Index";
 import user from "@/router/user";
 import system from "@/router/system";
 import { pushTab } from "@/service/common";
+import serviceManage from "@/router/serviceManage";
 
 NProgress.inc(0.2);
 NProgress.configure({ easing: "ease", speed: 500, showSpinner: false });
@@ -24,7 +25,7 @@ const router = createRouter({
           name: indexName,
         };
       },
-      children: [...system],
+      children: [...system, ...serviceManage],
     },
     ...user,
     { path: "/:pathMatch(.*)*", name: "NotFound", component: () => import("@/page/error/404") },
