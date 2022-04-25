@@ -93,16 +93,16 @@ export default defineComponent({
         title: '服务管理',
         subItems: [{
           name: '增值礼包列表',
-          key: 'zzlb'
+          key: 'service-giftBag-index'
         },{
           name: '增值卷列表',
-          key: 'zzjlb'
+          key: 'service-coupon-index'
         },{
           name: '增值卷查询',
           key: 'zzjcx'
         },{
           name: '增值服务列表',
-          key: 'zzfw'
+          key: 'service-carService-index'
         }]
       },
       // 系统管理
@@ -221,7 +221,8 @@ export default defineComponent({
           </Dropdown>
         </LayoutHeader>
          {tabList.value.length ? (
-          <div class={["app-router d-flex", collapsed.value ? "collapsed" : ""]}>
+          //  pad-b-0 会被app-router 覆盖样式
+          <div class={["app-router d-flex", collapsed.value ? "collapsed" : ""]} style="padding-bottom: 0;">
             <Tabs
               hideAdd
               type="editable-card"
@@ -306,7 +307,7 @@ export default defineComponent({
                 </SubMenu>
               </Menu>
             </LayoutSider>*/
-            <div class={["app-router", collapsed.value ? "collapsed" : ""]}>
+            <div class={["app-router overflow-x-hidden", collapsed.value ? "collapsed" : ""]}>
               <RouterView>
                 {{
                   default: ({ Component, route }: { Component: () => JSX.Element; route: RouteLocationNormalizedLoaded }) => {
