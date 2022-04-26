@@ -1,10 +1,11 @@
 import router from "@/router";
 import { defaultNetAddress, getNetAddressDetail, INetAddress, postNetAddress, putNetAddress } from "@/service/netAddress";
 import { removeTab } from "@/service/common";
-import { Button, Form, FormItem, Input, Modal } from "ant-design-vue";
+import { Button, Col, Form, FormItem, Input, Modal } from "ant-design-vue";
 import { defineComponent, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 import config from "@/config";
+import AMapLoader from '@amap/amap-jsapi-loader';
 
 
 export default defineComponent({
@@ -22,12 +23,21 @@ export default defineComponent({
     const isAddPage = props.id === null;
     const route = useRoute();
 
-    // const loader = new AMapJS.AMapLoader({
-    //   key: config.AMAP_KEY,
-    //   version: '2.0',
-    //   plugins: [],
-    //   security: { serviceHost: '您的代理服务器域名或地址/_AMapService' }
-    // });
+    
+    AMapLoader.load({
+      "key": config.amapKey,
+      "version": "2.0",
+    }).then((AMap)=>{
+        const map = new AMap.Map('address');
+        AMap.plugin(['AMap.ToolBar'],function(){//异步加载插件
+          var toolbar = new AMap.ToolBar();
+          map.addControl(toolbar);
+        });
+    }).catch(e => {
+        console.log(e);
+    })
+    // 加载插件
+    
 
     const handleSubmit = (params: INetAddress) => {
       Modal.confirm({
@@ -72,13 +82,16 @@ export default defineComponent({
             <div class="font-gray space-nowrap mar-l-3">按回车键，搜索位置，定位经纬度</div>
           </div>
         </FormItem>
-        {/* <FormItem>
-          <div>
-            {
-            ()=>{
-            }}
+        <Col
+          span={20}
+          push={4}
+          class="mar-t-5"
+        >
+          <div class="mar-b-5" id="address" style="width: 300px; height: 300px;">
+              
+          {/* <ToolBar /> */}
           </div>
-        </FormItem> */}
+        </Col>
         <FormItem name="long" label="经度" rules={[{ required: true, message: "请先输入经度" }]}>
           <Input placeholder="请输入经度" v-model={[form.long, "value"]}></Input>
         </FormItem>
