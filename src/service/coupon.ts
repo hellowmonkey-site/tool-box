@@ -42,10 +42,10 @@ export const defaultCouponData: ICouponData = {
 
 // 获取增值券列表
 export const getCouponList = ({ ...params }: ICouponSearch) => {
-  return flyio.get<ICouponData>("admin/coupon", params).then(data => data.data);
+  return flyio.get<ICouponData>("coupon", params).then(data => data.data);
 };
 
 // 获取增值券列表  不分页
 export const getAllCouponList = () => {
-  return flyio.get<ICoupon[]>("admin/couponList").then(data => data.data);
+  return flyio.get<ICoupon[]>("couponList").then(data => data.data);
 };

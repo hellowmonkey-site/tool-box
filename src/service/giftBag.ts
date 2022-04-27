@@ -56,25 +56,25 @@ export const defaultGiftBagData: IGiftBagData = {
 
 // 获取增值礼包列表
 export const getGiftBagList = ({ ...params }: IGiftBagSearch) => {
-  return flyio.get<IGiftBagData>("admin/giftBag", params).then(data => data.data);
+  return flyio.get<IGiftBagData>("giftBag", params).then(data => data.data);
 };
 
 // 获取增值礼包详情
 export const getGiftBagDetail = (id: number) => {
-  return flyio.get<IGiftBag>(`admin/giftBag/${id}`).then(data => data.data);
+  return flyio.get<IGiftBag>(`giftBag/${id}`).then(data => data.data);
 };
 
 // 删除增值礼包
 export const deleteGiftBag = (id: number) => {
-  return flyio.delete(`admin/giftBag/${id}`).then(data => data.data);
+  return flyio.delete(`giftBag/${id}`).then(data => data.data);
 };
 
 // 创建增值礼包
 export const postGiftBag = (params: IGiftBag) => {
-  return flyio.post("admin/giftBag", params).then(data => data.data);
+  return flyio.post("giftBag", params).then(data => data.data);
 };
 
 // 编辑增值礼包
 export const putGiftBag = ({ id, ...params }: IGiftBag) => {
-  return flyio.put(`admin/giftBag/${id}`, params).then(data => data.data);
+  return flyio.put(`giftBag/${id}`, params).then(data => data.data);
 };

@@ -29,30 +29,30 @@ export const defaultPermission: IPermission = {
 
 // 获取父级权限列表
 export const getPermissionList = (parent_id = 0) => {
-  return flyio.get<IPermission[]>("admin/permission", { parent_id }).then(data => data.data);
+  return flyio.get<IPermission[]>("permission", { parent_id }).then(data => data.data);
 };
 
 // 获取权限详情
 export const getPermissionDetail = (id: number) => {
-  return flyio.get<IPermission>(`admin/permission/${id}`).then(data => data.data);
+  return flyio.get<IPermission>(`permission/${id}`).then(data => data.data);
 };
 
 // 删除权限
 export const deletePermission = (id: number) => {
-  return flyio.delete(`admin/permission/${id}`).then(data => data.data);
+  return flyio.delete(`permission/${id}`).then(data => data.data);
 };
 
 // 创建权限
 export const postPermission = (params: IPermission) => {
-  return flyio.post("admin/permission", params).then(data => data.data);
+  return flyio.post("permission", params).then(data => data.data);
 };
 
 // 编辑权限
 export const putPermission = ({ id, ...params }: IPermission) => {
-  return flyio.put(`admin/permission/${id}`, params).then(data => data.data);
+  return flyio.put(`permission/${id}`, params).then(data => data.data);
 };
 
 // 获取所有权限
 export const getAllPermissionList = () => {
-  return flyio.get<IPermission[]>("admin/permission", {}).then(data => data.data);
+  return flyio.get<IPermission[]>("permission", {}).then(data => data.data);
 };

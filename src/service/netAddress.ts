@@ -54,25 +54,25 @@ export const defaultNetAddressData: INetAddressData = {
 
 // 获取服务网点列表
 export const getNetAddressList = ({ ...params }: INetAddressSearch) => {
-  return fly.get<INetAddressData>("admin/netAddress", params).then(data => data.data);
+  return fly.get<INetAddressData>("netAddress", params).then(data => data.data);
 };
 
 // 获取服务网点详情
 export const getNetAddressDetail = (id: number) => {
-  return fly.get<INetAddress>(`admin/netAddress/${id}`).then(data => data.data);
+  return fly.get<INetAddress>(`netAddress/${id}`).then(data => data.data);
 };
 
 // 删除服务网点
 export const deleteNetAddress = (id: number) => {
-  return fly.delete(`admin/netAddress/${id}`).then(data => data.data);
+  return fly.delete(`netAddress/${id}`).then(data => data.data);
 };
 
 // 创建服务网点
 export const postNetAddress = (params: INetAddress) => {
-  return fly.post("admin/netAddress", params).then(data => data.data);
+  return fly.post("netAddress", params).then(data => data.data);
 };
 
 // 编辑服务网点
 export const putNetAddress = ({ id, ...params }: INetAddress) => {
-  return fly.put(`admin/netAddress/${id}`, params).then(data => data.data);
+  return fly.put(`netAddress/${id}`, params).then(data => data.data);
 };

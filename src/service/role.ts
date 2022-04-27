@@ -27,7 +27,7 @@ export const roleList = ref<IRole[]>([]);
 // 获取角色列表
 export function getRoleList() {
   return fly
-    .get<IRole[]>("admin/role")
+    .get<IRole[]>("role")
     .then(data => data.data)
     .then(data => {
       roleList.value = data;
@@ -60,7 +60,7 @@ export function getRoleDetail(id: number) {
       return;
     }
   }
-  return fly.get<IRole>(`admin/role/${id}`).then(data => {
+  return fly.get<IRole>(`role/${id}`).then(data => {
     if (data?.data?.permissions) {
       data.data.permissions.forEach(checkItem => {
         handlePermissionCheckId(checkItem);
@@ -79,15 +79,15 @@ export function getRoleDetail(id: number) {
 
 // 删除角色
 export const deleteRole = (id: number) => {
-  return fly.delete(`admin/role/${id}`).then(data => data.data);
+  return fly.delete(`role/${id}`).then(data => data.data);
 };
 
 // 创建角色
 export const postRole = (params: IRole) => {
-  return fly.post("admin/role", params).then(data => data.data);
+  return fly.post("role", params).then(data => data.data);
 };
 
 // 编辑角色
 export const putRole = ({ id, ...params }: IRole) => {
-  return fly.put(`admin/role/${id}`, params).then(data => data.data);
+  return fly.put(`role/${id}`, params).then(data => data.data);
 };

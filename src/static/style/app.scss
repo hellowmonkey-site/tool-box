@@ -24,6 +24,11 @@ body {
   background-color: var(--page-background-color);
 }
 
+// 布局
+.app-header {
+  background-color: #fff;
+}
+
 // 下拉
 .select-table-dropdown {
   position: absolute;
@@ -172,66 +177,6 @@ body {
 
   .ant-card-head {
     padding: 5px;
-  }
-}
-
-.app-content {
-  background-color: #fff;
-  min-height: calc(100vh - 100px);
-  position: relative;
-}
-
-.app-header {
-  padding-left: var(--offset-5);
-  padding-right: var(--offset-5);
-
-  .app-logo {
-    height: 50%;
-  }
-}
-
-.app-drawer {
-  .ant-drawer-wrapper-body {
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .ant-drawer-body {
-    overflow-y: auto;
-  }
-}
-
-.app-sider {
-  background: #fff;
-  position: fixed;
-  height: 100%;
-
-  .ant-menu {
-    min-height: 100%;
-  }
-
-  .ant-layout-sider-trigger {
-    background: #eee;
-    color: #333;
-  }
-}
-
-.app-router {
-  padding: var(--offset-4) var(--offset-4) var(--offset-4) calc(200px + var(--offset-4));
-
-  &.collapsed {
-    padding-left: calc(80px + var(--offset-4));
-  }
-}
-
-.app-tabs {
-  padding-left: var(--offset-5);
-  padding-top: var(--offset-5);
-  padding-right: var(--offset-5);
-
-  .ant-tabs-bar {
-    margin: 0;
   }
 }
 

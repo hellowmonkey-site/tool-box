@@ -21,7 +21,7 @@ export const moduleList = ref<IModule[]>([]);
 // 获取模块列表
 export function getModuleList() {
   return fly
-    .get<IModule[]>("admin/module")
+    .get<IModule[]>("module")
     .then(data => data.data)
     .then(data => {
       moduleList.value = data;
@@ -31,20 +31,20 @@ export function getModuleList() {
 
 // 获取模块详情
 export function getModuleDetail(id: number) {
-  return fly.get<IModule>(`admin/module/${id}`).then(data => data.data);
+  return fly.get<IModule>(`module/${id}`).then(data => data.data);
 }
 
 // 删除模块
 export const deleteModule = (id: number) => {
-  return fly.delete(`admin/module/${id}`).then(data => data.data);
+  return fly.delete(`module/${id}`).then(data => data.data);
 };
 
 // 创建模块
 export const postModule = (params: IModule) => {
-  return fly.post("admin/module", params).then(data => data.data);
+  return fly.post("module", params).then(data => data.data);
 };
 
 // 编辑角色
 export const putModule = ({ id, ...params }: IModule) => {
-  return fly.put(`admin/module/${id}`, params).then(data => data.data);
+  return fly.put(`module/${id}`, params).then(data => data.data);
 };
