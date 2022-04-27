@@ -5,8 +5,7 @@ import { Button, Col, Form, FormItem, Input, Modal } from "ant-design-vue";
 import { defineComponent, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 import config from "@/config";
-import AMapLoader from '@amap/amap-jsapi-loader';
-
+import AMapLoader from "@amap/amap-jsapi-loader";
 
 export default defineComponent({
   props: {
@@ -23,35 +22,22 @@ export default defineComponent({
     const isAddPage = props.id === null;
     const route = useRoute();
 
-    
     AMapLoader.load({
-      "key": config.amapKey,
-      "version": "2.0",
-    }).then((AMap)=>{
-        const map = new AMap.Map('address');
-        AMap.plugin(['AMap.ToolBar'],function(){//异步加载插件
-          var toolbar = new AMap.ToolBar();
+      key: config.amapKey,
+      version: "2.0",
+    })
+      .then(AMap => {
+        const map = new AMap.Map("address");
+        AMap.plugin(["AMap.ToolBar"], function () {
+          //异步加载插件
+          const toolbar = new AMap.ToolBar();
           map.addControl(toolbar);
         });
-    }).catch(e => {
+      })
+      .catch(e => {
         console.log(e);
-    })
-    // 加载插件
-    
-
-    const handleSubmit = (params: INetAddress) => {
-      Modal.confirm({
-        title: `确认${isAddPage ? "添加" : "编辑此"}网点？`,
-        onOk: () => {
-          return (isAddPage ? postNetAddress({ ...params }) : putNetAddress(form)).then(e => {
-            router.back();
-            if (typeof route.name === 'string') {
-              removeTab(route.name)
-            }
-          });
-        },
       });
-    };
+    // 加载插件
 
     onMounted(() => {
       if (!isAddPage) {
@@ -66,6 +52,21 @@ export default defineComponent({
       }
     });
 
+    const handleSubmit = (params: INetAddress) => {
+      Modal.confirm({
+        title: `确认${isAddPage ? "添加" : "编辑此"}网点？`,
+        onOk: () => {
+          return (isAddPage ? postNetAddress({ ...params }) : putNetAddress(form)).then(e => {
+            router.back();
+            removeTab(String(route.name));
+          });
+        },
+      });
+    };
+    const getLocation = () => {
+      return 1;
+    };
+
     return () => (
       <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
         <FormItem name="name" label="服务网点名称" rules={[{ required: true, message: "请先输入服务器网点名称" }]}>
@@ -73,24 +74,18 @@ export default defineComponent({
         </FormItem>
         <FormItem name="address" label="地址" rules={[{ required: true, message: "请先输入地址" }]}>
           <div class="d-flex direction-row align-items-center">
-            <Input 
-              placeholder="请输入地址" 
-              v-model={[form.address, "value"]} 
-              onPressEnter={(e)=>{
-                
-              }}></Input>
+            <Input
+              placeholder="请输入地址"
+              v-model={[form.address, "value"]}
+              onPressEnter={e => {
+                getLocation();
+              }}
+            ></Input>
             <div class="font-gray space-nowrap mar-l-3">按回车键，搜索位置，定位经纬度</div>
           </div>
         </FormItem>
-        <Col
-          span={20}
-          push={4}
-          class="mar-t-5"
-        >
-          <div class="mar-b-5" id="address" style="width: 300px; height: 300px;">
-              
-          {/* <ToolBar /> */}
-          </div>
+        <Col span={20} push={4} class="mar-t-5">
+          <div class="mar-b-5" id="address" style="width: 300px; height: 300px;"></div>
         </Col>
         <FormItem name="long" label="经度" rules={[{ required: true, message: "请先输入经度" }]}>
           <Input placeholder="请输入经度" v-model={[form.long, "value"]}></Input>

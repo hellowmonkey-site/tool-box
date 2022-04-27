@@ -25,16 +25,14 @@ export default defineComponent({
         title: `确认${isAddPage ? "添加" : "编辑此"}角色？`,
         onOk: () => {
           if (form.permissions) {
-            params.permissions = form.permissions
+            params.permissions = form.permissions;
           }
           if (form.route) {
-            params.route = form.route
+            params.route = form.route;
           }
           return (isAddPage ? postRole({ ...params }) : putRole(form)).then(e => {
             router.back();
-            if (typeof route.name === 'string') {
-              removeTab(route.name)
-            }
+            removeTab(String(route.name));
           });
         },
       });
@@ -43,13 +41,13 @@ export default defineComponent({
     onMounted(() => {
       if (!isAddPage) {
         getRoleDetail(props.id).then(data => {
-          console.log(data)
+          console.log(data);
           form.id = data.id;
           form.name = data.name;
           form.home_url = data.home_url;
-          form.status = data.status
-          form.permissions = data.permissions
-          form.route = data.route
+          form.status = data.status;
+          form.permissions = data.permissions;
+          form.route = data.route;
         });
       }
     });
@@ -63,28 +61,24 @@ export default defineComponent({
           <Input placeholder="请输入首页地址" v-model={[form.home_url, "value"]}></Input>
         </FormItem>
         <FormItem name="status" label="是否激活" rules={[{ required: true, message: "请选择是否激活" }]}>
-          <RadioGroup v-model={[form.status, 'value']}>
+          <RadioGroup v-model={[form.status, "value"]}>
             <Radio value={1}>是</Radio>
             <Radio value={0}>否</Radio>
           </RadioGroup>
         </FormItem>
         <FormItem label="权限管理">
           <UserPermissions
-            premissions = {form.permissions}
-            route = {form.route}
-            onPermissionKeyChange={ 
-              (item) => {
-                form.permissions = item
-              }
-            }
-            onRouteKeyChange= {
-              (item) => {
-                form.route = item
-              }
-            }
+            premissions={form.permissions}
+            route={form.route}
+            onPermissionKeyChange={item => {
+              form.permissions = item;
+            }}
+            onRouteKeyChange={item => {
+              form.route = item;
+            }}
           ></UserPermissions>
         </FormItem>
-        
+
         <div class="d-flex align-items-center justify-center mar-t-5">
           <Button htmlType="submit" type="primary" size="large">
             提交

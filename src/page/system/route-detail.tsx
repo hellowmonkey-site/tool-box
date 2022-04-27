@@ -5,8 +5,6 @@ import { defaultRoute, getRouterDetail, IRoute, postRouter, putRouter } from "@/
 import { Button, Form, FormItem, Input, Modal, Select, SelectOption, Switch } from "ant-design-vue";
 import { defineComponent, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
-import AMapLoader from '@amap/amap-jsapi-loader';
-import config from "@/config";
 
 export default defineComponent({
   props: {
@@ -23,7 +21,7 @@ export default defineComponent({
     });
     const isAddPage = props.id === null;
 
-    const dataSource = ref<IModule[]>([])
+    const dataSource = ref<IModule[]>([]);
 
     const handleSubmit = (params: IRoute) => {
       console.log(params);
@@ -33,9 +31,7 @@ export default defineComponent({
         onOk: () => {
           return (isAddPage ? postRouter({ ...params, parent_id: Number(route.query.parent_id || 0) }) : putRouter(form)).then(e => {
             router.back();
-            if (typeof route.name === 'string') {
-              removeTab(route.name)
-            }
+            removeTab(String(route.name));
           });
         },
       });
@@ -52,28 +48,23 @@ export default defineComponent({
           form.name = data.name;
           form.module_id = data.module_id;
           // ({
-          //   id: form.id, 
-          //   is_menu: form.is_menu, 
-          //   key: form.key, 
-          //   parent_id: form.parent_id, 
+          //   id: form.id,
+          //   is_menu: form.is_menu,
+          //   key: form.key,
+          //   parent_id: form.parent_id,
           //   sort: form.sort,
           //   name: form.name,
           //   module_id: form.module_id,
           // } = data)
         });
       }
-      getModuleList().then(data=>{
-        dataSource.value = moduleList.value
+      getModuleList().then(data => {
+        dataSource.value = moduleList.value;
       });
-
-      AMapLoader.load({ key: config.amapKey,version:'2.0' }).then(AMap=>{
-        new AMap.Map('map')
-      })
     });
 
     return () => (
       <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
-        <div id="map" style={{height: '300px'}}></div>
         <FormItem name="name" label="标题" rules={[{ required: true, message: "请先输入标题" }]}>
           <Input placeholder="请输入标题" v-model={[form.name, "value"]}></Input>
         </FormItem>
@@ -88,13 +79,7 @@ export default defineComponent({
         </FormItem>
         <FormItem name="module_id" label="所属模块" rules={[{ required: true, message: "请选择所属模块" }]}>
           <Select v-model={[form.module_id, "value"]}>
-            {
-              ()=> (
-                dataSource.value.map(item => (<SelectOption value={item.id}>
-                  {item.title}
-                </SelectOption>))
-              )
-            }
+            {() => dataSource.value.map(item => <SelectOption value={item.id}>{item.title}</SelectOption>)}
           </Select>
         </FormItem>
         <FormItem name="url" label="url" rules={[{ required: true, message: "请先输入路由地址" }]}>

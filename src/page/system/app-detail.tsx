@@ -26,9 +26,7 @@ export default defineComponent({
         onOk: () => {
           return (isAddPage ? postApp({ ...params }) : putApp(form)).then(e => {
             router.back();
-            if (typeof route.name === 'string') {
-              removeTab(route.name)
-            }
+            removeTab(String(route.name));
           });
         },
       });
@@ -41,7 +39,7 @@ export default defineComponent({
           form.name = data.name;
           form.app_key = data.app_key;
           form.secret_key = data.secret_key;
-          form.status = data.status
+          form.status = data.status;
         });
       }
     });
@@ -69,4 +67,3 @@ export default defineComponent({
     );
   },
 });
-

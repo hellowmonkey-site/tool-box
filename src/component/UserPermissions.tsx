@@ -7,66 +7,64 @@ export default defineComponent({
   props: {
     premissions: {
       type: Array as PropType<string[]>,
-      default: []
+      default: () => [],
     },
     route: {
       type: Array as PropType<string[]>,
-      default: []
-    }
+      default: () => [],
+    },
   },
   emits: ["routeKeyChange", "permissionKeyChange"],
   setup: (props, ctx) => {
     const routeTreeData = ref<IRoute[]>([]);
     const permissionTreeData = ref<IPermission[]>([]);
-    
+
     function fetchData() {
-      getAllPermissionList().then(data=>{
+      getAllPermissionList().then(data => {
         data.forEach(element => {
           element.key = element.id.toString();
-          element.title = element.name
+          element.title = element.name;
           handleChildKey(element);
         });
-        permissionTreeData.value = data
+        permissionTreeData.value = data;
       });
-      getAllRouterList().then(data=>{
+      getAllRouterList().then(data => {
         data.forEach(element => {
           element.key = element.id.toString();
-          element.title = element.name
+          element.title = element.name;
           handleChildKey(element);
         });
-        routeTreeData.value = data
+        routeTreeData.value = data;
       });
     }
 
-    function handleChildKey ( child: IPermission | IRoute | undefined ) {
-      if (child && child.children && child.children.length > 0)
-      {
+    function handleChildKey(child: IPermission | IRoute | undefined) {
+      if (child && child.children && child.children.length > 0) {
         child.children.forEach(element => {
-           element.key = element.id.toString()
-           element.title = element.name
-           handleChildKey(element)
+          element.key = element.id.toString();
+          element.title = element.name;
+          handleChildKey(element);
         });
-      }
-      else {
-        return
+      } else {
+        return;
       }
     }
 
     const routeCheckedKeys = ref<string[]>([]);
     const permissionCheckedKeys = ref<string[]>([]);
 
-    watch(props, (newVaule) => {
-      routeCheckedKeys.value = newVaule.route
-      permissionCheckedKeys.value = newVaule.premissions
+    watch(props, newVaule => {
+      routeCheckedKeys.value = newVaule.route;
+      permissionCheckedKeys.value = newVaule.premissions;
     });
 
     watch(routeCheckedKeys, () => {
       // 页面权限修改
-      ctx.emit("routeKeyChange", routeCheckedKeys.value)
+      ctx.emit("routeKeyChange", routeCheckedKeys.value);
     });
     watch(permissionCheckedKeys, () => {
       // 操作权限修改
-      ctx.emit("permissionKeyChange", permissionCheckedKeys.value)
+      ctx.emit("permissionKeyChange", permissionCheckedKeys.value);
     });
 
     onMounted(() => {
@@ -75,22 +73,12 @@ export default defineComponent({
 
     return () => (
       <div class="d-flex direction-row justify-around align-items-stretch">
-          <Card title="页面权限管理" style="width:49%;">
-            <Tree
-              checkable
-              treeData = {routeTreeData.value}
-              v-model={[routeCheckedKeys.value, "checkedKeys"]}
-            >
-            </Tree>
-          </Card>
-          <Card title="操作权限管理" style="width:49%;">
-            <Tree
-              checkable
-              treeData = {permissionTreeData.value}
-              v-model={[permissionCheckedKeys.value, "checkedKeys"]}
-            >
-            </Tree>
-          </Card>
+        <Card title="页面权限管理" style="width:49%;">
+          <Tree checkable treeData={routeTreeData.value} v-model={[routeCheckedKeys.value, "checkedKeys"]}></Tree>
+        </Card>
+        <Card title="操作权限管理" style="width:49%;">
+          <Tree checkable treeData={permissionTreeData.value} v-model={[permissionCheckedKeys.value, "checkedKeys"]}></Tree>
+        </Card>
       </div>
     );
   },

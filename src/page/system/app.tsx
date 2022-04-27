@@ -30,11 +30,7 @@ export default defineComponent({
         dataIndex: "status",
         title: "状态",
         customRender({ record }: TableData) {
-          return (
-            <>
-              {record.status===1?'启用':'停用'}
-            </>
-          );
+          return <>{record.status === 1 ? "启用" : "停用"}</>;
         },
       },
       {

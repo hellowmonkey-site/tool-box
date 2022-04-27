@@ -28,13 +28,11 @@ export default defineComponent({
         title: `确认${isAddPage ? "添加" : "编辑此"}增值服务？`,
         onOk: () => {
           if (form.img_path) {
-            params.img_path = form.img_path
+            params.img_path = form.img_path;
           }
           return (isAddPage ? postCarService({ ...params }) : putCarService(form)).then(e => {
             router.back();
-            if (typeof route.name === 'string') {
-              removeTab(route.name)
-            }
+            removeTab(String(route.name));
           });
         },
       });
@@ -48,9 +46,9 @@ export default defineComponent({
           form.status = data.status;
           form.url = data.url;
           if (data.img_id) {
-            form.img_path = data.img_id
+            form.img_path = data.img_id;
           }
-          imgPath.value = data.img_path.toString()
+          imgPath.value = data.img_path.toString();
         });
       }
     });
@@ -59,7 +57,7 @@ export default defineComponent({
       if (form.img_path && form.img_path > 0) {
         return Promise.resolve();
       }
-      return Promise.reject(new Error('请先上传图标!'));
+      return Promise.reject(new Error("请先上传图标!"));
     }
 
     return () => (
@@ -70,19 +68,23 @@ export default defineComponent({
         <FormItem name="url" label="跳转链接" rules={[{ required: true, message: "请先输入跳转链接" }]}>
           <Input placeholder="请输入跳转链接" v-model={[form.url, "value"]}></Input>
         </FormItem>
-        <FormItem name="img_path" label="上传图标" rules={[{required: true, validator: checkImages }]}>
-          <UploadImageList images={[{id: 0, path:imgPath.value}]} maxCount={1} onChange={e=>{
-            if (e && e.length > 0) {
-              form.img_path = e[0].id
-              imgPath.value = e[0].path
-            } else {
-              form.img_path = 0
-              imgPath.value = ""
-            }
-          }}></UploadImageList>
+        <FormItem name="img_path" label="上传图标" rules={[{ required: true, validator: checkImages }]}>
+          <UploadImageList
+            images={[{ id: 0, path: imgPath.value }]}
+            maxCount={1}
+            onChange={e => {
+              if (e && e.length > 0) {
+                form.img_path = e[0].id;
+                imgPath.value = e[0].path;
+              } else {
+                form.img_path = 0;
+                imgPath.value = "";
+              }
+            }}
+          ></UploadImageList>
         </FormItem>
         <FormItem name="status" label="是否上线">
-          <RadioGroup v-model={[form.status, 'value']}>
+          <RadioGroup v-model={[form.status, "value"]}>
             <Radio value={1}>是</Radio>
             <Radio value={0}>否</Radio>
           </RadioGroup>

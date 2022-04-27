@@ -18,16 +18,14 @@ export default defineComponent({
       ...defaultModule,
     });
     const isAddPage = props.id === null;
-    const route = useRoute()
+    const route = useRoute();
     const handleSubmit = (params: IModule) => {
       Modal.confirm({
         title: `确认${isAddPage ? "添加" : "编辑此"}模块？`,
         onOk: () => {
           return (isAddPage ? postModule({ ...params }) : putModule(form)).then(e => {
             router.back();
-            if (typeof route.name === 'string') {
-              removeTab(route.name)
-            }
+            removeTab(String(route.name));
           });
         },
       });
@@ -53,7 +51,7 @@ export default defineComponent({
           <Input placeholder="请输入排序" v-model={[form.sort, "value"]}></Input>
         </FormItem>
         <FormItem name="status" label="是否启用" rules={[{ required: true, message: "请选择是否启用" }]}>
-          <RadioGroup v-model={[form.status, 'value']}>
+          <RadioGroup v-model={[form.status, "value"]}>
             <Radio value={1}>是</Radio>
             <Radio value={0}>否</Radio>
           </RadioGroup>
