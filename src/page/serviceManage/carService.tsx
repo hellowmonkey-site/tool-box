@@ -1,6 +1,6 @@
 import UploadImageList from "@/component/UploadImageList";
 import { TableData } from "@/config/type";
-import { defaultCarService, defaultCarServiceData, defaultCarServiceSearch, deleteCarService, getCarServiceList, ICarService, ICarServiceData, ICarServiceSearch, putCarService } from "@/service/serviceManage/carService";
+import { defaultCarService, defaultCarServiceData, defaultCarServiceSearch, deleteCarService, getCarServiceList, ICarService, ICarServiceData, ICarServiceSearch, putCarService } from "@/service/carService";
 import { Button, Image, Modal, Table, message, Form, FormItem, Input, RangePicker, Card, Row, Col } from "ant-design-vue";
 import form from "ant-design-vue/lib/form";
 import { defineComponent, onMounted, reactive, ref } from "vue";

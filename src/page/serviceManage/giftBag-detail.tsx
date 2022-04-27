@@ -1,10 +1,10 @@
 import router from "@/router";
-import { defaultGiftBag, getGiftBagDetail, IGiftBag, postGiftBag, putGiftBag } from "@/service/serviceManage/giftBag";
+import { defaultGiftBag, getGiftBagDetail, IGiftBag, postGiftBag, putGiftBag } from "@/service/giftBag";
 import { removeTab } from "@/service/common";
 import { Button, Col, Form, FormItem, Input, InputNumber, Modal, Radio, RadioGroup, Row, Select, SelectOption, Space } from "ant-design-vue";
 import { defineComponent, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
-import { defaultCoupon, getAllCouponList, ICoupon } from "@/service/serviceManage/coupon";
+import { defaultCoupon, getAllCouponList, ICoupon } from "@/service/coupon";
 import { MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons-vue";
 import { Rule } from "ant-design-vue/lib/form";
 

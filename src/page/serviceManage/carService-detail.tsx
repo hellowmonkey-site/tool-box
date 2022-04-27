@@ -1,6 +1,6 @@
 import UploadImageList from "@/component/UploadImageList";
 import router from "@/router";
-import { defaultCarService, getCarServiceDetail, ICarService, postCarService, putCarService } from "@/service/serviceManage/carService";
+import { defaultCarService, getCarServiceDetail, ICarService, postCarService, putCarService } from "@/service/carService";
 import { removeTab } from "@/service/common";
 import { Button, Form, FormItem, Input, Modal, Radio, RadioGroup } from "ant-design-vue";
 import { defineComponent, onMounted, reactive, ref } from "vue";

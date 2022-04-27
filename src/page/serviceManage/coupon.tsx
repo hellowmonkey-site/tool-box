@@ -1,5 +1,5 @@
 import { TableData } from "@/config/type";
-import { defaultCoupon, defaultCouponData, defaultCouponSearch, getCouponList, ICoupon, ICouponData, ICouponSearch } from "@/service/serviceManage/coupon";
+import { defaultCoupon, defaultCouponData, defaultCouponSearch, getCouponList, ICoupon, ICouponData, ICouponSearch } from "@/service/coupon";
 import { Button, Image, Modal, Table, message, Form, FormItem, Input, RangePicker, Card, Row, Col } from "ant-design-vue";
 import { defineComponent, onMounted, reactive } from "vue";
 import { onBeforeRouteUpdate, RouterLink, useRouter } from "vue-router";

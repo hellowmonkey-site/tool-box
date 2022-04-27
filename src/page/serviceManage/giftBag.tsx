@@ -1,6 +1,6 @@
 import { TableData } from "@/config/type";
-import { ICoupon } from "@/service/serviceManage/coupon";
-import { defaultGiftBag, defaultGiftBagData, defaultGiftBagSearch, deleteGiftBag, getGiftBagList, IGiftBag, IGiftBagData, IGiftBagSearch, putGiftBag } from "@/service/serviceManage/giftBag";
+import { ICoupon } from "@/service/coupon";
+import { defaultGiftBag, defaultGiftBagData, defaultGiftBagSearch, deleteGiftBag, getGiftBagList, IGiftBag, IGiftBagData, IGiftBagSearch, putGiftBag } from "@/service/giftBag";
 import { Button, Modal, Table, message, Form, FormItem, Input, Card, Row, Col, List } from "ant-design-vue";
 import { defineComponent, onMounted, reactive } from "vue";
 import { onBeforeRouteUpdate, RouterLink, useRouter } from "vue-router";
