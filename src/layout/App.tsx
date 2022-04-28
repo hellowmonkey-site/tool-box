@@ -2,15 +2,12 @@ import { ConfigProvider, Modal, Spin } from "ant-design-vue";
 import { defineComponent } from "vue";
 import { RouterView } from "vue-router";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
-import dayjs from "dayjs";
-import "dayjs/locale/zh-cn";
 import { isIE } from "@/helper/validate";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import { loadingState } from "@/service/common";
 
 export default defineComponent({
   setup() {
-    dayjs.locale("zh-cn");
     return () => (
       <ConfigProvider locale={zhCN}>
         <Spin

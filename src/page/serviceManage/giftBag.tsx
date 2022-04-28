@@ -1,4 +1,4 @@
-import { TableData } from "@/config/type";
+import { StatusType, TableData } from "@/config/type";
 import { ICoupon } from "@/service/coupon";
 import {
   defaultGiftBag,
@@ -60,7 +60,7 @@ export default defineComponent({
         dataIndex: "status",
         title: "状态",
         customRender({ record }: TableData) {
-          return <>{record.status === 1 ? "上线" : "下线"}</>;
+          return <>{record.status === StatusType.ONLINE ? "上线" : "下线"}</>;
         },
       },
       {
@@ -73,7 +73,7 @@ export default defineComponent({
                 class="mar-r-2-item"
                 onClick={() => {
                   Modal.confirm({
-                    title: `确认要${record.status === 1 ? "下线" : "上线"}${record.name}吗？`,
+                    title: `确认要${record.status === StatusType.ONLINE ? "下线" : "上线"}${record.name}吗？`,
                     onOk: () => {
                       const data = dataSource.items.filter(item => item.id === record.id);
                       if (data && data.length > 0) {
@@ -92,7 +92,7 @@ export default defineComponent({
                   });
                 }}
               >
-                {record.status === 1 ? "下线" : "上线"}
+                {record.status === StatusType.ONLINE ? "下线" : "上线"}
               </Button>
               <Button
                 class="mar-r-2-item"

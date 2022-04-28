@@ -5,7 +5,7 @@ import Index from "@/layout/Index";
 
 import user from "@/router/user";
 import system from "@/router/system";
-import { pushTab } from "@/service/common";
+import { pushRouteTab } from "@/service/common";
 import serviceManage from "@/router/serviceManage";
 
 NProgress.inc(0.2);
@@ -13,27 +13,29 @@ NProgress.configure({ easing: "ease", speed: 500, showSpinner: false });
 
 export const indexName = "system-route-index";
 
+export const routes = [
+  {
+    path: "/",
+    name: "index",
+    component: Index,
+    redirect: () => {
+      return {
+        name: indexName,
+      };
+    },
+    children: [...system, ...serviceManage],
+  },
+  ...user,
+  { path: "/:pathMatch(.*)*", name: "NotFound", component: () => import("@/page/error/404") },
+];
+
 const router = createRouter({
   history: createWebHistory(),
-  routes: [
-    {
-      path: "/",
-      name: "index",
-      component: Index,
-      redirect: () => {
-        return {
-          name: indexName,
-        };
-      },
-      children: [...system, ...serviceManage],
-    },
-    ...user,
-    { path: "/:pathMatch(.*)*", name: "NotFound", component: () => import("@/page/error/404") },
-  ],
+  routes,
 });
 
 router.beforeEach(to => {
-  pushTab(to);
+  pushRouteTab(to);
   NProgress.start();
   return true;
 });

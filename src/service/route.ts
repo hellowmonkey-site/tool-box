@@ -3,29 +3,25 @@ import flyio from "flyio";
 
 export interface IRoute {
   children?: IRoute[];
-  deep: NumberBoolean;
   id: number;
   is_menu: NumberBoolean;
   key: string;
+  module_id?: number;
+  name: string;
   parent_id: number;
   sort: number;
-  name: string;
   url: string;
-  module_id: string;
-  title: string | undefined;
 }
 
 export const defaultRoute: IRoute = {
-  deep: 0,
-  is_menu: 1,
+  is_menu: NumberBoolean.TRUE,
   key: "",
   parent_id: 0,
   sort: 0,
   name: "",
   url: "",
-  module_id: "0",
+  module_id: undefined,
   id: 0,
-  title: "",
 };
 
 // 获取父级路由列表

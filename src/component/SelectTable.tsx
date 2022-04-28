@@ -98,7 +98,7 @@ export default defineComponent({
           <Input
             placeholder="请输入"
             value={form.keywords === null ? activeText.value : form.keywords}
-            onInput={e => onInput(e.target)}
+            // onInput={e => onInput(e.target)}
             onFocus={() => onInputFocus()}
             onBlur={() => onInputBlur()}
           />
@@ -121,9 +121,9 @@ export default defineComponent({
                 },
               }}
               scroll={{ y: 400 }}
-              onRowClick={e => {
-                onRowClick(e);
-              }}
+              // onRowClick={e => {
+              //   onRowClick(e);
+              // }}
               size="small"
               dataSource={dataSource.value}
               loading={loading.value}

@@ -1,6 +1,6 @@
 import router from "@/router";
 import { defaultGiftBag, getGiftBagDetail, IGiftBag, postGiftBag, putGiftBag } from "@/service/giftBag";
-import { removeTab } from "@/service/common";
+import { removeRouteTab } from "@/service/common";
 import {
   Button,
   Col,
@@ -44,7 +44,7 @@ export default defineComponent({
         onOk: () => {
           return (isAddPage ? postGiftBag({ ...params }) : putGiftBag(form)).then(e => {
             router.back();
-            removeTab(String(route.name));
+            removeRouteTab(String(route.name));
           });
         },
       });

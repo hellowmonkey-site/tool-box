@@ -1,4 +1,4 @@
-import { TableData } from "@/config/type";
+import { StatusType, TableData } from "@/config/type";
 import { getAppList, IApp, appList, deleteApp } from "@/service/app";
 import { Button, message, Modal, Table } from "ant-design-vue";
 import { defineComponent, onMounted, ref } from "vue";
@@ -29,14 +29,14 @@ export default defineComponent({
       {
         dataIndex: "status",
         title: "状态",
-        customRender({ record }: TableData) {
-          return <>{record.status === 1 ? "启用" : "停用"}</>;
+        customRender({ record }: TableData<IApp>) {
+          return <>{record.status === StatusType.ONLINE ? "启用" : "停用"}</>;
         },
       },
       {
         key: "action",
         title: "操作",
-        customRender({ record }: TableData) {
+        customRender({ record }: TableData<IApp>) {
           return (
             <>
               <RouterLink to={{ name: "system-app-edit", params: { id: record.id } }} class="mar-r-2-item ant-btn ant-btn-primary">
@@ -46,8 +46,9 @@ export default defineComponent({
                 class="mar-r-2-item"
                 danger
                 onClick={() => {
+                  console.log(record);
                   Modal.confirm({
-                    title: `确认要删除${record.title}吗？`,
+                    title: `确认要删除${record.name}吗？`,
                     onOk: () => {
                       return deleteApp(record.id).then(() => {
                         fetchData();

@@ -46,10 +46,10 @@ export type UploadFileItem = {
   url: string;
 };
 
-export type TableData = {
+export type TableData<T = any> = {
   column: any;
   index: number;
-  record: any;
+  record: T;
   text: any;
 };
 export type UploadChangeParam = {
@@ -67,4 +67,10 @@ export type ExcludeInterface<T, E> = {
 export const enum NumberBoolean {
   FALSE,
   TRUE,
+}
+
+// 状态
+export const enum StatusType {
+  OFFLINE,
+  ONLINE,
 }

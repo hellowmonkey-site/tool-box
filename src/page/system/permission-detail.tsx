@@ -5,7 +5,7 @@ import { defaultPermission, getPermissionDetail, IPermission, postPermission, pu
 import { Button, Form, FormItem, Input, Modal, Select, SelectOption } from "ant-design-vue";
 import { defineComponent, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
-import { removeTab } from "@/service/common";
+import { removeRouteTab } from "@/service/common";
 
 interface moudle {
   name: string;
@@ -39,7 +39,7 @@ export default defineComponent({
           return (isAddPage ? postPermission({ ...params, parent_id: Number(route.query.parent_id || 0) }) : putPermission(form)).then(
             e => {
               router.back();
-              removeTab(String(route.name));
+              removeRouteTab(String(route.name));
             }
           );
         },

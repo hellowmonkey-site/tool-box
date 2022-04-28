@@ -1,6 +1,6 @@
 import router from "@/router";
 import { defaultNetAddress, getNetAddressDetail, INetAddress, postNetAddress, putNetAddress } from "@/service/netAddress";
-import { removeTab } from "@/service/common";
+import { removeRouteTab } from "@/service/common";
 import { Button, Col, Form, FormItem, Input, Modal } from "ant-design-vue";
 import { defineComponent, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
@@ -58,7 +58,7 @@ export default defineComponent({
         onOk: () => {
           return (isAddPage ? postNetAddress({ ...params }) : putNetAddress(form)).then(e => {
             router.back();
-            removeTab(String(route.name));
+            removeRouteTab(String(route.name));
           });
         },
       });

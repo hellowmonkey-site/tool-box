@@ -1,6 +1,6 @@
 import UserPermissions from "@/component/UserPermissions";
 import router from "@/router";
-import { removeTab } from "@/service/common";
+import { removeRouteTab } from "@/service/common";
 import { defaultRole, getRoleDetail, IRole, postRole, putRole } from "@/service/role";
 import { Button, Form, FormItem, Input, Modal, Radio, RadioGroup } from "ant-design-vue";
 import { defineComponent, onMounted, reactive, ref } from "vue";
@@ -32,7 +32,7 @@ export default defineComponent({
           }
           return (isAddPage ? postRole({ ...params }) : putRole(form)).then(e => {
             router.back();
-            removeTab(String(route.name));
+            removeRouteTab(String(route.name));
           });
         },
       });

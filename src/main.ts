@@ -5,6 +5,7 @@ import "@/static/style/antd.less";
 import "@/static/style/app.scss";
 
 import "@/extend";
+import "@/plugin/dayjs";
 import "@/plugin/ajax";
 import { getUserInfo, userToken } from "./service/user";
 

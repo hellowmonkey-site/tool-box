@@ -23,7 +23,7 @@ export default defineComponent({
       {
         key: "is_menu",
         title: "是不是菜单",
-        customRender({ record }: TableData) {
+        customRender({ record }: TableData<IRoute>) {
           return record.is_menu ? "是" : "否";
         },
       },
@@ -38,7 +38,7 @@ export default defineComponent({
       {
         key: "action",
         title: "操作",
-        customRender({ record }: TableData) {
+        customRender({ record }: TableData<IRoute>) {
           return (
             <>
               <RouterLink to={{ name: "system-route-index", query: { parent_id: record.id } }} class="mar-r-2-item ant-btn">
@@ -51,8 +51,9 @@ export default defineComponent({
                 class="mar-r-2-item"
                 danger
                 onClick={() => {
+                  console.log(record);
                   Modal.confirm({
-                    title: `确认要删除${record.title}吗？`,
+                    title: `确认要删除${record.name}吗？`,
                     onOk: () => {
                       return deleteRouter(record.id).then(() => {
                         fetchData();

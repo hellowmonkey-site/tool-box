@@ -1,7 +1,8 @@
 import { compressImage } from "@/helper/file";
+import router, { indexName, routes } from "@/router";
 import fly from "flyio";
 import { reactive, ref } from "vue";
-import { RouteLocationNormalizedLoaded } from "vue-router";
+import { RouteLocationNormalizedLoaded, RouteRecordName } from "vue-router";
 
 let timer: number;
 
@@ -17,18 +18,46 @@ export function uploadImage(file: File, compressImageOpts = defaultCompressImage
 }
 
 // tabs
-export const tabList = ref<RouteLocationNormalizedLoaded[]>([]);
-export const pushTab = (data: RouteLocationNormalizedLoaded) => {
-  if (tabList.value.some(v => v.name === data.name)) {
+export const routeTabList = ref<RouteLocationNormalizedLoaded[]>([]);
+export const pushRouteTab = (data: RouteLocationNormalizedLoaded) => {
+  const otherRoutes = routes.filter(v => v.name !== "index");
+  if (otherRoutes.some(v => v.name === data.name)) {
     return;
   }
-  if (data.name !== "login") {
-    tabList.value.push(data);
+
+  if (routeTabList.value.some(v => v.name === data.name)) {
+    return;
   }
+  routeTabList.value.push(data);
 };
 
-export const removeTab = (name: string) => {
-  tabList.value = tabList.value.filter(v => v.name !== name);
+export const removeRouteTab = (names: RouteRecordName | RouteRecordName[]) => {
+  const routeName = router.currentRoute.value.name;
+  if (routeName === indexName && routeTabList.value.length === 1) {
+    return;
+  }
+  let arr: RouteRecordName[] = [];
+  if (!Array.isArray(names)) {
+    arr = [names];
+  } else {
+    arr = names;
+  }
+  routeTabList.value = routeTabList.value.filter(v => {
+    if (v.name) {
+      return !arr.includes(v.name);
+    }
+    return false;
+  });
+  if (routeName && arr.includes(routeName)) {
+    let redirect = "/";
+    if (routeTabList.value.length) {
+      const last = routeTabList.value[routeTabList.value.length - 1]?.fullPath;
+      if (last) {
+        redirect = last;
+      }
+    }
+    router.push(redirect);
+  }
 };
 
 // spin

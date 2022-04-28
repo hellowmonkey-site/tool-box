@@ -1,5 +1,6 @@
+import { StatusType } from "@/config/type";
 import router from "@/router";
-import { removeTab } from "@/service/common";
+import { removeRouteTab } from "@/service/common";
 import { getModuleList, IModule, moduleList } from "@/service/module";
 import { defaultRoute, getRouterDetail, IRoute, postRouter, putRouter } from "@/service/route";
 import { Button, Form, FormItem, Input, Modal, Select, SelectOption, Switch } from "ant-design-vue";
@@ -31,7 +32,7 @@ export default defineComponent({
         onOk: () => {
           return (isAddPage ? postRouter({ ...params, parent_id: Number(route.query.parent_id || 0) }) : putRouter(form)).then(e => {
             router.back();
-            removeTab(String(route.name));
+            removeRouteTab(String(route.name));
           });
         },
       });
@@ -72,13 +73,19 @@ export default defineComponent({
           <Input placeholder="请输入name" v-model={[form.key, "value"]}></Input>
         </FormItem>
         <FormItem name="is_menu" label="是不是菜单" rules={[{ required: true, message: "请先输入是不是菜单" }]}>
-          <Switch v-model={[form.is_menu, "checked"]} checkedChildren="是" unCheckedChildren="不是" unCheckedValue={0} checkedValue={1} />
+          <Switch
+            v-model={[form.is_menu, "checked"]}
+            checkedChildren="是"
+            unCheckedChildren="不是"
+            unCheckedValue={StatusType.OFFLINE}
+            checkedValue={StatusType.ONLINE}
+          />
         </FormItem>
         <FormItem name="sort" label="排序" rules={[{ required: true, message: "请先输入排序" }]}>
           <Input placeholder="请输入排序" type="number" v-model={[form.sort, "value"]}></Input>
         </FormItem>
         <FormItem name="module_id" label="所属模块" rules={[{ required: true, message: "请选择所属模块" }]}>
-          <Select v-model={[form.module_id, "value"]}>
+          <Select v-model={[form.module_id, "value"]} placeholder="请选择模块">
             {() => dataSource.value.map(item => <SelectOption value={item.id}>{item.title}</SelectOption>)}
           </Select>
         </FormItem>

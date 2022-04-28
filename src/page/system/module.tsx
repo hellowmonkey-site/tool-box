@@ -25,7 +25,7 @@ export default defineComponent({
       {
         key: "action",
         title: "操作",
-        customRender({ record }: TableData) {
+        customRender({ record }: TableData<IModule>) {
           return (
             <>
               <RouterLink to={{ name: "system-module-edit", params: { id: record.id } }} class="mar-r-2-item ant-btn ant-btn-primary">

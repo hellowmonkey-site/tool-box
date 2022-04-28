@@ -1,4 +1,4 @@
-import { TableData } from "@/config/type";
+import { StatusType, TableData } from "@/config/type";
 import { defaultCouponData, defaultCouponSearch, getCouponList, ICouponData, ICouponSearch } from "@/service/coupon";
 import { Button, Table, message, Form, FormItem, Input, Card, Row, Col } from "ant-design-vue";
 import { defineComponent, onMounted, reactive } from "vue";
@@ -39,7 +39,7 @@ export default defineComponent({
         dataIndex: "status",
         title: "状态",
         customRender({ record }: TableData) {
-          return <>{record.status === 1 ? "已上线" : "已下线"}</>;
+          return <>{record.status === StatusType.ONLINE ? "已上线" : "已下线"}</>;
         },
       },
     ];
