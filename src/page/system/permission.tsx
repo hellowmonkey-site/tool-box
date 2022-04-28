@@ -10,7 +10,7 @@ export default defineComponent({
   setup: (props, ctx) => {
     const route = useRoute();
     const dataSource = ref<IPermission[]>([]);
-    let parent_id = 0;
+    let parentId = 0;
     const columns = [
       {
         dataIndex: "id",
@@ -43,7 +43,7 @@ export default defineComponent({
       {
         key: "action",
         title: "操作",
-        customRender({ record }: TableData) {
+        customRender({ record }: TableData<IPermission>) {
           return (
             <>
               <RouterLink to={{ name: "system-permission-index", query: { parent_id: record.id } }} class="mar-r-2-item ant-btn">
@@ -57,7 +57,7 @@ export default defineComponent({
                 danger
                 onClick={() => {
                   Modal.confirm({
-                    title: `确认要删除${record.title}吗？`,
+                    title: `确认要删除${record.name}吗？`,
                     onOk: () => {
                       return deletePermission(record.id).then(() => {
                         fetchData();
@@ -76,7 +76,7 @@ export default defineComponent({
 
     function fetchData() {
       const hide = message.loading("数据加载中...");
-      getPermissionList(parent_id)
+      getPermissionList(parentId)
         .then(data => {
           dataSource.value = data;
         })
@@ -86,19 +86,19 @@ export default defineComponent({
     }
 
     onBeforeRouteUpdate(e => {
-      parent_id = Number(e.query.parent_id || 0);
+      parentId = Number(e.query.parent_id || 0);
       fetchData();
     });
 
     onMounted(() => {
-      parent_id = Number(route.query.parent_id || 0);
+      parentId = Number(route.query.parent_id || 0);
       fetchData();
     });
 
     return () => (
       <>
         <div class="d-flex justify-end mar-b-3">
-          <RouterLink to={{ name: "system-permission-add", query: { parent_id } }} class="ant-btn">
+          <RouterLink to={{ name: "system-permission-add", query: { parent_id: parentId } }} class="ant-btn">
             添加权限
           </RouterLink>
         </div>

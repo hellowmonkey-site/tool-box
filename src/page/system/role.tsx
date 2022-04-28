@@ -1,14 +1,13 @@
 import { TableData } from "@/config/type";
-import { deleteRole, getRoleList, IRole, roleList } from "@/service/role";
+import { deleteRole, getRoleList, roleList } from "@/service/role";
 import { Button, message, Modal, Table } from "ant-design-vue";
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted } from "vue";
 import { RouterLink } from "vue-router";
 
 export default defineComponent({
   props: {},
   emits: [],
   setup: (props, ctx) => {
-    const dataSource = ref<IRole[]>([]);
     const columns = [
       {
         dataIndex: "id",
@@ -55,13 +54,9 @@ export default defineComponent({
 
     function fetchData() {
       const hide = message.loading("数据加载中...");
-      getRoleList()
-        .then(data => {
-          dataSource.value = roleList.value;
-        })
-        .finally(() => {
-          hide();
-        });
+      getRoleList().finally(() => {
+        hide();
+      });
     }
 
     onMounted(() => {
@@ -75,7 +70,7 @@ export default defineComponent({
             添加
           </RouterLink>
         </div>
-        <Table bordered columns={columns} pagination={false} dataSource={dataSource.value}></Table>
+        <Table bordered columns={columns} pagination={false} dataSource={roleList.value}></Table>
       </>
     );
   },

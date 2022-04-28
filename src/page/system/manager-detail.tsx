@@ -1,10 +1,10 @@
-import SelectTable from "@/component/SelectTable";
 import UploadImageList from "@/component/UploadImageList";
-import router from "@/router";
-import { defaultAdmin, getAdminDetail, getAdminList, IAdmin, postAdmin, putAdmin } from "@/service/admin";
+import { removeRouteTab } from "@/service/common";
+import { defaultManager, getManagerDetail, IManager, postManager, putManager } from "@/service/manager";
 import { getRoleList, roleList } from "@/service/role";
-import { Button, Dropdown, Form, FormItem, Input, InputPassword, Modal, Select, SelectOption, Table } from "ant-design-vue";
+import { Button, Form, FormItem, Input, InputPassword, Modal, Select, SelectOption } from "ant-design-vue";
 import { defineComponent, onMounted, reactive } from "vue";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   props: {
@@ -15,18 +15,19 @@ export default defineComponent({
   },
   emits: [],
   setup: (props, ctx) => {
-    const form = reactive<IAdmin>({
-      ...defaultAdmin,
+    const route = useRoute();
+
+    const form = reactive<IManager>({
+      ...defaultManager,
     });
     const isAddPage = props.id === null;
 
-    const handleSubmit = (params: IAdmin) => {
-      return console.log(params);
+    const handleSubmit = (params: IManager) => {
       Modal.confirm({
         title: `确认${isAddPage ? "添加" : "编辑此"}用户？`,
         onOk: () => {
-          return (isAddPage ? postAdmin({ ...params }) : putAdmin(form)).then(e => {
-            router.back();
+          return (isAddPage ? postManager({ ...params }) : putManager(form)).then(e => {
+            removeRouteTab(route.name!);
           });
         },
       });
@@ -34,14 +35,14 @@ export default defineComponent({
 
     onMounted(() => {
       if (!isAddPage) {
-        getAdminDetail(props.id).then(data => {
+        getManagerDetail(props.id).then(data => {
           form.id = data.id;
           form.username = data.username;
           form.home_url = data.home_url;
           form.avatar = data.avatar;
           form.nickname = data.nickname;
           form.remark = data.remark;
-          form.staff_id = data.staff_id;
+          form.client_id = data.client_id;
           form.role = data.role;
         });
       }
@@ -51,19 +52,6 @@ export default defineComponent({
 
     return () => (
       <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
-        <FormItem name="staff_id" label="员工" rules={[{ required: true, message: "请先选择员工" }]}>
-          <SelectTable
-            fetchData={e => {
-              console.log(e);
-              return getAdminList();
-            }}
-            showProp="username"
-            columns={[
-              { dataIndex: "id", title: "ID" },
-              { dataIndex: "username", title: "账号" },
-            ]}
-          ></SelectTable>
-        </FormItem>
         <FormItem name="username" label="登录账号" rules={[{ required: true, message: "请先输入登录账号" }]}>
           <Input placeholder="请输入登录账号" v-model={[form.username, "value"]}></Input>
         </FormItem>

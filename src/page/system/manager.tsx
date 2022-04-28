@@ -1,6 +1,6 @@
 import Avatar from "@/component/Avatar";
 import { TableData } from "@/config/type";
-import { deleteAdmin, getAdminList, IAdmin } from "@/service/admin";
+import { deleteManager, getManagerList, IManager } from "@/service/manager";
 import { Button, message, Modal, Table } from "ant-design-vue";
 import { defineComponent, onMounted, ref } from "vue";
 import { RouterLink } from "vue-router";
@@ -9,7 +9,7 @@ export default defineComponent({
   props: {},
   emits: [],
   setup: (props, ctx) => {
-    const dataSource = ref<IAdmin[]>([]);
+    const dataSource = ref<IManager[]>([]);
     const columns = [
       {
         dataIndex: "id",
@@ -22,14 +22,14 @@ export default defineComponent({
       {
         key: "avatar",
         title: "头像",
-        customRender({ record }: TableData) {
-          return <Avatar src={record.avatar} />;
+        customRender({ record }: TableData<IManager>) {
+          return record.avatar ? <Avatar src={record.avatar.path} /> : null;
         },
       },
       {
         key: "role",
         title: "角色",
-        customRender({ record }: TableData) {
+        customRender({ record }: TableData<IManager>) {
           return Array.from(record.role).join(",");
         },
       },
@@ -40,10 +40,10 @@ export default defineComponent({
       {
         key: "action",
         title: "操作",
-        customRender({ record }: TableData) {
+        customRender({ record }: TableData<IManager>) {
           return (
             <>
-              <RouterLink to={{ name: "system-admin-edit", params: { id: record.id } }} class="mar-r-2-item ant-btn ant-btn-primary">
+              <RouterLink to={{ name: "system-manager-edit", params: { id: record.id } }} class="mar-r-2-item ant-btn ant-btn-primary">
                 编辑
               </RouterLink>
               <Button
@@ -51,9 +51,9 @@ export default defineComponent({
                 danger
                 onClick={() => {
                   Modal.confirm({
-                    title: `确认要删除${record.title}吗？`,
+                    title: `确认要删除${record.nickname}吗？`,
                     onOk: () => {
-                      return deleteAdmin(record.id).then(() => {
+                      return deleteManager(record.id).then(() => {
                         fetchData();
                       });
                     },
@@ -70,7 +70,7 @@ export default defineComponent({
 
     function fetchData() {
       const hide = message.loading("数据加载中...");
-      getAdminList()
+      getManagerList()
         .then(data => {
           dataSource.value = data;
         })
@@ -86,7 +86,7 @@ export default defineComponent({
     return () => (
       <>
         <div class="d-flex justify-end mar-b-3">
-          <RouterLink to={{ name: "system-admin-add" }} class="ant-btn">
+          <RouterLink to={{ name: "system-manager-add" }} class="ant-btn">
             添加
           </RouterLink>
         </div>

@@ -1,12 +1,13 @@
 import { NumberBoolean } from "@/config/type";
 import flyio from "flyio";
+import { ref } from "vue";
 
 export interface IRoute {
   children?: IRoute[];
   id: number;
   is_menu: NumberBoolean;
   key: string;
-  module_id?: number;
+  module_id: number | null;
   name: string;
   parent_id: number;
   sort: number;
@@ -20,9 +21,11 @@ export const defaultRoute: IRoute = {
   sort: 0,
   name: "",
   url: "",
-  module_id: undefined,
+  module_id: null,
   id: 0,
 };
+
+export const allRouteList = ref<IRoute[]>([]);
 
 // 获取父级路由列表
 export const getRouterList = (parent_id = 0) => {
@@ -51,5 +54,11 @@ export const putRouter = ({ id, ...params }: IRoute) => {
 
 // 获取所有路由
 export const getAllRouterList = () => {
-  return flyio.get<IRoute[]>("router", {}).then(data => data.data);
+  return flyio
+    .get<IRoute[]>("router")
+    .then(data => data.data)
+    .then(data => {
+      allRouteList.value = data;
+      return data;
+    });
 };

@@ -23,7 +23,6 @@ export default defineComponent({
       getAllPermissionList().then(data => {
         data.forEach(element => {
           element.key = element.id.toString();
-          element.title = element.name;
           handleChildKey(element);
         });
         permissionTreeData.value = data;
@@ -31,7 +30,6 @@ export default defineComponent({
       getAllRouterList().then(data => {
         data.forEach(element => {
           element.key = element.id.toString();
-          element.title = element.name;
           handleChildKey(element);
         });
         routeTreeData.value = data;
@@ -42,7 +40,6 @@ export default defineComponent({
       if (child && child.children && child.children.length > 0) {
         child.children.forEach(element => {
           element.key = element.id.toString();
-          element.title = element.name;
           handleChildKey(element);
         });
       } else {
@@ -72,11 +69,11 @@ export default defineComponent({
     });
 
     return () => (
-      <div class="d-flex direction-row justify-around align-items-stretch">
-        <Card title="页面权限管理" style="width:49%;">
+      <div class="d-flex justify-around align-items-stretch">
+        <Card title="页面权限管理" class="mar-r-3-item flex-item-extend">
           <Tree checkable treeData={routeTreeData.value} v-model={[routeCheckedKeys.value, "checkedKeys"]}></Tree>
         </Card>
-        <Card title="操作权限管理" style="width:49%;">
+        <Card title="操作权限管理" class="mar-r-3-item flex-item-extend">
           <Tree checkable treeData={permissionTreeData.value} v-model={[permissionCheckedKeys.value, "checkedKeys"]}></Tree>
         </Card>
       </div>

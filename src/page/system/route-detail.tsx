@@ -1,10 +1,9 @@
 import { StatusType } from "@/config/type";
-import router from "@/router";
 import { removeRouteTab } from "@/service/common";
-import { getModuleList, IModule, moduleList } from "@/service/module";
+import { getModuleList, moduleList } from "@/service/module";
 import { defaultRoute, getRouterDetail, IRoute, postRouter, putRouter } from "@/service/route";
 import { Button, Form, FormItem, Input, Modal, Select, SelectOption, Switch } from "ant-design-vue";
-import { defineComponent, onMounted, reactive, ref } from "vue";
+import { defineComponent, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -22,17 +21,12 @@ export default defineComponent({
     });
     const isAddPage = props.id === null;
 
-    const dataSource = ref<IModule[]>([]);
-
     const handleSubmit = (params: IRoute) => {
-      console.log(params);
-
       Modal.confirm({
         title: `确认${isAddPage ? "添加" : "编辑此"}页面？`,
         onOk: () => {
           return (isAddPage ? postRouter({ ...params, parent_id: Number(route.query.parent_id || 0) }) : putRouter(form)).then(e => {
-            router.back();
-            removeRouteTab(String(route.name));
+            removeRouteTab(route.name!);
           });
         },
       });
@@ -48,20 +42,9 @@ export default defineComponent({
           form.sort = data.sort;
           form.name = data.name;
           form.module_id = data.module_id;
-          // ({
-          //   id: form.id,
-          //   is_menu: form.is_menu,
-          //   key: form.key,
-          //   parent_id: form.parent_id,
-          //   sort: form.sort,
-          //   name: form.name,
-          //   module_id: form.module_id,
-          // } = data)
         });
       }
-      getModuleList().then(data => {
-        dataSource.value = moduleList.value;
-      });
+      getModuleList();
     });
 
     return () => (
@@ -86,7 +69,7 @@ export default defineComponent({
         </FormItem>
         <FormItem name="module_id" label="所属模块" rules={[{ required: true, message: "请选择所属模块" }]}>
           <Select v-model={[form.module_id, "value"]} placeholder="请选择模块">
-            {() => dataSource.value.map(item => <SelectOption value={item.id}>{item.title}</SelectOption>)}
+            {() => moduleList.value.map(item => <SelectOption value={item.id}>{item.title}</SelectOption>)}
           </Select>
         </FormItem>
         <FormItem name="url" label="url" rules={[{ required: true, message: "请先输入路由地址" }]}>

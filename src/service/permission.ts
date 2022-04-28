@@ -1,4 +1,5 @@
 import flyio from "flyio";
+import { ref } from "vue";
 
 export interface IPermission {
   children?: IPermission[];
@@ -6,12 +7,11 @@ export interface IPermission {
   parent_id: number;
   sort: number;
   path: string;
-  app_id: string;
-  module_id: number;
+  app_id: number | null;
+  module_id: number | null;
   method: string;
   id: number;
   name: string;
-  title: string | undefined;
 }
 
 export const defaultPermission: IPermission = {
@@ -19,13 +19,14 @@ export const defaultPermission: IPermission = {
   parent_id: 0,
   sort: 0,
   method: "",
-  module_id: 0,
+  module_id: null,
   path: "",
-  app_id: "",
+  app_id: null,
   id: 0,
   name: "",
-  title: "",
 };
+
+export const allPermissionList = ref<IPermission[]>([]);
 
 // 获取父级权限列表
 export const getPermissionList = (parent_id = 0) => {
@@ -54,5 +55,11 @@ export const putPermission = ({ id, ...params }: IPermission) => {
 
 // 获取所有权限
 export const getAllPermissionList = () => {
-  return flyio.get<IPermission[]>("permission", {}).then(data => data.data);
+  return flyio
+    .get<IPermission[]>("permission")
+    .then(data => data.data)
+    .then(data => {
+      allPermissionList.value = data;
+      return data;
+    });
 };

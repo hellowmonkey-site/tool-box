@@ -1,5 +1,5 @@
 import { TableData } from "@/config/type";
-import { deleteRouter, getRouterList, IRoute } from "@/service/route";
+import { deleteClient, getClientList, IClient } from "@/service/client";
 import { Button, message, Modal, Table } from "ant-design-vue";
 import { defineComponent, onMounted, ref } from "vue";
 import { onBeforeRouteUpdate, RouterLink, useRoute } from "vue-router";
@@ -9,7 +9,7 @@ export default defineComponent({
   emits: [],
   setup: (props, ctx) => {
     const route = useRoute();
-    const dataSource = ref<IRoute[]>([]);
+    const dataSource = ref<IClient[]>([]);
     let parentId = 0;
     const columns = [
       {
@@ -19,13 +19,6 @@ export default defineComponent({
       {
         dataIndex: "name",
         title: "标题",
-      },
-      {
-        key: "is_menu",
-        title: "是不是菜单",
-        customRender({ record }: TableData<IRoute>) {
-          return record.is_menu ? "是" : "否";
-        },
       },
       {
         dataIndex: "sort",
@@ -38,7 +31,7 @@ export default defineComponent({
       {
         key: "action",
         title: "操作",
-        customRender({ record }: TableData<IRoute>) {
+        customRender({ record }: TableData<IClient>) {
           return (
             <>
               <RouterLink to={{ name: "system-route-index", query: { parent_id: record.id } }} class="mar-r-2-item ant-btn">
@@ -55,7 +48,7 @@ export default defineComponent({
                   Modal.confirm({
                     title: `确认要删除${record.name}吗？`,
                     onOk: () => {
-                      return deleteRouter(record.id).then(() => {
+                      return deleteClient(record.id).then(() => {
                         fetchData();
                       });
                     },
@@ -72,7 +65,7 @@ export default defineComponent({
 
     function fetchData() {
       const hide = message.loading("数据加载中...");
-      getRouterList(parentId)
+      getClientList(parentId)
         .then(data => {
           dataSource.value = data;
         })

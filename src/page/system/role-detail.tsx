@@ -1,10 +1,11 @@
-import UserPermissions from "@/component/UserPermissions";
-import router from "@/router";
+import { StatusType, TreeType } from "@/config/type";
 import { removeRouteTab } from "@/service/common";
+import { allPermissionList, getAllPermissionList, IPermission } from "@/service/permission";
 import { defaultRole, getRoleDetail, IRole, postRole, putRole } from "@/service/role";
-import { Button, Form, FormItem, Input, Modal, Radio, RadioGroup } from "ant-design-vue";
-import { defineComponent, onMounted, reactive, ref } from "vue";
-import route from "./route";
+import { allRouteList, getAllRouterList, IRoute } from "@/service/route";
+import { Button, Card, Form, FormItem, Input, Modal, Radio, RadioGroup, Tree } from "ant-design-vue";
+import { computed, defineComponent, onMounted, reactive, ref } from "vue";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   props: {
@@ -15,10 +16,34 @@ export default defineComponent({
   },
   emits: [],
   setup: (props, ctx) => {
+    const route = useRoute();
     const form = reactive<IRole>({
       ...defaultRole,
     });
     const isAddPage = props.id === null;
+
+    const routeCheckedKeys = ref<string[]>([]);
+    const permissionCheckedKeys = ref<string[]>([]);
+
+    function handleChildKey<T extends { id: number; parent_id: number; name: string }>(arr: T[] = [], parentId = 0): TreeType[] {
+      const data = arr
+        .filter(v => v.parent_id === parentId)
+        .map(v => {
+          return {
+            key: String(v.id),
+            title: v.name,
+            children: handleChildKey(arr, v.id),
+          };
+        });
+      return data;
+    }
+
+    const routeTreeData = computed(() => {
+      return handleChildKey<IRoute>(allRouteList.value);
+    });
+    const permissionTreeData = computed(() => {
+      return handleChildKey<IPermission>(allPermissionList.value);
+    });
 
     const handleSubmit = (params: IRole) => {
       Modal.confirm({
@@ -31,7 +56,6 @@ export default defineComponent({
             params.route = form.route;
           }
           return (isAddPage ? postRole({ ...params }) : putRole(form)).then(e => {
-            router.back();
             removeRouteTab(String(route.name));
           });
         },
@@ -41,7 +65,6 @@ export default defineComponent({
     onMounted(() => {
       if (!isAddPage) {
         getRoleDetail(props.id).then(data => {
-          console.log(data);
           form.id = data.id;
           form.name = data.name;
           form.home_url = data.home_url;
@@ -50,6 +73,8 @@ export default defineComponent({
           form.route = data.route;
         });
       }
+      getAllRouterList();
+      getAllPermissionList();
     });
 
     return () => (
@@ -62,21 +87,27 @@ export default defineComponent({
         </FormItem>
         <FormItem name="status" label="是否激活" rules={[{ required: true, message: "请选择是否激活" }]}>
           <RadioGroup v-model={[form.status, "value"]}>
-            <Radio value={1}>是</Radio>
-            <Radio value={0}>否</Radio>
+            <Radio value={StatusType.ONLINE}>是</Radio>
+            <Radio value={StatusType.OFFLINE}>否</Radio>
           </RadioGroup>
         </FormItem>
         <FormItem label="权限管理">
-          <UserPermissions
-            premissions={form.permissions}
-            route={form.route}
-            onPermissionKeyChange={item => {
-              form.permissions = item;
-            }}
-            onRouteKeyChange={item => {
-              form.route = item;
-            }}
-          ></UserPermissions>
+          <div class="d-flex justify-around align-items-stretch">
+            <Card title="页面权限管理" class="mar-r-3-item flex-item-extend">
+              <Tree checkable treeData={routeTreeData.value} v-model={[routeCheckedKeys.value, "checkedKeys"]}></Tree>
+            </Card>
+            <Card title="操作权限管理" class="mar-r-3-item flex-item-extend">
+              <Tree
+                checkable
+                // loadData={node => {
+                //   console.log(node);
+                //   return Promise.resolve();
+                // }}
+                treeData={permissionTreeData.value}
+                v-model={[permissionCheckedKeys.value, "checkedKeys"]}
+              ></Tree>
+            </Card>
+          </div>
         </FormItem>
 
         <div class="d-flex align-items-center justify-center mar-t-5">

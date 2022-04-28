@@ -56,31 +56,31 @@ const systemRoutes: RouteRecordRaw[] = [
     component: () => import("@/page/system/role-detail"),
   },
   {
-    name: "system-admin-index",
-    path: "/system/admin",
+    name: "system-manager-index",
+    path: "/system/manager",
     meta: {
       title: "用户设置",
     },
-    component: () => import("@/page/system/admin"),
+    component: () => import("@/page/system/manager"),
   },
   {
-    name: "system-admin-add",
-    path: "/system/admin/add",
+    name: "system-manager-add",
+    path: "/system/manager/add",
     meta: {
       title: "添加用户",
       keepAlive: true,
     },
-    component: () => import("@/page/system/admin-detail"),
+    component: () => import("@/page/system/manager-detail"),
   },
   {
-    name: "system-admin-edit",
-    path: "/system/admin/:id(\\d+)",
+    name: "system-manager-edit",
+    path: "/system/manager/:id(\\d+)",
     props: true,
     meta: {
       title: "用户编辑",
       keepAlive: true,
     },
-    component: () => import("@/page/system/admin-detail"),
+    component: () => import("@/page/system/manager-detail"),
   },
   {
     name: "system-banner",
@@ -214,6 +214,33 @@ const systemRoutes: RouteRecordRaw[] = [
       keepAlive: true,
     },
     component: () => import("@/page/system/netAddress-detail"),
+  },
+  {
+    name: "system-client-index",
+    path: "/system/client",
+    meta: {
+      title: "用户设置",
+    },
+    component: () => import("@/page/system/client"),
+  },
+  {
+    name: "system-client-add",
+    path: "/system/client/add",
+    meta: {
+      title: "添加用户",
+      keepAlive: true,
+    },
+    component: () => import("@/page/system/client-detail"),
+  },
+  {
+    name: "system-client-edit",
+    path: "/system/client/:id(\\d+)",
+    props: true,
+    meta: {
+      title: "用户编辑",
+      keepAlive: true,
+    },
+    component: () => import("@/page/system/client-detail"),
   },
 ];
 export default systemRoutes;

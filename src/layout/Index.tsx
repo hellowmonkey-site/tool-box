@@ -61,14 +61,14 @@ export default defineComponent({
               if (item.children?.length) {
                 <MenuItemGroup>
                   {item.children.map(child => {
-                    <MenuItem key={child.id} title={child.title}>
-                      {child.title}
+                    <MenuItem key={child.id} title={child.name}>
+                      {child.name}
                     </MenuItem>;
                   })}
                 </MenuItemGroup>;
               } else {
-                <MenuItem key={item.id} title={item.title}>
-                  {item.title}
+                <MenuItem key={item.id} title={item.name}>
+                  {item.name}
                 </MenuItem>;
               }
             })}
@@ -80,6 +80,20 @@ export default defineComponent({
         </LayoutSider>
         <Layout>
           <LayoutHeader class="app-header d-flex align-items-end">
+            <div class="d-flex align-items-center pad-l-3 pad-r-3 mar-b-2">
+              <Button
+                class="mar-r-3-item"
+                onClick={() => {
+                  isCollapsed.value = !isCollapsed.value;
+                }}
+              >
+                {{
+                  icon() {
+                    return isCollapsed.value ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />;
+                  },
+                }}
+              </Button>
+            </div>
             <Tabs
               type="editable-card"
               hideAdd
@@ -99,24 +113,6 @@ export default defineComponent({
               }}
             >
               {{
-                leftExtra() {
-                  return (
-                    <div class="d-flex align-items-center pad-l-3 pad-r-3">
-                      <Button
-                        class="mar-r-3-item"
-                        onClick={() => {
-                          isCollapsed.value = !isCollapsed.value;
-                        }}
-                      >
-                        {{
-                          icon() {
-                            return isCollapsed.value ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />;
-                          },
-                        }}
-                      </Button>
-                    </div>
-                  );
-                },
                 default() {
                   return (
                     <>
@@ -194,21 +190,23 @@ export default defineComponent({
             </div> */}
           </LayoutHeader>
           <LayoutContent>
-            <RouterView>
-              {{
-                default: ({ Component, route }: { Component: () => JSX.Element; route: RouteLocationNormalizedLoaded }) => {
-                  if (route.meta.keepAlive) {
-                    return (
-                      <KeepAlive>
-                        <Component />
-                      </KeepAlive>
-                    );
-                  } else {
-                    return <Component />;
-                  }
-                },
-              }}
-            </RouterView>
+            <div class="pad-4">
+              <RouterView>
+                {{
+                  default: ({ Component, route }: { Component: () => JSX.Element; route: RouteLocationNormalizedLoaded }) => {
+                    if (route.meta.keepAlive) {
+                      return (
+                        <KeepAlive>
+                          <Component />
+                        </KeepAlive>
+                      );
+                    } else {
+                      return <Component />;
+                    }
+                  },
+                }}
+              </RouterView>
+            </div>
           </LayoutContent>
         </Layout>
       </Layout>

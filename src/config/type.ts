@@ -74,3 +74,10 @@ export const enum StatusType {
   OFFLINE,
   ONLINE,
 }
+
+// 树形
+export type TreeType = {
+  key: string;
+  title: string;
+  children: TreeType[];
+};
