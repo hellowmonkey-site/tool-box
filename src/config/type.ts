@@ -7,14 +7,14 @@ export type ObjType = {
 export type FunType = (...args: any[]) => any;
 
 export type StorageType = {
-  id: number | string;
+  id: number;
   path: string;
   name?: string;
 };
 
-export type ResponseData = {
+export type ResponseData<T = any> = {
   code: number;
-  data: any;
+  data: T;
   msg: string;
 };
 
@@ -80,4 +80,19 @@ export type TreeType = {
   key: string;
   title: string;
   children: TreeType[];
+};
+
+// 分页数据
+export type PageData<T = any> = {
+  page: number;
+  page_count: number;
+  per_page: number;
+  total: number;
+  totals: number;
+  items: T[];
+};
+
+export type PageParamsType = {
+  page_size?: number;
+  page?: number;
 };

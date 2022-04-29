@@ -1,5 +1,4 @@
 import storage from "@/helper/storage";
-import { message } from "ant-design-vue";
 import flyio from "flyio";
 import { computed, reactive, ref } from "vue";
 import { IRoute } from "./route";
@@ -7,6 +6,16 @@ import { IRoute } from "./route";
 export interface IUser {
   id: number;
   username: string;
+}
+
+export interface IUserInfo {
+  info: IUser;
+  route_tree: IRoute[];
+  permissions: string[];
+  route: string[];
+}
+export interface IUserLogin extends IUserInfo {
+  token: string;
 }
 
 const token: string = storage.get("token") as string;
@@ -24,27 +33,24 @@ export const requestHeaders = computed(() => ({
   Authorization: userToken.value ? `Bearer ${userToken.value}` : "",
 }));
 
-function setUserToken(data: string) {
+export function setUserToken(data: string) {
   userToken.value = data;
   storage.set("token", data);
 }
 
-function setUserInfo(params: { info: IUser; menu_tree: IRoute[]; permissions: string[]; router: string[] }) {
+export function setUserInfo(params: IUserInfo) {
   userInfo.id = params.info.id;
   userInfo.username = params.info.username;
-  userRoutes.value = params.router;
-  userMenus.value = params.menu_tree;
-  userHandles.value = params.permissions;
+  userRoutes.value = params.route || [];
+  userMenus.value = params.route_tree || [];
+  userHandles.value = params.permissions || [];
 }
 
 // 登录
 export const postLogin = (params: any) => {
   return flyio
-    .post("login", params)
-    .then((data: any) => {
-      message.success(data.msg);
-      return data.data;
-    })
+    .post<IUserLogin>("login", params)
+    .then(data => data.data)
     .then(data => {
       const { token, ...params } = data;
       setUserToken(token);
@@ -56,8 +62,8 @@ export const postLogin = (params: any) => {
 // 获取用户信息
 export const getUserInfo = () => {
   return flyio
-    .get("userInfo")
-    .then((data: any) => data.data)
+    .get<IUserInfo>("managerInfo")
+    .then(data => data.data)
     .then(data => {
       setUserInfo(data);
       return data;

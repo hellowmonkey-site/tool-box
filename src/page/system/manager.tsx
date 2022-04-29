@@ -1,15 +1,24 @@
 import Avatar from "@/component/Avatar";
-import { TableData } from "@/config/type";
-import { deleteManager, getManagerList, IManager } from "@/service/manager";
+import { PageData, PageParamsType, TableData } from "@/config/type";
+import { deleteManager, getManagerPageList, IManager } from "@/service/manager";
 import { Button, message, Modal, Table } from "ant-design-vue";
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, reactive, ref } from "vue";
 import { RouterLink } from "vue-router";
 
 export default defineComponent({
   props: {},
   emits: [],
   setup: (props, ctx) => {
-    const dataSource = ref<IManager[]>([]);
+    const form = reactive<
+      PageParamsType & {
+        parent_id: number;
+      }
+    >({
+      parent_id: 0,
+      page_size: 20,
+      page: 1,
+    });
+    const dataSource = ref<PageData<IManager>>();
     const columns = [
       {
         dataIndex: "id",
@@ -27,10 +36,10 @@ export default defineComponent({
         },
       },
       {
-        key: "role",
+        key: "roles",
         title: "角色",
         customRender({ record }: TableData<IManager>) {
-          return Array.from(record.role).join(",");
+          return Array.from(record.roles).join(",");
         },
       },
       {
@@ -51,7 +60,7 @@ export default defineComponent({
                 danger
                 onClick={() => {
                   Modal.confirm({
-                    title: `确认要删除${record.nickname}吗？`,
+                    title: `确认要删除${record.username}吗？`,
                     onOk: () => {
                       return deleteManager(record.id).then(() => {
                         fetchData();
@@ -70,7 +79,7 @@ export default defineComponent({
 
     function fetchData() {
       const hide = message.loading("数据加载中...");
-      getManagerList()
+      getManagerPageList(form)
         .then(data => {
           dataSource.value = data;
         })
@@ -86,11 +95,30 @@ export default defineComponent({
     return () => (
       <>
         <div class="d-flex justify-end mar-b-3">
-          <RouterLink to={{ name: "system-manager-add" }} class="ant-btn">
-            添加
+          <RouterLink to={{ name: "system-manager-add" }} class="ant-btn ant-btn-primary">
+            添加员工
           </RouterLink>
         </div>
-        <Table bordered columns={columns} pagination={false} dataSource={dataSource.value}></Table>
+        <Table
+          bordered
+          columns={columns}
+          pagination={{
+            total: dataSource.value?.totals,
+            current: dataSource.value?.page,
+            pageSize: dataSource.value?.per_page,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal(total, range) {
+              return `共${total}条数据, 当前为${range.join("-")}条`;
+            },
+            onChange(page, pageSize) {
+              form.page = page;
+              form.page_size = pageSize;
+              fetchData();
+            },
+          }}
+          dataSource={dataSource.value?.items}
+        ></Table>
       </>
     );
   },

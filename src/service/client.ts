@@ -1,15 +1,17 @@
-import { NumberBoolean, StatusType } from "@/config/type";
+import { NumberBoolean, PageData, StatusType } from "@/config/type";
 import flyio from "flyio";
 
 export interface IClient {
-  extends: number[] | null;
+  created_at: string;
+  deleted_at: string | null;
   id: number;
   is_group: NumberBoolean;
-  module: number[];
+  modules: number[];
   name: string;
   parent_id: number;
   short_name: string;
   status: StatusType;
+  updated_at: string | null;
 }
 
 export const defaultClient: IClient = {
@@ -17,15 +19,17 @@ export const defaultClient: IClient = {
   parent_id: 0,
   name: "",
   id: 0,
-  extends: null,
-  module: [],
+  modules: [],
   short_name: "",
   status: StatusType.ONLINE,
+  updated_at: null,
+  created_at: "",
+  deleted_at: null,
 };
 
 // 获取父级路由列表
-export const getClientList = (parent_id = 0) => {
-  return flyio.get<IClient[]>("client", { page: 1, row: 20 }).then(data => data.data);
+export const getClientPageList = (params = {}) => {
+  return flyio.get<PageData<IClient>>("client", params).then(data => data.data);
 };
 
 // 获取路由详情
@@ -46,9 +50,4 @@ export const postClient = (params: IClient) => {
 // 编辑路由
 export const putClient = ({ id, ...params }: IClient) => {
   return flyio.put(`client/${id}`, params).then(data => data.data);
-};
-
-// 获取所有路由
-export const getAllClientList = () => {
-  return flyio.get<IClient[]>("client", {}).then(data => data.data);
 };

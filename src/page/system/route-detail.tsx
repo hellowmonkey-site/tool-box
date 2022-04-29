@@ -48,39 +48,41 @@ export default defineComponent({
     });
 
     return () => (
-      <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
-        <FormItem name="name" label="标题" rules={[{ required: true, message: "请先输入标题" }]}>
-          <Input placeholder="请输入标题" v-model={[form.name, "value"]}></Input>
-        </FormItem>
-        <FormItem name="key" label="name" rules={[{ required: true, message: "请先输入name" }]}>
-          <Input placeholder="请输入name" v-model={[form.key, "value"]}></Input>
-        </FormItem>
-        <FormItem name="is_menu" label="是不是菜单" rules={[{ required: true, message: "请先输入是不是菜单" }]}>
-          <Switch
-            v-model={[form.is_menu, "checked"]}
-            checkedChildren="是"
-            unCheckedChildren="不是"
-            unCheckedValue={StatusType.OFFLINE}
-            checkedValue={StatusType.ONLINE}
-          />
-        </FormItem>
-        <FormItem name="sort" label="排序" rules={[{ required: true, message: "请先输入排序" }]}>
-          <Input placeholder="请输入排序" type="number" v-model={[form.sort, "value"]}></Input>
-        </FormItem>
-        <FormItem name="module_id" label="所属模块" rules={[{ required: true, message: "请选择所属模块" }]}>
-          <Select v-model={[form.module_id, "value"]} placeholder="请选择模块">
-            {() => moduleList.value.map(item => <SelectOption value={item.id}>{item.title}</SelectOption>)}
-          </Select>
-        </FormItem>
-        <FormItem name="url" label="url" rules={[{ required: true, message: "请先输入路由地址" }]}>
-          <Input placeholder="请输入路由地址" type="text" v-model={[form.url, "value"]}></Input>
-        </FormItem>
-        <div class="d-flex align-items-center justify-center">
-          <Button htmlType="submit" type="primary" size="large">
-            提交
-          </Button>
-        </div>
-      </Form>
+      <div class="box">
+        <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
+          <FormItem name="name" label="标题" rules={[{ required: true, message: "请先输入标题" }]}>
+            <Input placeholder="请输入标题" v-model={[form.name, "value"]}></Input>
+          </FormItem>
+          <FormItem name="key" label="name" rules={[{ required: true, message: "请先输入name" }]}>
+            <Input placeholder="请输入name" v-model={[form.key, "value"]}></Input>
+          </FormItem>
+          <FormItem name="is_menu" label="是不是菜单" rules={[{ required: true, message: "请先输入是不是菜单" }]}>
+            <Switch
+              v-model={[form.is_menu, "checked"]}
+              checkedChildren="是"
+              unCheckedChildren="不是"
+              unCheckedValue={StatusType.OFFLINE}
+              checkedValue={StatusType.ONLINE}
+            />
+          </FormItem>
+          <FormItem name="sort" label="排序" rules={[{ required: true, message: "请先输入排序" }]}>
+            <Input placeholder="请输入排序" type="number" v-model={[form.sort, "value"]}></Input>
+          </FormItem>
+          <FormItem name="module_id" label="所属模块" rules={[{ required: true, message: "请选择所属模块" }]}>
+            <Select v-model={[form.module_id, "value"]} placeholder="请选择模块">
+              {() => moduleList.value.map(item => <SelectOption value={item.id}>{item.title}</SelectOption>)}
+            </Select>
+          </FormItem>
+          <FormItem name="url" label="url" rules={[{ required: true, message: "请先输入路由地址" }]}>
+            <Input placeholder="请输入路由地址" type="text" v-model={[form.url, "value"]}></Input>
+          </FormItem>
+          <div class="d-flex align-items-center justify-center">
+            <Button htmlType="submit" type="primary" size="large">
+              提交
+            </Button>
+          </div>
+        </Form>
+      </div>
     );
   },
 });

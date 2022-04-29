@@ -24,6 +24,12 @@ body {
   background-color: var(--page-background-color);
 }
 
+.box {
+  background: #fff;
+  padding: var(--offset-5);
+  border-radius: 5px;
+}
+
 // 布局
 .app-header {
   background-color: #fff;
@@ -35,6 +41,10 @@ body {
   .ant-tabs-nav {
     margin: 0;
   }
+}
+
+.app-layout {
+  background-color: var(--page-background-color);
 }
 
 .app-sider {

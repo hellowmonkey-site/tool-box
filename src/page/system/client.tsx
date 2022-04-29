@@ -1,7 +1,7 @@
-import { TableData } from "@/config/type";
-import { deleteClient, getClientList, IClient } from "@/service/client";
+import { PageData, PageParamsType, StatusType, TableData } from "@/config/type";
+import { deleteClient, getClientPageList, IClient } from "@/service/client";
 import { Button, message, Modal, Table } from "ant-design-vue";
-import { defineComponent, onMounted, ref } from "vue";
+import { defineComponent, onMounted, reactive, ref } from "vue";
 import { onBeforeRouteUpdate, RouterLink, useRoute } from "vue-router";
 
 export default defineComponent({
@@ -9,8 +9,18 @@ export default defineComponent({
   emits: [],
   setup: (props, ctx) => {
     const route = useRoute();
-    const dataSource = ref<IClient[]>([]);
-    let parentId = 0;
+    const dataSource = ref<PageData<IClient>>();
+
+    const form = reactive<
+      PageParamsType & {
+        parent_id: number;
+      }
+    >({
+      parent_id: 0,
+      page_size: 20,
+      page: 1,
+    });
+
     const columns = [
       {
         dataIndex: "id",
@@ -18,15 +28,18 @@ export default defineComponent({
       },
       {
         dataIndex: "name",
-        title: "标题",
+        title: "名称",
       },
       {
-        dataIndex: "sort",
-        title: "排序",
+        dataIndex: "short_name",
+        title: "简称",
       },
       {
-        dataIndex: "key",
-        title: "name",
+        key: "key",
+        title: "状态",
+        customRender({ record }: TableData<IClient>) {
+          return record.status === StatusType.OFFLINE ? "下线" : "上线";
+        },
       },
       {
         key: "action",
@@ -34,10 +47,10 @@ export default defineComponent({
         customRender({ record }: TableData<IClient>) {
           return (
             <>
-              <RouterLink to={{ name: "system-route-index", query: { parent_id: record.id } }} class="mar-r-2-item ant-btn">
-                查看子页面
+              <RouterLink to={{ name: "system-client-index", query: { parent_id: record.id } }} class="mar-r-2-item ant-btn">
+                查看子商家
               </RouterLink>
-              <RouterLink to={{ name: "system-route-edit", params: { id: record.id } }} class="mar-r-2-item ant-btn ant-btn-primary">
+              <RouterLink to={{ name: "system-client-edit", params: { id: record.id } }} class="mar-r-2-item ant-btn ant-btn-primary">
                 编辑
               </RouterLink>
               <Button
@@ -65,7 +78,7 @@ export default defineComponent({
 
     function fetchData() {
       const hide = message.loading("数据加载中...");
-      getClientList(parentId)
+      getClientPageList(form)
         .then(data => {
           dataSource.value = data;
         })
@@ -75,23 +88,42 @@ export default defineComponent({
     }
 
     onBeforeRouteUpdate(e => {
-      parentId = Number(e.query.parent_id || 0);
+      form.parent_id = Number(e.query.parent_id || 0);
       fetchData();
     });
 
     onMounted(() => {
-      parentId = Number(route.query.parent_id || 0);
+      form.parent_id = Number(route.query.parent_id || 0);
       fetchData();
     });
 
     return () => (
       <>
         <div class="d-flex justify-end mar-b-3">
-          <RouterLink to={{ name: "system-route-add", query: { parent_id: parentId } }} class="ant-btn">
-            添加页面
+          <RouterLink to={{ name: "system-client-add", query: { parent_id: form.parent_id } }} class="ant-btn">
+            添加商家
           </RouterLink>
         </div>
-        <Table bordered columns={columns} pagination={false} dataSource={dataSource.value}></Table>
+        <Table
+          bordered
+          columns={columns}
+          pagination={{
+            total: dataSource.value?.totals,
+            current: dataSource.value?.page,
+            pageSize: dataSource.value?.per_page,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal(total, range) {
+              return `共${total}条数据, 当前为${range.join("-")}条`;
+            },
+            onChange(page, pageSize) {
+              form.page = page;
+              form.page_size = pageSize;
+              fetchData();
+            },
+          }}
+          dataSource={dataSource.value?.items}
+        ></Table>
       </>
     );
   },

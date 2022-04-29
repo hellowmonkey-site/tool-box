@@ -6,6 +6,7 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/route",
     meta: {
       title: "页面设置",
+      keepAlive: true,
     },
     component: () => import("@/page/system/route"),
   },
@@ -14,7 +15,6 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/route/add",
     meta: {
       title: "添加页面",
-      keepAlive: true,
     },
     component: () => import("@/page/system/route-detail"),
   },
@@ -24,7 +24,6 @@ const systemRoutes: RouteRecordRaw[] = [
     props: true,
     meta: {
       title: "页面编辑",
-      keepAlive: true,
     },
     component: () => import("@/page/system/route-detail"),
   },
@@ -33,6 +32,7 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/role",
     meta: {
       title: "角色设置",
+      keepAlive: true,
     },
     component: () => import("@/page/system/role"),
   },
@@ -41,7 +41,6 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/role/add",
     meta: {
       title: "添加角色",
-      keepAlive: true,
     },
     component: () => import("@/page/system/role-detail"),
   },
@@ -51,7 +50,6 @@ const systemRoutes: RouteRecordRaw[] = [
     props: true,
     meta: {
       title: "角色编辑",
-      keepAlive: true,
     },
     component: () => import("@/page/system/role-detail"),
   },
@@ -59,7 +57,8 @@ const systemRoutes: RouteRecordRaw[] = [
     name: "system-manager-index",
     path: "/system/manager",
     meta: {
-      title: "用户设置",
+      title: "员工设置",
+      keepAlive: true,
     },
     component: () => import("@/page/system/manager"),
   },
@@ -67,8 +66,7 @@ const systemRoutes: RouteRecordRaw[] = [
     name: "system-manager-add",
     path: "/system/manager/add",
     meta: {
-      title: "添加用户",
-      keepAlive: true,
+      title: "添加员工",
     },
     component: () => import("@/page/system/manager-detail"),
   },
@@ -77,8 +75,7 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/manager/:id(\\d+)",
     props: true,
     meta: {
-      title: "用户编辑",
-      keepAlive: true,
+      title: "员工编辑",
     },
     component: () => import("@/page/system/manager-detail"),
   },
@@ -87,6 +84,7 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/banner",
     meta: {
       title: "幻灯设置",
+      keepAlive: true,
     },
     component: () => import("@/page/system/banner"),
   },
@@ -112,6 +110,7 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/module",
     meta: {
       title: "模块设置",
+      keepAlive: true,
     },
     component: () => import("@/page/system/module"),
   },
@@ -120,7 +119,6 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/module/add",
     meta: {
       title: "添加模块",
-      keepAlive: true,
     },
     component: () => import("@/page/system/module-detail"),
   },
@@ -130,7 +128,6 @@ const systemRoutes: RouteRecordRaw[] = [
     props: true,
     meta: {
       title: "模块编辑",
-      keepAlive: true,
     },
     component: () => import("@/page/system/module-detail"),
   },
@@ -139,6 +136,7 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/permission",
     meta: {
       title: "权限设置",
+      keepAlive: true,
     },
     component: () => import("@/page/system/permission"),
   },
@@ -147,7 +145,6 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/permission/add",
     meta: {
       title: "添加权限",
-      keepAlive: true,
     },
     component: () => import("@/page/system/permission-detail"),
   },
@@ -157,7 +154,6 @@ const systemRoutes: RouteRecordRaw[] = [
     props: true,
     meta: {
       title: "权限编辑",
-      keepAlive: true,
     },
     component: () => import("@/page/system/permission-detail"),
   },
@@ -166,6 +162,7 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/app",
     meta: {
       title: "APP设置",
+      keepAlive: true,
     },
     component: () => import("@/page/system/app"),
   },
@@ -174,7 +171,6 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/app/add",
     meta: {
       title: "添加APP",
-      keepAlive: true,
     },
     component: () => import("@/page/system/app-detail"),
   },
@@ -184,7 +180,6 @@ const systemRoutes: RouteRecordRaw[] = [
     props: true,
     meta: {
       title: "APP编辑",
-      keepAlive: true,
     },
     component: () => import("@/page/system/app-detail"),
   },
@@ -193,6 +188,7 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/netAddress",
     meta: {
       title: "服务网点",
+      keepAlive: true,
     },
     component: () => import("@/page/system/netAddress"),
   },
@@ -201,7 +197,6 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/netAddress/add",
     meta: {
       title: "添加服务网点",
-      keepAlive: true,
     },
     component: () => import("@/page/system/netAddress-detail"),
   },
@@ -211,7 +206,6 @@ const systemRoutes: RouteRecordRaw[] = [
     props: true,
     meta: {
       title: "服务网点编辑",
-      keepAlive: true,
     },
     component: () => import("@/page/system/netAddress-detail"),
   },
@@ -219,7 +213,8 @@ const systemRoutes: RouteRecordRaw[] = [
     name: "system-client-index",
     path: "/system/client",
     meta: {
-      title: "用户设置",
+      title: "商家设置",
+      keepAlive: true,
     },
     component: () => import("@/page/system/client"),
   },
@@ -227,8 +222,7 @@ const systemRoutes: RouteRecordRaw[] = [
     name: "system-client-add",
     path: "/system/client/add",
     meta: {
-      title: "添加用户",
-      keepAlive: true,
+      title: "添加商家",
     },
     component: () => import("@/page/system/client-detail"),
   },
@@ -237,8 +231,7 @@ const systemRoutes: RouteRecordRaw[] = [
     path: "/system/client/:id(\\d+)",
     props: true,
     meta: {
-      title: "用户编辑",
-      keepAlive: true,
+      title: "商家编辑",
     },
     component: () => import("@/page/system/client-detail"),
   },

@@ -44,31 +44,33 @@ export default defineComponent({
     });
 
     return () => (
-      <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
-        <FormItem name="name" label="APP名称" rules={[{ required: true, message: "请先输入APP名称" }]}>
-          <Input placeholder="请输入APP名称" v-model={[form.name, "value"]}></Input>
-        </FormItem>
-        <FormItem name="app_key" label="app_key">
-          <Input placeholder="请输入app_key" v-model={[form.app_key, "value"]}></Input>
-        </FormItem>
-        <FormItem name="secret_key" label="secret_key">
-          <Input placeholder="请输入secret_key" v-model={[form.secret_key, "value"]}></Input>
-        </FormItem>
-        <FormItem name="status" label="是否启用" rules={[{ required: false, message: "请先选择是不是集团用户" }]}>
-          <Switch
-            v-model={[form.status, "checked"]}
-            checkedChildren="是"
-            unCheckedChildren="否"
-            unCheckedValue={StatusType.OFFLINE}
-            checkedValue={StatusType.ONLINE}
-          />
-        </FormItem>
-        <div class="d-flex align-items-center justify-center">
-          <Button htmlType="submit" type="primary" size="large">
-            提交
-          </Button>
-        </div>
-      </Form>
+      <div class="box">
+        <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
+          <FormItem name="name" label="APP名称" rules={[{ required: true, message: "请先输入APP名称" }]}>
+            <Input placeholder="请输入APP名称" v-model={[form.name, "value"]}></Input>
+          </FormItem>
+          <FormItem name="app_key" label="app_key">
+            <Input placeholder="请输入app_key" v-model={[form.app_key, "value"]}></Input>
+          </FormItem>
+          <FormItem name="secret_key" label="secret_key">
+            <Input placeholder="请输入secret_key" v-model={[form.secret_key, "value"]}></Input>
+          </FormItem>
+          <FormItem name="status" label="是否启用" rules={[{ required: false, message: "请先选择是不是集团用户" }]}>
+            <Switch
+              v-model={[form.status, "checked"]}
+              checkedChildren="是"
+              unCheckedChildren="否"
+              unCheckedValue={StatusType.OFFLINE}
+              checkedValue={StatusType.ONLINE}
+            />
+          </FormItem>
+          <div class="d-flex align-items-center justify-center">
+            <Button htmlType="submit" type="primary" size="large">
+              提交
+            </Button>
+          </div>
+        </Form>
+      </div>
     );
   },
 });

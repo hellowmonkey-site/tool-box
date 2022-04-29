@@ -1,7 +1,6 @@
-import { CloseCircleOutlined, DownOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons-vue";
+import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons-vue";
 import {
   Button,
-  Dropdown,
   Layout,
   LayoutContent,
   LayoutHeader,
@@ -11,11 +10,12 @@ import {
   MenuItemGroup,
   TabPane,
   Tabs,
+  Tooltip,
 } from "ant-design-vue";
 import { computed, defineComponent, KeepAlive, ref } from "vue";
 import { RouteLocationNormalizedLoaded, RouterView, useRoute } from "vue-router";
 import Logo from "@/static/image/logo.png";
-import { userInfo, userMenus } from "@/service/user";
+import { setUserToken, userInfo, userMenus } from "@/service/user";
 import { version } from "../../package.json";
 import config from "@/config";
 import { removeRouteTab, routeTabList } from "@/service/common";
@@ -50,9 +50,17 @@ export default defineComponent({
             {isCollapsed.value ? null : (
               <div class="d-flex align-items-center justify-between flex-item-extend">
                 <span class="font-large mar-r-3-item">{userInfo.username}</span>
-                <div class="cursor-pointer">
-                  <LogoutOutlined style={{ fontSize: "14px" }} />
-                </div>
+                <Tooltip title="退出登录" placement="bottom">
+                  <div
+                    class="cursor-pointer"
+                    onClick={() => {
+                      setUserToken("");
+                      router.push({ name: "login" });
+                    }}
+                  >
+                    <LogoutOutlined style={{ fontSize: "14px" }} />
+                  </div>
+                </Tooltip>
               </div>
             )}
           </div>
@@ -78,7 +86,7 @@ export default defineComponent({
             <span class="font-mini">v {version}</span>
           </div>
         </LayoutSider>
-        <Layout>
+        <Layout class="app-layout">
           <LayoutHeader class="app-header d-flex align-items-end">
             <div class="d-flex align-items-center pad-l-3 pad-r-3 mar-b-2">
               <Button

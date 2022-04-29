@@ -4,6 +4,6 @@ export default defineComponent({
   props: {},
   emits: [],
   setup: (props, ctx) => {
-    return () => <div></div>;
+    return () => <div class="box"></div>;
   },
 });
