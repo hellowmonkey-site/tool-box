@@ -24,8 +24,9 @@ export const pushRouteTab = (data: RouteLocationNormalizedLoaded) => {
   if (otherRoutes.some(v => v.name === data.name)) {
     return;
   }
-
-  if (routeTabList.value.some(v => v.name === data.name)) {
+  const index = routeTabList.value.findIndex(v => v.name === data.name);
+  if (index > -1) {
+    routeTabList.value[index] = data;
     return;
   }
   routeTabList.value.push(data);
