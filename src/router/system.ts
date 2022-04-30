@@ -77,30 +77,6 @@ const systemRoutes: RouteRecordRaw[] = [
     component: () => import("@/page/system/manager-detail"),
   },
   {
-    name: "system-banner",
-    path: "/system/banner",
-    meta: {
-      title: "幻灯设置",
-      keepAlive: true,
-    },
-    component: () => import("@/page/system/banner"),
-  },
-  {
-    name: "system-banner-add",
-    path: "/system/banner/add",
-    meta: { keepAlive: true, title: "添加幻灯" },
-    component: () => import("@/page/system/banner-detail"),
-  },
-  {
-    name: "system-banner-edit",
-    path: "/system/banner/:id(\\d+)",
-    props: true,
-    meta: {
-      title: "幻灯编辑",
-    },
-    component: () => import("@/page/system/banner-detail"),
-  },
-  {
     name: "system-module-index",
     path: "/system/module",
     meta: {
@@ -171,30 +147,6 @@ const systemRoutes: RouteRecordRaw[] = [
       title: "APP编辑",
     },
     component: () => import("@/page/system/app-detail"),
-  },
-  {
-    name: "system-netAddress-index",
-    path: "/system/netAddress",
-    meta: {
-      title: "服务网点",
-      keepAlive: true,
-    },
-    component: () => import("@/page/system/netAddress"),
-  },
-  {
-    name: "system-netAddress-add",
-    path: "/system/netAddress/add",
-    meta: { keepAlive: true, title: "添加服务网点" },
-    component: () => import("@/page/system/netAddress-detail"),
-  },
-  {
-    name: "system-netAddress-edit",
-    path: "/system/netAddress/:id(\\d+)",
-    props: true,
-    meta: {
-      title: "服务网点编辑",
-    },
-    component: () => import("@/page/system/netAddress-detail"),
   },
   {
     name: "system-client-index",
