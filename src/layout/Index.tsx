@@ -1,4 +1,4 @@
-import { LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons-vue";
+import { LeftOutlined, LogoutOutlined, MenuFoldOutlined, MenuUnfoldOutlined, ReloadOutlined, RightOutlined } from "@ant-design/icons-vue";
 import {
   Button,
   Layout,
@@ -87,19 +87,67 @@ export default defineComponent({
         </LayoutSider>
         <Layout class="app-layout flex-item-extend d-flex direction-column">
           <LayoutHeader class="app-header d-flex align-items-end">
-            <div class="d-flex align-items-center pad-l-3 pad-r-3 mar-b-2">
-              <Button
-                class="mar-r-3-item"
-                onClick={() => {
-                  isCollapsed.value = !isCollapsed.value;
-                }}
-              >
-                {{
-                  icon() {
-                    return isCollapsed.value ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />;
-                  },
-                }}
-              </Button>
+            <div class="d-flex align-items-center pad-l-3 pad-r-4 mar-b-2">
+              <Tooltip title={isCollapsed.value ? "展开菜单" : "收起菜单"} placement="bottom">
+                <Button
+                  class="mar-r-2-item"
+                  onClick={() => {
+                    isCollapsed.value = !isCollapsed.value;
+                  }}
+                >
+                  {{
+                    icon() {
+                      return isCollapsed.value ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />;
+                    },
+                  }}
+                </Button>
+              </Tooltip>
+              {config.isElectron ? (
+                <>
+                  <Tooltip title="后退" placement="bottom">
+                    <Button
+                      class="mar-r-2-item"
+                      onClick={() => {
+                        router.back();
+                      }}
+                    >
+                      {{
+                        icon() {
+                          return <LeftOutlined />;
+                        },
+                      }}
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="前进" placement="bottom">
+                    <Button
+                      class="mar-r-2-item"
+                      onClick={() => {
+                        router.forward();
+                      }}
+                    >
+                      {{
+                        icon() {
+                          return <RightOutlined />;
+                        },
+                      }}
+                    </Button>
+                  </Tooltip>
+                  <Tooltip title="刷新" placement="bottom">
+                    <Button
+                      class="mar-r-2-item"
+                      onClick={() => {
+                        location.reload();
+                      }}
+                    >
+                      {{
+                        icon() {
+                          return <ReloadOutlined />;
+                        },
+                      }}
+                    </Button>
+                  </Tooltip>
+                </>
+              ) : null}
             </div>
             <Tabs
               type="editable-card"

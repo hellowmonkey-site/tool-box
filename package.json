@@ -8,7 +8,9 @@
     "preview": "vite preview",
     "lint": "npm run eslint && npm run stylelint",
     "eslint": "eslint --fix src/**/*.{js,ts,jsx,tsx,vue}",
-    "stylelint": "stylelint --fix src/**/*.{scss,sass,css,less}"
+    "stylelint": "stylelint --fix src/**/*.{scss,sass,css,less}",
+    "electron": "electron ./electron/main.js",
+    "electron-builder": "electron-builder"
   },
   "dependencies": {
     "@amap/amap-jsapi-loader": "^1.0.1",
@@ -30,6 +32,8 @@
     "@typescript-eslint/parser": "^5.13.0",
     "@vitejs/plugin-vue": "^2.2.0",
     "@vitejs/plugin-vue-jsx": "^1.3.8",
+    "electron": "^18.2.0",
+    "electron-builder": "^23.0.3",
     "eslint": "^8.10.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
@@ -47,5 +51,18 @@
     "typescript": "^4.5.4",
     "vite": "^2.8.0",
     "vue-tsc": "^0.29.8"
+  },
+  "build": {
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    }
   }
 }

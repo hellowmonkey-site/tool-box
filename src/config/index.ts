@@ -1,4 +1,9 @@
+const isDev = import.meta.env.DEV;
+const isElectron = typeof electronAPI !== "undefined";
+
 export default {
+  isDev,
+  isElectron,
   baseURL: "http://test.guoyuan.insure.api.cheqianqiu.net/admin",
   successCode: 200,
   loginCode: 10000,

@@ -36,6 +36,7 @@ const router = createRouter({
 router.beforeEach(to => {
   pushRouteTab(to);
   NProgress.start();
+  document.title = String(to.meta.title);
   return true;
 });
 

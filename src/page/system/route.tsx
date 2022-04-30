@@ -97,6 +97,13 @@ export default defineComponent({
           <RouterLink to={{ name: "system-route-add", query: { parent_id: parentId } }} class="ant-btn">
             添加页面
           </RouterLink>
+          <Button
+            onClick={() => {
+              electronAPI.setTitle("hahahaha");
+            }}
+          >
+            换标题
+          </Button>
         </div>
         <Table bordered columns={columns} pagination={false} dataSource={dataSource.value}></Table>
       </div>
