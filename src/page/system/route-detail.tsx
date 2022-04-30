@@ -48,7 +48,7 @@ export default defineComponent({
     });
 
     return () => (
-      <div class="box">
+      <div class="content-box">
         <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
           <FormItem name="name" label="标题" rules={[{ required: true, message: "请先输入标题" }]}>
             <Input placeholder="请输入标题" v-model={[form.name, "value"]}></Input>

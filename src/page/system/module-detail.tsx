@@ -42,7 +42,7 @@ export default defineComponent({
     });
 
     return () => (
-      <div class="box">
+      <div class="content-box">
         <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
           <FormItem name="title" label="模块名称" rules={[{ required: true, message: "请先输入模块名称" }]}>
             <Input placeholder="请输入模块名称" v-model={[form.title, "value"]}></Input>

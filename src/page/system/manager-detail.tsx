@@ -1,4 +1,4 @@
-import UploadImageList from "@/component/UploadImageList";
+import UploadImageList from "@/component/common/UploadImageList";
 import { removeRouteTab } from "@/service/common";
 import { defaultManager, getManagerDetail, IManagerInput, postManager, putManager } from "@/service/manager";
 import { getRoleList, roleList } from "@/service/role";
@@ -51,7 +51,7 @@ export default defineComponent({
     });
 
     return () => (
-      <div class="box">
+      <div class="content-box">
         <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
           <FormItem name="username" label="登录账号" rules={[{ required: true, message: "请先输入登录账号" }]}>
             <Input placeholder="请输入登录账号" v-model={[form.username, "value"]}></Input>

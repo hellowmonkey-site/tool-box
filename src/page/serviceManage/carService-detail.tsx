@@ -1,4 +1,4 @@
-import UploadImageList from "@/component/UploadImageList";
+import UploadImageList from "@/component/common/UploadImageList";
 import router from "@/router";
 import { defaultCarService, getCarServiceDetail, ICarService, postCarService, putCarService } from "@/service/carService";
 import { removeRouteTab } from "@/service/common";

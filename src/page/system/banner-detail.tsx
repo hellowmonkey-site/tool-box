@@ -1,4 +1,4 @@
-import UploadImageList from "@/component/UploadImageList";
+import UploadImageList from "@/component/common/UploadImageList";
 import router from "@/router";
 import { defaultBanner, getBannerDetail, IBananer, postBanner, putBanner } from "@/service/banner";
 import { removeRouteTab } from "@/service/common";
@@ -86,40 +86,42 @@ export default defineComponent({
     });
 
     return () => (
-      <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
-        <FormItem name="name" label="名称" rules={[{ required: true, message: "请先输入名称" }]}>
-          <Input placeholder="请输入标题" v-model={[form.name, "value"]}></Input>
-        </FormItem>
-        <FormItem name="img_path" label="上传图片" rules={[{ required: true, validator: checkImages }]}>
-          <UploadImageList
-            images={[{ id: 0, path: imgPath.value }]}
-            maxCount={1}
-            onChange={e => {
-              if (e && e.length > 0) {
-                form.img_path = e[0].id;
-                imgPath.value = e[0].path;
-              } else {
-                form.img_path = 0;
-                imgPath.value = "";
-              }
-            }}
-          ></UploadImageList>
-        </FormItem>
-        <FormItem name="url" label="url">
-          <Input placeholder="请输入url" v-model={[form.url, "value"]}></Input>
-        </FormItem>
-        <FormItem name="status" label="是否上线">
-          <RadioGroup v-model={[form.status, "value"]}>
-            <Radio value={1}>是</Radio>
-            <Radio value={0}>否</Radio>
-          </RadioGroup>
-        </FormItem>
-        <div class="d-flex align-items-center justify-center">
-          <Button htmlType="submit" type="primary" size="large">
-            提交
-          </Button>
-        </div>
-      </Form>
+      <div class="content-box">
+        <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
+          <FormItem name="name" label="名称" rules={[{ required: true, message: "请先输入名称" }]}>
+            <Input placeholder="请输入标题" v-model={[form.name, "value"]}></Input>
+          </FormItem>
+          <FormItem name="img_path" label="上传图片" rules={[{ required: true, validator: checkImages }]}>
+            <UploadImageList
+              images={[{ id: 0, path: imgPath.value }]}
+              maxCount={1}
+              onChange={e => {
+                if (e && e.length > 0) {
+                  form.img_path = e[0].id;
+                  imgPath.value = e[0].path;
+                } else {
+                  form.img_path = 0;
+                  imgPath.value = "";
+                }
+              }}
+            ></UploadImageList>
+          </FormItem>
+          <FormItem name="url" label="url">
+            <Input placeholder="请输入url" v-model={[form.url, "value"]}></Input>
+          </FormItem>
+          <FormItem name="status" label="是否上线">
+            <RadioGroup v-model={[form.status, "value"]}>
+              <Radio value={1}>是</Radio>
+              <Radio value={0}>否</Radio>
+            </RadioGroup>
+          </FormItem>
+          <div class="d-flex align-items-center justify-center">
+            <Button htmlType="submit" type="primary" size="large">
+              提交
+            </Button>
+          </div>
+        </Form>
+      </div>
     );
   },
 });

@@ -8,6 +8,7 @@ import {
   Menu,
   MenuItem,
   MenuItemGroup,
+  Modal,
   TabPane,
   Tabs,
   Tooltip,
@@ -36,15 +37,8 @@ export default defineComponent({
     });
 
     return () => (
-      <Layout>
-        <LayoutSider
-          v-model={[isCollapsed.value, "collapsed"]}
-          trigger={null}
-          collapsible
-          breakpoint="lg"
-          class="full-height-vh app-sider"
-          width={220}
-        >
+      <Layout class="d-flex full-height-vh">
+        <LayoutSider v-model={[isCollapsed.value, "collapsed"]} trigger={null} collapsible breakpoint="lg" class="app-sider" width={220}>
           <div class="d-flex font-light pad-5 direction-column align-items-center justify-center">
             <div class="bg-cover border-radius-4 mar-b-3-item logo" style={{ backgroundImage: `url(${Logo})` }}></div>
             {isCollapsed.value ? null : (
@@ -54,8 +48,13 @@ export default defineComponent({
                   <div
                     class="cursor-pointer"
                     onClick={() => {
-                      setUserToken("");
-                      router.push({ name: "login" });
+                      Modal.confirm({
+                        title: "确认退出登录吗？",
+                        onOk() {
+                          setUserToken("");
+                          router.push({ name: "login" });
+                        },
+                      });
                     }}
                   >
                     <LogoutOutlined style={{ fontSize: "14px" }} />
@@ -86,7 +85,7 @@ export default defineComponent({
             <span class="font-mini">v {version}</span>
           </div>
         </LayoutSider>
-        <Layout class="app-layout">
+        <Layout class="app-layout flex-item-extend d-flex direction-column">
           <LayoutHeader class="app-header d-flex align-items-end">
             <div class="d-flex align-items-center pad-l-3 pad-r-3 mar-b-2">
               <Button
@@ -134,87 +133,23 @@ export default defineComponent({
                 },
               }}
             </Tabs>
-            {/* <Button
-              class="mar-r-3-item"
-              onClick={() => {
-                isCollapsed.value = !isCollapsed.value;
-              }}
-            >
+          </LayoutHeader>
+          <LayoutContent class="flex-item-extend overflow-y-auto">
+            <RouterView>
               {{
-                icon() {
-                  return isCollapsed.value ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />;
+                default: ({ Component, route }: { Component: () => JSX.Element; route: RouteLocationNormalizedLoaded }) => {
+                  if (route.meta.keepAlive) {
+                    return (
+                      <KeepAlive>
+                        <Component />
+                      </KeepAlive>
+                    );
+                  } else {
+                    return <Component />;
+                  }
                 },
               }}
-            </Button>
-            <div class="d-flex justify-between align-items-center flex-item-extend">
-              <div class="d-flex align-items-center flex-item-extend overflow-x-auto">
-                {new Array(20).fill(1).map((v, i) => {
-                  return (
-                    <Button
-                      key={i}
-                      class="mar-r-3-item"
-                      onClick={() => {
-                        isCollapsed.value = !isCollapsed.value;
-                      }}
-                    >
-                      <span>哈哈哈</span>
-                      <CloseCircleOutlined />
-                    </Button>
-                  );
-                })}
-              </div>
-              <Dropdown>
-                {{
-                  default: () => <Button>{{ icon: () => <DownOutlined /> }}</Button>,
-                  overlay: () => (
-                    <Menu>
-                      <MenuItem
-                        onClick={e => {
-                          // removeRouteTab(String(route.name));
-                          // activeCurrentTab();
-                        }}
-                      >
-                        关闭当前
-                      </MenuItem>
-                      <MenuItem
-                        onClick={e => {
-                          // tabList.value = tabList.value.filter(v => v.name === route.name);
-                        }}
-                      >
-                        关闭其他
-                      </MenuItem>
-                      <MenuItem
-                        onClick={e => {
-                          // tabList.value = tabList.value.filter(v => v.name === indexName);
-                          // router.replace({ name: indexName });
-                        }}
-                      >
-                        关闭全部
-                      </MenuItem>
-                    </Menu>
-                  ),
-                }}
-              </Dropdown>
-            </div> */}
-          </LayoutHeader>
-          <LayoutContent>
-            <div class="pad-4">
-              <RouterView>
-                {{
-                  default: ({ Component, route }: { Component: () => JSX.Element; route: RouteLocationNormalizedLoaded }) => {
-                    if (route.meta.keepAlive) {
-                      return (
-                        <KeepAlive>
-                          <Component />
-                        </KeepAlive>
-                      );
-                    } else {
-                      return <Component />;
-                    }
-                  },
-                }}
-              </RouterView>
-            </div>
+            </RouterView>
           </LayoutContent>
         </Layout>
       </Layout>

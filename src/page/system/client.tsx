@@ -1,6 +1,7 @@
+import MainBox from "@/component/common/MainBox";
 import { PageData, PageParamsType, StatusType, TableData } from "@/config/type";
 import { deleteClient, getClientPageList, IClient } from "@/service/client";
-import { Button, message, Modal, Table } from "ant-design-vue";
+import { Button, Input, message, Modal, Table } from "ant-design-vue";
 import { defineComponent, onMounted, reactive, ref } from "vue";
 import { onBeforeRouteUpdate, RouterLink, useRoute } from "vue-router";
 
@@ -14,8 +15,10 @@ export default defineComponent({
     const form = reactive<
       PageParamsType & {
         parent_id: number;
+        name?: string;
       }
     >({
+      name: "",
       parent_id: 0,
       page_size: 20,
       page: 1,
@@ -98,7 +101,17 @@ export default defineComponent({
     });
 
     return () => (
-      <>
+      <MainBox
+        onSearch={fetchData}
+        searchList={[
+          {
+            tip: "名称",
+            component() {
+              return <Input placeholder="请输入名称" v-model={[form.name, "value"]} />;
+            },
+          },
+        ]}
+      >
         <div class="d-flex justify-end mar-b-3">
           <RouterLink to={{ name: "system-client-add", query: { parent_id: form.parent_id } }} class="ant-btn">
             添加商家
@@ -124,7 +137,7 @@ export default defineComponent({
           }}
           dataSource={dataSource.value?.items}
         ></Table>
-      </>
+      </MainBox>
     );
   },
 });

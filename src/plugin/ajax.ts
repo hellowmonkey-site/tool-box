@@ -15,7 +15,7 @@ flyio.interceptors.request.use(conf => {
     "Content-Type": "application/json;charset=UTF-8",
     ...requestHeaders.value,
   };
-  conf.timeout = 0;
+  conf.timeout = config.timeout;
   // 参数处理
   if (conf.body && getType(conf.body) === "object") {
     const { __filterEmpty = 1, ...query } = conf.body;

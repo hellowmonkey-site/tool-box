@@ -92,14 +92,14 @@ export default defineComponent({
     });
 
     return () => (
-      <>
+      <div class="content-box">
         <div class="d-flex justify-end mar-b-3">
           <RouterLink to={{ name: "system-route-add", query: { parent_id: parentId } }} class="ant-btn">
             添加页面
           </RouterLink>
         </div>
         <Table bordered columns={columns} pagination={false} dataSource={dataSource.value}></Table>
-      </>
+      </div>
     );
   },
 });

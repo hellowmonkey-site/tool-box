@@ -20,51 +20,40 @@
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: all $animate-time;
+  transition: all $animate-time ease-in-out;
 }
 
-.fade-enter,
-.fade-leave-to,
-.fade-leave-active {
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
 
 .slider-left-enter-active,
 .slider-left-leave-active {
-  transition: transform $animate-time;
+  transition: transform $animate-time ease-in-out;
 }
 
-.slider-left-enter {
-  transform: translate(100%, 0);
-}
-
+.slider-left-enter-from,
 .slider-left-leave-to {
-  transform: translate(-100%, 0);
+  transform: translate(100%, 0);
 }
 
 .slider-right-enter-active,
 .slider-right-leave-active {
-  transition: transform $animate-time;
+  transition: transform $animate-time ease-in-out;
 }
 
-.slider-right-enter {
-  transform: translate(-100%, 0);
-}
-
-.slider-right-leave-to {
+.slider-right-leave-to,
+.slider-right-enter-from {
   transform: translate(100%, 0);
 }
 
 .slider-bottom-enter-active,
 .slider-bottom-leave-active {
-  transition: all $animate-time;
+  transition: all $animate-time ease-in-out;
 }
 
-.slider-bottom-enter {
-  opacity: 0;
-  transform: translate(0, -100%);
-}
-
+.slider-bottom-enter-from,
 .slider-bottom-leave-to {
   opacity: 0;
   transform: translate(0, -100%);
@@ -72,15 +61,19 @@
 
 .slider-top-enter-active,
 .slider-top-leave-active {
-  transition: all $animate-time;
+  transition: all $animate-time ease-in-out;
 }
 
-.slider-top-enter {
-  opacity: 0;
-  transform: translate(0, 100%);
-}
-
+.slider-top-enter-from,
 .slider-top-leave-to {
   opacity: 0;
   transform: translate(0, 100%);
+}
+
+.ani-zoom {
+  animation: ani-zoom $animate-time ease-in-out;
+}
+
+.ani-fade {
+  animation: ani-fade $animate-time ease-in-out;
 }

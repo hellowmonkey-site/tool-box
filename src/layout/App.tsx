@@ -1,27 +1,14 @@
-import { ConfigProvider, Modal, Spin } from "ant-design-vue";
+import { ConfigProvider, Modal } from "ant-design-vue";
 import { defineComponent } from "vue";
 import { RouterView } from "vue-router";
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 import { isIE } from "@/helper/validate";
-import { LoadingOutlined } from "@ant-design/icons-vue";
-import { loadingState } from "@/service/common";
 
 export default defineComponent({
   setup() {
     return () => (
       <ConfigProvider locale={zhCN}>
-        <Spin
-          spinning={loadingState.loading}
-          class={["app-loading", loadingState.loading ? "is-loading" : ""]}
-          indicator={
-            <div class="loading-spin">
-              <LoadingOutlined style="font-size: 24px" />
-            </div>
-          }
-          tip={loadingState.tip}
-        >
-          <RouterView />
-        </Spin>
+        <RouterView />
       </ConfigProvider>
     );
   },

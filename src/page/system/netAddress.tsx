@@ -135,7 +135,7 @@ export default defineComponent({
     });
 
     return () => (
-      <div>
+      <div class="content-box">
         <Form model={searchParams} onFinish={e => fetchData()} layout="vertical" class="d-flex flex-item-extend">
           <Row align="top" gutter={[20, 20]} justify="start" wrap={true} class="flex-item-extend">
             <Col flex={1} span={6}>

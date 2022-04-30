@@ -1,10 +1,11 @@
-import { StatusType, TreeType } from "@/config/type";
+import { StatusType } from "@/config/type";
 import { removeRouteTab } from "@/service/common";
-import { allPermissionList, getAllPermissionList, IPermission } from "@/service/permission";
+import { getPermissionList } from "@/service/permission";
 import { defaultRole, getRoleDetail, IRole, postRole, putRole } from "@/service/role";
-import { allRouteList, getAllRouterList, IRoute } from "@/service/route";
-import { Button, Card, Form, FormItem, Input, Modal, Radio, RadioGroup, Tree } from "ant-design-vue";
-import { computed, defineComponent, onMounted, reactive, ref } from "vue";
+import { getRouterList } from "@/service/route";
+import { Button, Card, Form, FormItem, Input, Modal, Radio, RadioGroup, Tree, TreeProps } from "ant-design-vue";
+import { EventDataNode } from "ant-design-vue/lib/tree";
+import { defineComponent, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -22,28 +23,31 @@ export default defineComponent({
     });
     const isAddPage = props.id === null;
 
-    const routeCheckedKeys = ref<string[]>([]);
-    const permissionCheckedKeys = ref<string[]>([]);
+    // const routeCheckedKeys = ref<string[]>([]);
+    // const permissionCheckedKeys = ref<string[]>([]);
 
-    function handleChildKey<T extends { id: number; parent_id: number; name: string }>(arr: T[] = [], parentId = 0): TreeType[] {
-      const data = arr
-        .filter(v => v.parent_id === parentId)
-        .map(v => {
-          return {
-            key: String(v.id),
-            title: v.name,
-            children: handleChildKey(arr, v.id),
-          };
-        });
-      return data;
-    }
+    // function handleChildKey<T extends { id: number; parent_id: number; name: string }>(arr: T[] = [], parentId = 0): TreeType[] {
+    //   const data = arr
+    //     .filter(v => v.parent_id === parentId)
+    //     .map(v => {
+    //       return {
+    //         key: String(v.id),
+    //         title: v.name,
+    //         children: handleChildKey(arr, v.id),
+    //       };
+    //     });
+    //   return data;
+    // }
 
-    const routeTreeData = computed(() => {
-      return handleChildKey<IRoute>(allRouteList.value);
-    });
-    const permissionTreeData = computed(() => {
-      return handleChildKey<IPermission>(allPermissionList.value);
-    });
+    // const routeTreeData = computed(() => {
+    //   return handleChildKey<IRoute>(allRouteList.value);
+    // });
+    // const permissionTreeData = computed(() => {
+    //   return handleChildKey<IPermission>(allPermissionList.value);
+    // });
+
+    const routeTreeData = ref<TreeProps["treeData"]>([]);
+    const permissionTreeData = ref<TreeProps["treeData"]>([]);
 
     const handleSubmit = (params: IRole) => {
       Modal.confirm({
@@ -62,6 +66,47 @@ export default defineComponent({
       });
     };
 
+    const onRouterLoadData: TreeProps["loadData"] = (treeNode: EventDataNode) => {
+      if (!(treeNode && treeNode.dataRef) || treeNode.dataRef.children) {
+        return Promise.resolve();
+      }
+      return fetchRouterList(Number(treeNode.dataRef.key)).then(data => {
+        treeNode.dataRef!.children = data;
+        routeTreeData.value = [...routeTreeData.value!.map(v => ({ ...v }))];
+      });
+    };
+    const onPermissionLoadData: TreeProps["loadData"] = (treeNode: EventDataNode) => {
+      if (!(treeNode && treeNode.dataRef) || treeNode.dataRef.children) {
+        return Promise.resolve();
+      }
+      return fetchPermissionList(Number(treeNode.dataRef.key)).then(data => {
+        treeNode.dataRef!.children = data;
+        permissionTreeData.value = [...permissionTreeData.value!.map(v => ({ ...v }))];
+      });
+    };
+
+    function fetchRouterList(parentId = 0): Promise<TreeProps["treeData"]> {
+      return getRouterList(parentId).then(data => {
+        return data.map(v => {
+          return {
+            key: String(v.id),
+            title: v.name,
+          };
+        });
+      });
+    }
+
+    function fetchPermissionList(parentId = 0): Promise<TreeProps["treeData"]> {
+      return getPermissionList(parentId).then(data => {
+        return data.map(v => {
+          return {
+            key: String(v.id),
+            title: v.name,
+          };
+        });
+      });
+    }
+
     onMounted(() => {
       if (!isAddPage) {
         getRoleDetail(props.id).then(data => {
@@ -69,16 +114,20 @@ export default defineComponent({
           form.name = data.name;
           form.home_url = data.home_url;
           form.status = data.status;
-          form.permissions = data.permissions;
-          form.route = data.route;
+          form.permissions = data.permissions?.map(String);
+          form.route = data.route?.map(String);
         });
       }
-      getAllRouterList();
-      getAllPermissionList();
+      fetchRouterList().then(data => {
+        routeTreeData.value = data;
+      });
+      fetchPermissionList().then(data => {
+        permissionTreeData.value = data;
+      });
     });
 
     return () => (
-      <div class="box">
+      <div class="content-box">
         <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
           <FormItem name="name" label="角色名称" rules={[{ required: true, message: "请先输入角色名称" }]}>
             <Input placeholder="请输入角色名称" v-model={[form.name, "value"]}></Input>
@@ -95,17 +144,14 @@ export default defineComponent({
           <FormItem label="权限管理">
             <div class="d-flex justify-around align-items-stretch">
               <Card title="页面权限管理" class="mar-r-3-item flex-item-extend">
-                <Tree checkable treeData={routeTreeData.value} v-model={[routeCheckedKeys.value, "checkedKeys"]}></Tree>
+                <Tree checkable treeData={routeTreeData.value} loadData={onRouterLoadData} v-model={[form.route, "checkedKeys"]}></Tree>
               </Card>
               <Card title="操作权限管理" class="mar-r-3-item flex-item-extend">
                 <Tree
                   checkable
-                  // loadData={node => {
-                  //   console.log(node);
-                  //   return Promise.resolve();
-                  // }}
                   treeData={permissionTreeData.value}
-                  v-model={[permissionCheckedKeys.value, "checkedKeys"]}
+                  loadData={onPermissionLoadData}
+                  v-model={[form.permissions, "checkedKeys"]}
                 ></Tree>
               </Card>
             </div>

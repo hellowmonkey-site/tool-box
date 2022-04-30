@@ -1,10 +1,8 @@
 import { compressImage } from "@/helper/file";
 import router, { indexName, routes } from "@/router";
 import fly from "flyio";
-import { reactive, ref } from "vue";
+import { ref } from "vue";
 import { RouteLocationNormalizedLoaded, RouteRecordName } from "vue-router";
-
-let timer: number;
 
 export const defaultCompressImageOpts = { quality: 0.8, maxWidth: 1300, maxHeight: 1800, convertSize: 1024 * 1024 * 2 };
 
@@ -59,21 +57,4 @@ export const removeRouteTab = (names: RouteRecordName | RouteRecordName[]) => {
     }
     router.push(redirect);
   }
-};
-
-// spin
-export const loadingState = reactive({
-  loading: false,
-  tip: "处理中...",
-});
-export const hideLoading = () => {
-  clearTimeout(timer);
-  loadingState.loading = false;
-};
-export const loading = (tip?: string) => {
-  clearTimeout(timer);
-  timer = setTimeout(hideLoading, 5000);
-  loadingState.loading = true;
-  loadingState.tip = tip || "处理中...";
-  return hideLoading;
 };

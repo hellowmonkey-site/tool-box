@@ -68,37 +68,39 @@ export default defineComponent({
     };
 
     return () => (
-      <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
-        <FormItem name="name" label="服务网点名称" rules={[{ required: true, message: "请先输入服务器网点名称" }]}>
-          <Input placeholder="请输入名称" v-model={[form.name, "value"]}></Input>
-        </FormItem>
-        <FormItem name="address" label="地址" rules={[{ required: true, message: "请先输入地址" }]}>
-          <div class="d-flex direction-row align-items-center">
-            <Input
-              placeholder="请输入地址"
-              v-model={[form.address, "value"]}
-              onPressEnter={e => {
-                getLocation();
-              }}
-            ></Input>
-            <div class="font-gray space-nowrap mar-l-3">按回车键，搜索位置，定位经纬度</div>
+      <div class="content-box">
+        <Form model={form} labelCol={{ sm: 4 }} onFinish={e => handleSubmit(e)}>
+          <FormItem name="name" label="服务网点名称" rules={[{ required: true, message: "请先输入服务器网点名称" }]}>
+            <Input placeholder="请输入名称" v-model={[form.name, "value"]}></Input>
+          </FormItem>
+          <FormItem name="address" label="地址" rules={[{ required: true, message: "请先输入地址" }]}>
+            <div class="d-flex direction-row align-items-center">
+              <Input
+                placeholder="请输入地址"
+                v-model={[form.address, "value"]}
+                onPressEnter={e => {
+                  getLocation();
+                }}
+              ></Input>
+              <div class="font-gray space-nowrap mar-l-3">按回车键，搜索位置，定位经纬度</div>
+            </div>
+          </FormItem>
+          <Col span={20} push={4} class="mar-t-5">
+            <div class="mar-b-5" id="address" style="width: 300px; height: 300px;"></div>
+          </Col>
+          <FormItem name="long" label="经度" rules={[{ required: true, message: "请先输入经度" }]}>
+            <Input placeholder="请输入经度" v-model={[form.long, "value"]}></Input>
+          </FormItem>
+          <FormItem name="lat" label="纬度" rules={[{ required: true, message: "请先输入纬度" }]}>
+            <Input placeholder="请输入纬度" v-model={[form.lat, "value"]}></Input>
+          </FormItem>
+          <div class="d-flex align-items-center justify-center">
+            <Button htmlType="submit" type="primary" size="large">
+              提交
+            </Button>
           </div>
-        </FormItem>
-        <Col span={20} push={4} class="mar-t-5">
-          <div class="mar-b-5" id="address" style="width: 300px; height: 300px;"></div>
-        </Col>
-        <FormItem name="long" label="经度" rules={[{ required: true, message: "请先输入经度" }]}>
-          <Input placeholder="请输入经度" v-model={[form.long, "value"]}></Input>
-        </FormItem>
-        <FormItem name="lat" label="纬度" rules={[{ required: true, message: "请先输入纬度" }]}>
-          <Input placeholder="请输入纬度" v-model={[form.lat, "value"]}></Input>
-        </FormItem>
-        <div class="d-flex align-items-center justify-center">
-          <Button htmlType="submit" type="primary" size="large">
-            提交
-          </Button>
-        </div>
-      </Form>
+        </Form>
+      </div>
     );
   },
 });

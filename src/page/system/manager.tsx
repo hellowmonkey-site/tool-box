@@ -1,4 +1,4 @@
-import Avatar from "@/component/Avatar";
+import Avatar from "@/component/common/Avatar";
 import { PageData, PageParamsType, TableData } from "@/config/type";
 import { deleteManager, getManagerPageList, IManager } from "@/service/manager";
 import { Button, message, Modal, Table } from "ant-design-vue";
@@ -78,7 +78,7 @@ export default defineComponent({
     ];
 
     function fetchData() {
-      const hide = message.loading("数据加载中...");
+      const hide = message.loading("加载中...");
       getManagerPageList(form)
         .then(data => {
           dataSource.value = data;
@@ -93,7 +93,7 @@ export default defineComponent({
     });
 
     return () => (
-      <>
+      <div class="content-box">
         <div class="d-flex justify-end mar-b-3">
           <RouterLink to={{ name: "system-manager-add" }} class="ant-btn ant-btn-primary">
             添加员工
@@ -119,7 +119,7 @@ export default defineComponent({
           }}
           dataSource={dataSource.value?.items}
         ></Table>
-      </>
+      </div>
     );
   },
 });

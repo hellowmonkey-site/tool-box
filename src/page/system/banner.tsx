@@ -116,7 +116,7 @@ export default defineComponent({
     });
 
     return () => (
-      <div>
+      <div class="content-box">
         <div class="d-flex justify-end direction-row align-items-center">
           <RouterLink to={{ name: "system-banner-add" }} class="mar-l-5 mar-b-5 ant-btn ant-btn-primary">
             新 增

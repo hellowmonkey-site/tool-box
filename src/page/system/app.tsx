@@ -81,14 +81,14 @@ export default defineComponent({
     });
 
     return () => (
-      <>
+      <div class="content-box">
         <div class="d-flex justify-end mar-b-3">
           <RouterLink to={{ name: "system-app-add" }} class="ant-btn">
             添加
           </RouterLink>
         </div>
         <Table bordered columns={columns} pagination={false} dataSource={dataSource.value}></Table>
-      </>
+      </div>
     );
   },
 });

@@ -2,9 +2,9 @@ import { EyeOutlined, UserOutlined } from "@ant-design/icons-vue";
 import { Button, Card, Checkbox, Form, FormItem, Input, InputPassword } from "ant-design-vue";
 import { defineComponent, reactive } from "vue";
 import Logo from "@/static/image/logo.png";
-import { loading } from "@/service/common";
 import router from "@/router";
 import { postLogin } from "@/service/user";
+import loading from "@/helper/loading";
 
 interface IForm {
   username: string;

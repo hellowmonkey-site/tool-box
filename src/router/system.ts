@@ -14,6 +14,7 @@ const systemRoutes: RouteRecordRaw[] = [
     name: "system-route-add",
     path: "/system/route/add",
     meta: {
+      keepAlive: true,
       title: "添加页面",
     },
     component: () => import("@/page/system/route-detail"),
@@ -39,9 +40,7 @@ const systemRoutes: RouteRecordRaw[] = [
   {
     name: "system-role-add",
     path: "/system/role/add",
-    meta: {
-      title: "添加角色",
-    },
+    meta: { keepAlive: true, title: "添加角色" },
     component: () => import("@/page/system/role-detail"),
   },
   {
@@ -65,9 +64,7 @@ const systemRoutes: RouteRecordRaw[] = [
   {
     name: "system-manager-add",
     path: "/system/manager/add",
-    meta: {
-      title: "添加员工",
-    },
+    meta: { keepAlive: true, title: "添加员工" },
     component: () => import("@/page/system/manager-detail"),
   },
   {
@@ -91,9 +88,7 @@ const systemRoutes: RouteRecordRaw[] = [
   {
     name: "system-banner-add",
     path: "/system/banner/add",
-    meta: {
-      title: "添加幻灯",
-    },
+    meta: { keepAlive: true, title: "添加幻灯" },
     component: () => import("@/page/system/banner-detail"),
   },
   {
@@ -117,9 +112,7 @@ const systemRoutes: RouteRecordRaw[] = [
   {
     name: "system-module-add",
     path: "/system/module/add",
-    meta: {
-      title: "添加模块",
-    },
+    meta: { keepAlive: true, title: "添加模块" },
     component: () => import("@/page/system/module-detail"),
   },
   {
@@ -143,9 +136,7 @@ const systemRoutes: RouteRecordRaw[] = [
   {
     name: "system-permission-add",
     path: "/system/permission/add",
-    meta: {
-      title: "添加权限",
-    },
+    meta: { keepAlive: true, title: "添加权限" },
     component: () => import("@/page/system/permission-detail"),
   },
   {
@@ -169,9 +160,7 @@ const systemRoutes: RouteRecordRaw[] = [
   {
     name: "system-app-add",
     path: "/system/app/add",
-    meta: {
-      title: "添加APP",
-    },
+    meta: { keepAlive: true, title: "添加APP" },
     component: () => import("@/page/system/app-detail"),
   },
   {
@@ -195,9 +184,7 @@ const systemRoutes: RouteRecordRaw[] = [
   {
     name: "system-netAddress-add",
     path: "/system/netAddress/add",
-    meta: {
-      title: "添加服务网点",
-    },
+    meta: { keepAlive: true, title: "添加服务网点" },
     component: () => import("@/page/system/netAddress-detail"),
   },
   {
@@ -221,9 +208,7 @@ const systemRoutes: RouteRecordRaw[] = [
   {
     name: "system-client-add",
     path: "/system/client/add",
-    meta: {
-      title: "添加商家",
-    },
+    meta: { keepAlive: true, title: "添加商家" },
     component: () => import("@/page/system/client-detail"),
   },
   {
