@@ -6,58 +6,6 @@ export type ObjType = {
 
 export type FunType = (...args: any[]) => any;
 
-export type StorageType = {
-  id: number;
-  path: string;
-  name?: string;
-};
-
-export type ResponseData<T = any> = {
-  code: number;
-  data: T;
-  msg: string;
-};
-
-export type TableColumnType = {
-  dataIndex: string;
-  key?: string;
-  title: string;
-  customRender?: (params: TableData) => any;
-};
-
-export type UploadFileData = {
-  lastModified: number;
-  lastModifiedDate: Date;
-  name: string;
-  originFileObj: File;
-  percent: number;
-  response?: ResponseData;
-  size: number;
-  status: string;
-  thumbUrl: string;
-  type: string;
-  uid: string;
-};
-
-export type UploadFileItem = {
-  uid: string | number;
-  name: string;
-  status: string;
-  url: string;
-};
-
-export type TableData<T = any> = {
-  column: any;
-  index: number;
-  record: T;
-  text: any;
-};
-export type UploadChangeParam = {
-  file: UploadFileData;
-  fileList: UploadFileData[];
-  event: any;
-};
-
 export type ExcludeAny<T, U> = T extends U ? any : T;
 // 去除interface中某些属性
 export type ExcludeInterface<T, E> = {
@@ -74,25 +22,3 @@ export const enum StatusType {
   OFFLINE,
   ONLINE,
 }
-
-// 树形
-export type TreeType = {
-  key: string;
-  title: string;
-  children: TreeType[];
-};
-
-// 分页数据
-export type PageData<T = any> = {
-  page: number;
-  page_count: number;
-  per_page: number;
-  total: number;
-  totals: number;
-  items: T[];
-};
-
-export type PageParamsType = {
-  page_size?: number;
-  page?: number;
-};

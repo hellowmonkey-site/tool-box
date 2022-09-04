@@ -180,3 +180,22 @@ export const fileToBase64 = (file: File): Promise<FileReader["result"]> => {
     reader.onerror = error => reject(error);
   });
 };
+
+// style拼接
+export function putStyle(params: ObjType) {
+  const style = document.body.getAttribute("style") || "";
+  const obj: ObjType = {};
+  const arr = String(style)
+    .split(";")
+    .filter(v => !!v);
+  arr.forEach(item => {
+    const [k, v] = String(item).split(":");
+    obj[k] = v;
+  });
+  let str = "";
+  Object.assign(obj, params);
+  Object.keys(obj).forEach(k => {
+    str += `${k}: ${obj[k]};`;
+  });
+  return str;
+}

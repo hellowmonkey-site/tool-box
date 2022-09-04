@@ -15,16 +15,4 @@ export default defineConfig({
       "~": "/node_modules",
     },
   },
-  css: {
-    preprocessorOptions: {
-      less: {
-        modifyVars: {
-          "layout-body-background": "#f7f7f7",
-          "primary-color": "#2FAD32",
-          "border-radius-base": "4px",
-        },
-        javascriptEnabled: true,
-      },
-    },
-  },
 });

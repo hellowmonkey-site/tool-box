@@ -1,21 +1,13 @@
 import "viewerjs/dist/viewer.css";
 import Viewer from "viewerjs";
-import { StorageType } from "@/config/type";
 let div: HTMLElement, viewer: Viewer;
 
-type Opt = string | StorageType[] | string[];
+type Opt = string | string[];
 
 export const imagePreview = (params: Opt, initialViewIndex = 0) => {
   let images: string[] = [];
   if (typeof params === "string") {
     images = [params];
-  } else {
-    images = params.map(item => {
-      if (typeof item !== "string") {
-        return item.path;
-      }
-      return item;
-    });
   }
   images = images.filter(v => !!v);
   if (!images.length) {
