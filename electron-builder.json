@@ -1,0 +1,25 @@
+{
+  "appId": "cc.hellowmonkey.tool",
+  "productName": "沃德工具箱",
+  "copyright": "2022",
+  "directories": {
+    "output": "release/${version}",
+    "buildResources": "electron/resource"
+  },
+  "win": {
+    "icon": "electron/image/logo.png",
+    "target": "nsis",
+    "legalTrademarks": "hellowmonkey",
+    "artifactName": "${productName}-Windows-${version}-Setup.${ext}"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": true,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": false
+  },
+  "files": [
+    "dist"
+  ]
+}

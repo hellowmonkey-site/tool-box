@@ -19,11 +19,14 @@ export default defineComponent({
           //   console.log(data);
           // });
           fileList.value.push(file!);
-          const formData = new FormData();
-          formData.append(file!.name, file!);
-          fly
-            .post("https://api.tinify.com/shrink", formData, { headers: { Authorization: "Basic 4RxZwMzdcMT4ksdgYnVYJzMtn2R7cgCT" } })
-            .then(data => data.data);
+          // const formData = new FormData();
+          // formData.append(file!.name, file!);
+          // fly
+          //   .post("https://api.tinify.com/shrink", formData, { headers: { Authorization: "Basic 4RxZwMzdcMT4ksdgYnVYJzMtn2R7cgCT" } })
+          //   .then(data => data.data);
+          electronAPI.compressImage("aaa").then(data => {
+            console.log(data);
+          });
         });
       console.log(list);
     }

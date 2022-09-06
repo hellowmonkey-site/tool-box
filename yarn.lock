@@ -5239,6 +5239,18 @@ viewerjs@^1.10.4:
   resolved "https://registry.npmjs.org/viewerjs/-/viewerjs-1.10.4.tgz"
   integrity sha512-CjMt64yC9D+XUx2t3F0TPbh/Yt5+/ke8/s3IizXa6NtksdJUFDoCcNxi/KRZ9eiZPR/D77pHnnQzAtCoLDaGIw==
 
+vite-plugin-electron-renderer@0.9.0:
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/vite-plugin-electron-renderer/-/vite-plugin-electron-renderer-0.9.0.tgz#12da19cf7c6fdb0d1b271a91873ee58883a264cb"
+  integrity sha512-Vc9rB3i0zlw32n5UGfoLmHAOZdH0ZbbA+tI0TPn36HbwXtmsfu+LVLqeccZh88iaQ3VJIm00rUDGMvswN2PLRg==
+
+vite-plugin-electron@^0.9.2:
+  version "0.9.2"
+  resolved "https://registry.yarnpkg.com/vite-plugin-electron/-/vite-plugin-electron-0.9.2.tgz#b7cfae4af3dbaafc114c7e80cdce372d150be156"
+  integrity sha512-8xUDn+Cdd1aFfCINpT9lRJNA9YaxIBW/Tlj4ALfPibFsntxEozJE4GpCog9bWhh8yMVd/ORsZgD6IbHYLwvzWg==
+  dependencies:
+    vite-plugin-electron-renderer "0.9.0"
+
 vite@^2.8.0:
   version "2.8.6"
   resolved "https://registry.npmjs.org/vite/-/vite-2.8.6.tgz"
