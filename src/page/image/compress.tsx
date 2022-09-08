@@ -1,39 +1,53 @@
 import { compressImage } from "@/service/image";
 import { UploadFileOutlined } from "@vicons/material";
-import { NIcon, NText, NUpload, NUploadDragger, UploadFileInfo } from "naive-ui";
+import { NAlert, NButton, NIcon, NSpin, NText, NUpload, NUploadDragger, UploadFileInfo } from "naive-ui";
 import { defineComponent, ref } from "vue";
-import fly from "flyio";
 
 export default defineComponent({
   props: {},
   emits: [],
   setup: (props, ctx) => {
-    const fileList = ref<File[]>([]);
+    const fileList = ref<{ name: string; success: boolean; path?: string }[]>([]);
+    const saveDirectory = ref("");
 
     function uploadImage(list: UploadFileInfo[]) {
       list
-        .filter(v => v.file)
         .map(v => v.file)
         .forEach(file => {
+          if (file) {
+            fileList.value.push({ name: file.name, success: false });
+            const index = fileList.value.length - 1;
+            electronAPI.compressImage(file.path, saveDirectory.value).then(path => {
+              fileList.value.splice(index, 1, { name: file.name, success: true, path });
+            });
+          }
           // compressImage(file).then(data => {
           //   console.log(data);
           // });
-          fileList.value.push(file!);
-          // const formData = new FormData();
-          // formData.append(file!.name, file!);
-          // fly
-          //   .post("https://api.tinify.com/shrink", formData, { headers: { Authorization: "Basic 4RxZwMzdcMT4ksdgYnVYJzMtn2R7cgCT" } })
-          //   .then(data => data.data);
-          electronAPI.compressImage("aaa").then(data => {
-            console.log(data);
-          });
         });
       console.log(list);
     }
 
     return () => (
       <>
-        <NUpload multiple directoryDnd onUpdate:fileList={fileList => uploadImage(fileList)} fileList={[]}>
+        <NAlert type="info" class="mar-b-5-item" showIcon title={`图片压缩后保存在：${saveDirectory.value || "原位置"}`}>
+          <div class="d-flex justify-end">
+            <NButton
+              type="primary"
+              onClick={() => {
+                electronAPI.selectDirectory("图片压缩后保存的位置").then(data => {
+                  if (data) {
+                    saveDirectory.value = data;
+                  }
+                });
+              }}
+              size="small"
+            >
+              选择位置
+            </NButton>
+          </div>
+        </NAlert>
+        <NUpload multiple directoryDnd onUpdate:fileList={fileList => uploadImage(fileList)} fileList={[]} class="mar-b-5-item">
           <NUploadDragger>
             <div class="d-flex direction-column align-items-center justify-center pad-5">
               <NIcon size={60} class="mar-b-5-item">
@@ -43,8 +57,30 @@ export default defineComponent({
             </div>
           </NUploadDragger>
         </NUpload>
+
         {fileList.value.map(item => (
-          <div>{item.name}</div>
+          <NAlert title={item.name} type={item.success ? "success" : "warning"} class="mar-b-3-item">
+            {{
+              icon() {
+                return item.success ? null : <NSpin size="small" />;
+              },
+              default() {
+                return item.path ? (
+                  <div class="d-flex justify-end">
+                    <NButton
+                      size="small"
+                      type="primary"
+                      onClick={() => {
+                        electronAPI.openDirectory(item.path!);
+                      }}
+                    >
+                      打开文件位置
+                    </NButton>
+                  </div>
+                ) : null;
+              },
+            }}
+          </NAlert>
         ))}
       </>
     );

@@ -3,7 +3,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
 import Index from "@/layout/Index";
 import { filterParams, putStyle } from "@/helper";
-import { setTitle, themeOverrides } from "@/service/common";
+import { setTitle, themeOverrides, visitedPageNum } from "@/service/common";
 
 NProgress.inc(0.2);
 NProgress.configure({ easing: "ease", speed: 500, showSpinner: false });
@@ -160,6 +160,7 @@ router.beforeEach(to => {
 });
 
 router.afterEach(() => {
+  visitedPageNum.value = history.length;
   NProgress.done();
 });
 

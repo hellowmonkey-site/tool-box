@@ -9,5 +9,8 @@ declare module "*.vue" {
 
 declare let electronAPI: {
   setTitle: (title: string) => void;
-  compressImage: (file: string) => Promise<string>;
+  compressImage: (filePath: string, targetPath?: string) => Promise<string>;
+  saveDialog: (title: string) => Promise<string>;
+  openDirectory: (path: string) => Promise<void>;
+  selectDirectory: (title?: string) => Promise<string>;
 };

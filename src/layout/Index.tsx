@@ -8,7 +8,6 @@ import {
   setNotification,
   settingOpen,
   themeColors,
-  themeOverrides,
   ThemeTypes,
   visitedPageNum,
 } from "@/service/common";
@@ -28,9 +27,6 @@ import {
   NLayoutSider,
   NMenu,
   NSelect,
-  NSlider,
-  NSpin,
-  NSwitch,
   NText,
   NTooltip,
   useDialog,
@@ -38,43 +34,22 @@ import {
   useNotification,
   useOsTheme,
 } from "naive-ui";
-import { computed, defineComponent, KeepAlive, onMounted, ref } from "vue";
+import { defineComponent, KeepAlive, onMounted } from "vue";
 import { RouterLink, RouterView, useRoute, useRouter } from "vue-router";
 import {
-  AndroidOutlined,
   ChevronLeftRound,
   ChevronRightRound,
-  ContentPasteSearchOutlined,
   DeveloperBoardOutlined,
-  FavoriteBorderOutlined,
-  FileDownloadFilled,
-  FileDownloadOutlined,
-  FullscreenExitOutlined,
-  FullscreenOutlined,
-  HistoryOutlined,
-  HomeFilled,
   ImageOutlined,
-  LogInOutlined,
-  LogOutOutlined,
-  MenuOutlined,
-  MovieFilterFilled,
-  // OpenInBrowserOutlined,
-  PersonFilled,
-  PersonOutlineOutlined,
   QrCodeOutlined,
   ReplayOutlined,
-  SearchFilled,
-  SearchOutlined,
   SettingsFilled,
   SettingsOutlined,
   VideocamOutlined,
   WbSunnyFilled,
   WbSunnyOutlined,
-  WindowOutlined,
 } from "@vicons/material";
-import { DropdownMixedOption } from "naive-ui/lib/dropdown/src/interface";
 import config from "@/config";
-import { getFullUrl } from "@/helper";
 import { menuRoutes } from "@/router";
 import Logo from "@/static/image/logo.png";
 
