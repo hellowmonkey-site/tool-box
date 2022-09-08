@@ -35,7 +35,7 @@ import {
   useOsTheme,
 } from "naive-ui";
 import { defineComponent, KeepAlive, onMounted } from "vue";
-import { RouterLink, RouterView, useRoute, useRouter } from "vue-router";
+import { RouteLocationNormalizedLoaded, RouterLink, RouterView, useRoute, useRouter } from "vue-router";
 import {
   ChevronLeftRound,
   ChevronRightRound,
@@ -321,9 +321,17 @@ export default defineComponent({
                 <NH2 prefix="bar" class="mar-b-4-item">
                   <NText>{route.meta.title}</NText>
                 </NH2>
-                <KeepAlive>
-                  <RouterView />
-                </KeepAlive>
+                <RouterView>
+                  {{
+                    default: ({ Component, route }: { Component: () => JSX.Element; route: RouteLocationNormalizedLoaded }) => {
+                      return (
+                        <KeepAlive>
+                          <Component key={String(route.name)} />
+                        </KeepAlive>
+                      );
+                    },
+                  }}
+                </RouterView>
               </div>
 
               {/* 返回顶部 */}
