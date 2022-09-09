@@ -11,4 +11,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
   selectDirectory: (path: string) => ipcRenderer.invoke("select-directory", path),
   // 选择文件夹
   openDirectory: (title: string) => ipcRenderer.invoke("open-directory", title),
+  // 选择文件夹
+  pngToIco: (filePath: string, size?: number) => ipcRenderer.invoke("png-to-ico", filePath, size),
 });

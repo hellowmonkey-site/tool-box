@@ -13,4 +13,7 @@ declare let electronAPI: {
   saveDialog: (title: string) => Promise<string>;
   openDirectory: (path: string) => Promise<void>;
   selectDirectory: (title?: string) => Promise<string>;
+  pngToIco: (filePath: string, size?: number) => Promise<Buffer>;
 };
+
+declare module "qrcode-decoder";

@@ -1,6 +1,6 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import { join } from "path";
-import { compressImage } from "./image";
+import { compressImage, pngToIco } from "./image";
 import { openDirectory, saveDialog, selectDirectory } from "./directory";
 
 const width = 1200;
@@ -84,6 +84,11 @@ function createWindow() {
   // 打开文件夹
   ipcMain.handle("open-directory", (e, title: string) => {
     return openDirectory(title);
+  });
+
+  // png转ico
+  ipcMain.handle("png-to-ico", (e, filePath: string, size: number) => {
+    return pngToIco(filePath, size);
   });
 }
 

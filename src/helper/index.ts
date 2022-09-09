@@ -199,3 +199,51 @@ export function putStyle(params: ObjType) {
   });
   return str;
 }
+
+// 复制文本到剪贴板
+export async function copyText(text: string): Promise<void> {
+  if (navigator.clipboard) {
+    await navigator.clipboard.writeText(text);
+  } else {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    textArea.style.opacity = "0";
+
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    const successful = document.execCommand("copy");
+    document.body.removeChild(textArea);
+    if (!successful) {
+      throw new Error("复制失败");
+    }
+  }
+}
+
+// 横线转驼峰
+export function lineToHump(str: string, lineType = "-") {
+  const reg = new RegExp(`${lineType}(\\w)`, "g");
+  return str.replace(reg, (all, letter) => {
+    return letter.toUpperCase();
+  });
+}
+
+// 横线转大驼峰
+export function lineToBigHump(str: string, lineType = "-") {
+  const [first, ...data] = lineToHump(str, lineType);
+  return first.toLocaleUpperCase() + data.join("");
+}
+
+// 驼峰转横线
+export function humpToLine(str: string, lineType = "-") {
+  let temp = str.replace(/[A-Z]/g, i => {
+    return lineType + i.toLowerCase();
+  });
+  if (temp.slice(0, 1) === lineType) {
+    temp = temp.slice(1);
+  }
+  return temp;
+}

@@ -14,6 +14,7 @@ export const menuRoutes: RouteRecordRaw[] = [
     name: "image-compress",
     meta: {
       title: "图片压缩",
+      electron: true,
     },
     component: () => import("@/page/image/compress"),
   },
@@ -38,6 +39,7 @@ export const menuRoutes: RouteRecordRaw[] = [
     name: "image-ico",
     meta: {
       title: "ico生成",
+      electron: true,
     },
     component: () => import("@/page/image/ico"),
   },
@@ -159,8 +161,9 @@ router.beforeEach(to => {
   return true;
 });
 
+const initHistoryLen = history.length;
 router.afterEach(() => {
-  visitedPageNum.value = history.length;
+  visitedPageNum.value = history.length - initHistoryLen;
   NProgress.done();
 });
 

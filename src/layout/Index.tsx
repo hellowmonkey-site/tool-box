@@ -26,6 +26,7 @@ import {
   NLayoutHeader,
   NLayoutSider,
   NMenu,
+  NResult,
   NSelect,
   NText,
   NTooltip,
@@ -318,12 +319,27 @@ export default defineComponent({
             </NLayoutSider>
             <NLayout>
               <div class="pad-4">
-                <NH2 prefix="bar" class="mar-b-4-item">
-                  <NText>{route.meta.title}</NText>
-                </NH2>
+                {route.meta.title ? (
+                  <NH2 prefix="bar" class="mar-b-4-item">
+                    <NText>{route.meta.title}</NText>
+                  </NH2>
+                ) : null}
                 <RouterView>
                   {{
                     default: ({ Component, route }: { Component: () => JSX.Element; route: RouteLocationNormalizedLoaded }) => {
+                      if (route.meta.electron && !config.isElectron) {
+                        return (
+                          <div class="d-flex direction-column align-items-center justify-center" style="height: 60vh">
+                            <NResult status="403" title="此功能暂不支持在浏览器使用，请下载桌面程序进行食用">
+                              {{
+                                footer() {
+                                  return <NButton>下载桌面程序</NButton>;
+                                },
+                              }}
+                            </NResult>
+                          </div>
+                        );
+                      }
                       return (
                         <KeepAlive>
                           <Component key={String(route.name)} />

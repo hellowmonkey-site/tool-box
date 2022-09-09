@@ -19,6 +19,7 @@ export default defineConfig({
           buildStart() {
             removeSync(join(__dirname, "dist/electron"));
             copySync(join(__dirname, "electron/resource"), "dist/electron/resource");
+            copySync(join(__dirname, "electron/data"), "dist/electron/data");
           },
         }
       : null,
