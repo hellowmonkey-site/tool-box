@@ -2,7 +2,7 @@ import config from "@/config";
 import { DialogApiInjection } from "naive-ui/lib/dialog/src/DialogProvider";
 import { NotificationApiInjection } from "naive-ui/lib/notification/src/NotificationProvider";
 import { computed, ref } from "vue";
-import { darkTheme, GlobalTheme, GlobalThemeOverrides, useOsTheme } from "naive-ui";
+import { darkTheme, GlobalTheme, GlobalThemeOverrides, NInput, useOsTheme } from "naive-ui";
 import { localStorage } from "@/helper/storage";
 import { MessageApiInjection } from "naive-ui/lib/message/src/MessageProvider";
 import { random } from "@/helper";

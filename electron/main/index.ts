@@ -1,7 +1,8 @@
-import { app, BrowserWindow, globalShortcut, ipcMain, Menu, Tray } from "electron";
+import { app, BrowserWindow, globalShortcut, ipcMain, Menu, SaveDialogOptions, Tray } from "electron";
 import { join } from "path";
 import { compressImage, pngToIco } from "./image";
-import { openDirectory, saveDialog, selectDirectory } from "./directory";
+import { openDirectory, saveDialog, saveBase64File, selectDirectory } from "./file";
+import { getFilePath, notification } from "./helper";
 
 const width = 1200;
 const height = 800;
@@ -159,8 +160,23 @@ ipcMain.handle("compress-image", async (e, filePath: string, targetPath?: string
 });
 
 // 选择保存位置弹框
-ipcMain.handle("save-dialog", (e, title: string) => {
-  return saveDialog(title);
+ipcMain.handle("save-dialog", (e, opts: SaveDialogOptions) => {
+  return saveDialog(opts);
+});
+
+// 保存base64文件
+ipcMain.handle("save-base64-file", (e, base64Str: string) => {
+  return saveBase64File(base64Str).then(fullPath => {
+    return compressImage(fullPath).then(data => {
+      const { fileName, filePath } = getFilePath(fullPath);
+      return {
+        ...data,
+        fullPath,
+        fileName,
+        filePath,
+      };
+    });
+  });
 });
 
 // 选择文件夹
@@ -176,4 +192,9 @@ ipcMain.handle("open-directory", (e, title: string) => {
 // png转ico
 ipcMain.handle("png-to-ico", (e, filePath: string, size: number) => {
   return pngToIco(filePath, size);
+});
+
+// 通知
+ipcMain.handle("notification", (e, title: string, content: string) => {
+  return notification(title, content);
 });

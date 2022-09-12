@@ -11,10 +11,14 @@ declare let electronAPI: {
   setProgressBar: (progress: number) => void;
   setTitle: (title: string) => void;
   compressImage: (filePath: string, targetPath?: string, width?: number) => Promise<{ fileSize: number; targetSize: number }>;
-  saveDialog: (title: string) => Promise<string>;
+  saveDialog: (opts: any) => Promise<string>;
+  saveBase64File: (
+    base64Str: string
+  ) => Promise<{ fileSize: number; targetSize: number; fullPath: string; fileName: string; filePath: string }>;
   openDirectory: (path: string) => Promise<void>;
   selectDirectory: (title?: string) => Promise<string>;
   pngToIco: (filePath: string, size?: number) => Promise<Buffer>;
+  notification: (title: string, content: string) => Promise<void>;
 };
 
 declare module "qrcode-decoder";

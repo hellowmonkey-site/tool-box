@@ -2,17 +2,18 @@ import tinify from "tinify";
 import toIco from "png-to-ico";
 import { join, sep } from "path";
 import * as fse from "fs-extra";
+import { getFilePath } from "./helper";
 
 const tinifyKeys = ["4RxZwMzdcMT4ksdgYnVYJzMtn2R7cgCT", "XrHtLVmrnvnhGLHH2RCkRN9BPm7ZdJg1", "ZZtYtycXQk4d5P11NmFTt70YnJrJx1Qk"];
 
 // 压缩图片
 export async function compressImage(filePath: string, targetPath?: string, width?: number) {
   let i = 0;
-  const arr = filePath.split(sep);
-  const fileName = arr[arr.length - 1];
+  const path = getFilePath(filePath);
   if (!targetPath) {
-    targetPath = arr.slice(0, arr.length - 1).join(sep);
+    targetPath = path.filePath;
   }
+  const fileName = path.fileName;
   targetPath = join(targetPath, fileName);
   const fileSize = fse.statSync(filePath).size;
   while (i < tinifyKeys.length) {

@@ -153,7 +153,6 @@ export default defineComponent({
           showRemoveButton={false}
           showRetryButton={false}
           showPreviewButton={false}
-          listType="image"
           onBeforeUpload={e => uploadImage(e.file)}
           fileList={[]}
           class="mar-b-5-item"
@@ -163,7 +162,7 @@ export default defineComponent({
               <NIcon size={60} class="mar-b-5-item">
                 <UploadFileOutlined />
               </NIcon>
-              <NText>点击或者拖动文件到该区域来上传</NText>
+              <NText>点击或者拖动图片到该区域来进行压缩</NText>
             </div>
           </NUploadDragger>
         </NUpload>

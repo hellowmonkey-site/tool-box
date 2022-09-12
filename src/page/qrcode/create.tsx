@@ -19,10 +19,10 @@ export default defineComponent({
         return;
       }
       const imgURL = canvasEl.value.toDataURL("image/png");
-      const dlLink = document.createElement("a");
-      dlLink.download = "qrcode.png";
-      dlLink.href = imgURL;
-      dlLink.click();
+      const a = document.createElement("a");
+      a.download = "qrcode.png";
+      a.href = imgURL;
+      a.click();
     }
 
     onActivated(() => {
