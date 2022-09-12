@@ -31,6 +31,20 @@ a {
 
 .content {
   width: 95%;
-  max-width: 1200px;
+  max-width: 1300px;
   margin: 20px auto;
+}
+
+.box {
+  height: 210px;
+  transition: transform $animate-time ease-in-out;
+  z-index: 0;
+  position: relative;
+
+  &:hover {
+    z-index: 1;
+    border-color: var(--primary-color);
+    transform: scale(1.08);
+    box-shadow: 0 0 10px -3px var(--primary-color);
+  }
 }

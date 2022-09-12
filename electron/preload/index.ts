@@ -1,16 +1,18 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("electronAPI", {
+  // 设置进度条
+  setProgressBar: (...args: any[]) => ipcRenderer.send("set-progress-bar", ...args),
   // 设置title
-  setTitle: (title: string) => ipcRenderer.send("set-title", title),
+  setTitle: (...args: any[]) => ipcRenderer.send("set-title", ...args),
   // 图片压缩
-  compressImage: (filePath: string, targetPath?: string) => ipcRenderer.invoke("compress-image", filePath, targetPath),
+  compressImage: (...args: any[]) => ipcRenderer.invoke("compress-image", ...args),
   // 保存对话框
-  saveDialog: (title: string) => ipcRenderer.invoke("save-dialog", title),
+  saveDialog: (...args: any[]) => ipcRenderer.invoke("save-dialog", ...args),
   // 选择文件夹
-  selectDirectory: (path: string) => ipcRenderer.invoke("select-directory", path),
+  selectDirectory: (...args: any[]) => ipcRenderer.invoke("select-directory", ...args),
   // 选择文件夹
-  openDirectory: (title: string) => ipcRenderer.invoke("open-directory", title),
+  openDirectory: (...args: any[]) => ipcRenderer.invoke("open-directory", ...args),
   // 选择文件夹
-  pngToIco: (filePath: string, size?: number) => ipcRenderer.invoke("png-to-ico", filePath, size),
+  pngToIco: (...args: any[]) => ipcRenderer.invoke("png-to-ico", ...args),
 });

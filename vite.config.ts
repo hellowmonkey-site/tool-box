@@ -23,7 +23,7 @@ export default defineConfig({
           },
         }
       : null,
-    isElectron && isDev
+    isElectron
       ? electron({
           main: {
             entry: "electron/main/index.ts",

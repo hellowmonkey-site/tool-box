@@ -41,6 +41,7 @@ import {
   ChevronLeftRound,
   ChevronRightRound,
   DeveloperBoardOutlined,
+  HomeOutlined,
   ImageOutlined,
   QrCodeOutlined,
   ReplayOutlined,
@@ -53,6 +54,64 @@ import {
 import config from "@/config";
 import { menuRoutes } from "@/router";
 import Logo from "@/static/image/logo.png";
+
+export const firstMenus: MenuOption[] = [
+  {
+    label: "图片",
+    key: "image",
+    icon() {
+      return (
+        <NIcon>
+          <ImageOutlined />
+        </NIcon>
+      );
+    },
+  },
+  {
+    label: "视频",
+    key: "video",
+    icon() {
+      return (
+        <NIcon>
+          <VideocamOutlined />
+        </NIcon>
+      );
+    },
+  },
+  {
+    label: "二维码",
+    key: "qrcode",
+    icon() {
+      return (
+        <NIcon>
+          <QrCodeOutlined />
+        </NIcon>
+      );
+    },
+  },
+  {
+    label: "开发",
+    key: "developer",
+    icon() {
+      return (
+        <NIcon>
+          <DeveloperBoardOutlined />
+        </NIcon>
+      );
+    },
+  },
+  {
+    label: "日常",
+    key: "util",
+    icon() {
+      return (
+        <NIcon>
+          <SettingsOutlined />
+        </NIcon>
+      );
+    },
+  },
+];
 
 export default defineComponent({
   props: {},
@@ -86,61 +145,20 @@ export default defineComponent({
 
     const menus: MenuOption[] = [
       {
-        label: "图片",
-        key: "image",
+        label() {
+          return <RouterLink to={{ name: "index" }}>首页</RouterLink>;
+        },
+        key: "index",
         icon() {
           return (
             <NIcon>
-              <ImageOutlined />
+              <HomeOutlined />
             </NIcon>
           );
         },
       },
-      {
-        label: "视频",
-        key: "video",
-        icon() {
-          return (
-            <NIcon>
-              <VideocamOutlined />
-            </NIcon>
-          );
-        },
-      },
-      {
-        label: "二维码",
-        key: "qrcode",
-        icon() {
-          return (
-            <NIcon>
-              <QrCodeOutlined />
-            </NIcon>
-          );
-        },
-      },
-      {
-        label: "开发",
-        key: "developer",
-        icon() {
-          return (
-            <NIcon>
-              <DeveloperBoardOutlined />
-            </NIcon>
-          );
-        },
-      },
-      {
-        label: "日常",
-        key: "util",
-        icon() {
-          return (
-            <NIcon>
-              <SettingsOutlined />
-            </NIcon>
-          );
-        },
-      },
-    ].map(v => renderMenu(v));
+      ...firstMenus.map(v => renderMenu(v)),
+    ];
 
     onMounted(() => {
       // 判断是不是IE浏览器

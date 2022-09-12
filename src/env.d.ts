@@ -8,8 +8,9 @@ declare module "*.vue" {
 }
 
 declare let electronAPI: {
+  setProgressBar: (progress: number) => void;
   setTitle: (title: string) => void;
-  compressImage: (filePath: string, targetPath?: string) => Promise<string>;
+  compressImage: (filePath: string, targetPath?: string, width?: number) => Promise<{ fileSize: number; targetSize: number }>;
   saveDialog: (title: string) => Promise<string>;
   openDirectory: (path: string) => Promise<void>;
   selectDirectory: (title?: string) => Promise<string>;

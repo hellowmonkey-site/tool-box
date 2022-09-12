@@ -38,13 +38,20 @@ export default defineComponent({
 
     return () => (
       <>
-        <NUpload onBeforeUpload={e => uploadImage(e.file)} fileList={[]} listType="image" showDownloadButton class="mar-b-5-item">
+        <NUpload
+          accept="image/*"
+          onBeforeUpload={e => uploadImage(e.file)}
+          fileList={[]}
+          listType="image"
+          showDownloadButton
+          class="mar-b-5-item"
+        >
           <NUploadDragger>
             <div class="d-flex direction-column align-items-center justify-center pad-5">
               <NIcon size={60} class="mar-b-5-item">
                 <UploadFileOutlined />
               </NIcon>
-              <NText>点击或者拖动.png文件到该区域来上传</NText>
+              <NText>点击或者拖动图片到该区域来上传</NText>
             </div>
           </NUploadDragger>
         </NUpload>

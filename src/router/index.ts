@@ -4,6 +4,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Index from "@/layout/Index";
 import { filterParams, putStyle } from "@/helper";
 import { setTitle, themeOverrides, visitedPageNum } from "@/service/common";
+import config from "@/config";
 
 NProgress.inc(0.2);
 NProgress.configure({ easing: "ease", speed: 500, showSpinner: false });
@@ -60,37 +61,45 @@ export const menuRoutes: RouteRecordRaw[] = [
     component: () => import("@/page/video/parse"),
   },
   {
-    path: "developer/javascript",
-    name: "developer-javascript",
+    path: "developer/regex",
+    name: "developer-regex",
     meta: {
-      title: "javascript",
+      title: "常用正则",
     },
-    component: () => import("@/page/developer/javascript"),
+    component: () => import("@/page/developer/regex"),
   },
-  {
-    path: "developer/babel",
-    name: "developer-babel",
-    meta: {
-      title: "babel编译",
-    },
-    component: () => import("@/page/developer/babel"),
-  },
-  {
-    path: "developer/typescript",
-    name: "developer-typescript",
-    meta: {
-      title: "typescript编译",
-    },
-    component: () => import("@/page/developer/typescript"),
-  },
-  {
-    path: "developer/css",
-    name: "developer-css",
-    meta: {
-      title: "css",
-    },
-    component: () => import("@/page/developer/css"),
-  },
+  // {
+  //   path: "developer/javascript",
+  //   name: "developer-javascript",
+  //   meta: {
+  //     title: "javascript",
+  //   },
+  //   component: () => import("@/page/developer/javascript"),
+  // },
+  // {
+  //   path: "developer/babel",
+  //   name: "developer-babel",
+  //   meta: {
+  //     title: "babel编译",
+  //   },
+  //   component: () => import("@/page/developer/babel"),
+  // },
+  // {
+  //   path: "developer/typescript",
+  //   name: "developer-typescript",
+  //   meta: {
+  //     title: "typescript编译",
+  //   },
+  //   component: () => import("@/page/developer/typescript"),
+  // },
+  // {
+  //   path: "developer/css",
+  //   name: "developer-css",
+  //   meta: {
+  //     title: "css",
+  //   },
+  //   component: () => import("@/page/developer/css"),
+  // },
   {
     path: "qrcode/create",
     name: "qrcode-create",
@@ -116,26 +125,42 @@ export const menuRoutes: RouteRecordRaw[] = [
     component: () => import("@/page/util/num-money"),
   },
   {
-    path: "util/timestamp",
-    name: "util-timestamp",
+    path: "util/timestamp-date",
+    name: "util-timestamp-date",
     meta: {
-      title: "时间戳转换",
+      title: "时间戳转日期",
     },
-    component: () => import("@/page/util/timestamp"),
+    component: () => import("@/page/util/timestamp-date"),
+  },
+  {
+    path: "util/date-timestamp",
+    name: "util-date-timestamp",
+    meta: {
+      title: "日期转时间戳",
+    },
+    component: () => import("@/page/util/date-timestamp"),
   },
 ];
 
 export const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    name: "index",
+    name: "app",
     component: Index,
     redirect: () => {
       return {
-        name: menuRoutes[0].name,
+        name: "index",
       };
     },
-    children: menuRoutes,
+    children: [
+      {
+        path: "",
+        name: "index",
+        meta: {},
+        component: () => import("@/page/index"),
+      },
+      ...menuRoutes,
+    ],
   },
   { path: "/:pathMatch(.*)*", name: "NotFound", component: () => import("@/page/error/404") },
 ];
@@ -156,7 +181,7 @@ router.beforeEach(to => {
 
   NProgress.done().start();
 
-  setTitle(String(to.meta.title || ""));
+  setTitle(String(to.meta.title || config.title));
 
   return true;
 });

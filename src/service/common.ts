@@ -5,6 +5,7 @@ import { computed, ref } from "vue";
 import { darkTheme, GlobalTheme, GlobalThemeOverrides, useOsTheme } from "naive-ui";
 import { localStorage } from "@/helper/storage";
 import { MessageApiInjection } from "naive-ui/lib/message/src/MessageProvider";
+import { random } from "@/helper";
 
 const os = useOsTheme();
 
@@ -160,3 +161,16 @@ export const setTitle = (title: string) => {
     electronAPI?.setTitle(title);
   }
 };
+
+// 设置进度条
+export function loadingProgressBar() {
+  let progress = 0;
+  const timer = setInterval(() => {
+    progress = Math.min(99, progress + random(1, 4));
+    electronAPI.setProgressBar(progress / 100);
+  }, 50);
+  return () => {
+    clearInterval(timer);
+    electronAPI.setProgressBar(0);
+  };
+}

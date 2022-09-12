@@ -77,3 +77,7 @@
 .ani-fade {
   animation: ani-fade $animate-time ease-in-out;
 }
+
+.ani {
+  transition: all $animate-time ease-in-out;
+}

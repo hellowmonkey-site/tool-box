@@ -1,5 +1,5 @@
 import { random } from "@/helper";
-import { message } from "@/service/common";
+import { loadingProgressBar, message } from "@/service/common";
 import { UploadFileOutlined } from "@vicons/material";
 import { NIcon, NRadio, NRadioGroup, NText, NUpload, NUploadDragger, UploadFileInfo } from "naive-ui";
 import { defineComponent, ref } from "vue";
@@ -22,6 +22,7 @@ export default defineComponent({
         const percentage = Math.max(99, li.percentage! + random(10, 300) / 100);
         fileList.value.splice(index, 1, { ...li, percentage });
       }, 100);
+      const hide = loadingProgressBar();
       electronAPI
         .pngToIco(file.path, icoSize.value)
         .then(data => {
@@ -34,6 +35,7 @@ export default defineComponent({
         })
         .finally(() => {
           clearInterval(timer);
+          hide();
         });
       return false;
     }

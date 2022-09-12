@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow, globalShortcut, ipcMain, Menu, Tray } from "electron";
 import { join } from "path";
 import { compressImage, pngToIco } from "./image";
 import { openDirectory, saveDialog, selectDirectory } from "./directory";
@@ -10,8 +10,33 @@ const icon = join(__dirname, "../resource/image/logo.png");
 const isDev = process.env.NODE_ENV === "development";
 const url = isDev ? "http://127.0.0.1:3030" : "https://tool.hellowmonkey.cc";
 
+let tray: Tray, win: BrowserWindow;
+
+function toggleWin() {
+  if (win.isVisible()) {
+    hideWin();
+  } else {
+    showWin();
+  }
+}
+
+function showWin() {
+  win.show();
+  win.setSkipTaskbar(false);
+}
+
+function hideWin() {
+  win.hide();
+  win.setSkipTaskbar(true);
+}
+
+function destroyApp() {
+  app.quit();
+  tray.destroy();
+}
+
 function createWindow() {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width,
     height,
     minWidth: width,
@@ -58,52 +83,97 @@ function createWindow() {
     loading.close();
     win.focus();
   });
-
-  // 设置title
-  ipcMain.on("set-title", (event, title) => {
-    const webContents = event.sender;
-    const win = BrowserWindow.fromWebContents(webContents);
-    win?.setTitle(title);
+  win.on("close", e => {
+    e.preventDefault();
+    hideWin();
   });
 
-  // 图片压缩
-  ipcMain.handle("compress-image", async (e, filePath: string, targetPath?: string) => {
-    return compressImage(filePath, targetPath);
-  });
+  // 新建托盘
+  tray = new Tray(icon);
+  // 托盘名称
+  tray.setToolTip(title);
+  // 托盘菜单
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: "显示",
+      click: () => {
+        showWin();
+      },
+    },
+    {
+      type: "separator",
+    },
+    {
+      label: "退出",
+      click: () => {
+        destroyApp();
+      },
+    },
+  ]);
+  // 载入托盘菜单
+  tray.setContextMenu(contextMenu);
 
-  // 选择保存位置弹框
-  ipcMain.handle("save-dialog", (e, title: string) => {
-    return saveDialog(title);
-  });
-
-  // 选择文件夹
-  ipcMain.handle("select-directory", (e, path: string) => {
-    return selectDirectory(path);
-  });
-
-  // 打开文件夹
-  ipcMain.handle("open-directory", (e, title: string) => {
-    return openDirectory(title);
-  });
-
-  // png转ico
-  ipcMain.handle("png-to-ico", (e, filePath: string, size: number) => {
-    return pngToIco(filePath, size);
+  tray.on("click", () => {
+    toggleWin();
   });
 }
 
-app.whenReady().then(() => {
-  createWindow();
+app
+  .whenReady()
+  .then(() => {
+    createWindow();
 
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-      createWindow();
-    }
+    app.on("activate", () => {
+      if (BrowserWindow.getAllWindows().length === 0) {
+        createWindow();
+      }
+    });
+  })
+  .then(() => {
+    globalShortcut.register("Alt+CommandOrControl+A", () => {
+      toggleWin();
+    });
   });
-});
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
-    app.quit();
+    destroyApp();
   }
+});
+
+// 设置title
+ipcMain.on("set-title", (event, title) => {
+  const webContents = event.sender;
+  const win = BrowserWindow.fromWebContents(webContents);
+  win?.setTitle(title);
+});
+
+// 设置进度条
+ipcMain.on("set-progress-bar", (e, progress: number) => {
+  win?.setProgressBar(progress);
+});
+
+// 图片压缩
+ipcMain.handle("compress-image", async (e, filePath: string, targetPath?: string, width?: number) => {
+  return compressImage(filePath, targetPath, width);
+});
+
+// 选择保存位置弹框
+ipcMain.handle("save-dialog", (e, title: string) => {
+  return saveDialog(title);
+});
+
+// 选择文件夹
+ipcMain.handle("select-directory", (e, path: string) => {
+  return selectDirectory(path);
+});
+
+// 打开文件夹
+ipcMain.handle("open-directory", (e, title: string) => {
+  return openDirectory(title);
+});
+
+// png转ico
+ipcMain.handle("png-to-ico", (e, filePath: string, size: number) => {
+  return pngToIco(filePath, size);
 });

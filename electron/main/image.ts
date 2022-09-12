@@ -6,19 +6,28 @@ import * as fse from "fs-extra";
 const tinifyKeys = ["4RxZwMzdcMT4ksdgYnVYJzMtn2R7cgCT", "XrHtLVmrnvnhGLHH2RCkRN9BPm7ZdJg1", "ZZtYtycXQk4d5P11NmFTt70YnJrJx1Qk"];
 
 // 压缩图片
-export async function compressImage(filePath: string, targetPath?: string) {
+export async function compressImage(filePath: string, targetPath?: string, width?: number) {
   let i = 0;
   const arr = filePath.split(sep);
   const fileName = arr[arr.length - 1];
   if (!targetPath) {
     targetPath = arr.slice(0, arr.length - 1).join(sep);
   }
+  targetPath = join(targetPath, fileName);
+  const fileSize = fse.statSync(filePath).size;
   while (i < tinifyKeys.length) {
     tinify.key = tinifyKeys[i];
     try {
-      const source = tinify.fromFile(filePath);
-      await source.toFile(join(targetPath, fileName));
-      return Promise.resolve(targetPath);
+      let source = tinify.fromFile(filePath);
+      if (width) {
+        source = source.resize({
+          method: "scale",
+          width,
+        });
+      }
+      await source.toFile(targetPath);
+      const targetSize = fse.statSync(targetPath).size;
+      return Promise.resolve({ fileSize, targetSize });
     } catch (error) {
       i++;
     }

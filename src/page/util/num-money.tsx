@@ -1,7 +1,7 @@
 import { copyText } from "@/helper";
 import { message } from "@/service/common";
 import { NAlert, NButton, NInput } from "naive-ui";
-import { defineComponent, ref } from "vue";
+import { defineComponent, onActivated, ref } from "vue";
 
 export default defineComponent({
   props: {},
@@ -9,6 +9,7 @@ export default defineComponent({
   setup: (props, ctx) => {
     const num = ref<string | null>(null);
     const ret = ref<string>("");
+    const iptEl = ref<HTMLInputElement>();
 
     function digitUppercase(n: number) {
       const fraction = ["角", "分"];
@@ -49,6 +50,10 @@ export default defineComponent({
       ret.value = digitUppercase(Number(num.value));
     }
 
+    onActivated(() => {
+      iptEl.value?.focus();
+    });
+
     return () => (
       <div class="d-flex direction-column">
         <NInput
@@ -61,6 +66,7 @@ export default defineComponent({
             }
           }}
           size="large"
+          ref={iptEl}
           onKeydown={e => {
             if (e.key === "Enter") {
               e.preventDefault();
@@ -68,17 +74,19 @@ export default defineComponent({
             }
           }}
         />
-        <div class="mar-b-4-item d-flex align-items-center justify-center">
+        {num.value ? (
           <NButton
             type="primary"
             size="large"
+            class="mar-b-4-item"
+            block
             onClick={() => {
               handleSubmit();
             }}
           >
             转换
           </NButton>
-        </div>
+        ) : null}
         {ret.value ? (
           <NAlert type="success" showIcon title={ret.value}>
             <div class="d-flex justify-end">
