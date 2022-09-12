@@ -35,7 +35,7 @@ function hideWin() {
 
 function destroyApp() {
   app.quit();
-  tray.destroy();
+  tray?.destroy();
 }
 
 function createWindow() {
