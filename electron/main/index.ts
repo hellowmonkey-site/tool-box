@@ -22,7 +22,9 @@ function toggleWin() {
 }
 
 function showWin() {
+  if (win.isMinimized()) win.restore();
   win?.show();
+  win?.focus();
   win?.setSkipTaskbar(false);
 }
 
@@ -141,6 +143,15 @@ app.on("window-all-closed", () => {
     destroyApp();
   }
 });
+
+const gotTheLock = app.requestSingleInstanceLock();
+if (!gotTheLock) {
+  destroyApp();
+} else {
+  app.on("second-instance", () => {
+    showWin();
+  });
+}
 
 // 设置title
 ipcMain.on("set-title", (event, title) => {
