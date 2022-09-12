@@ -14,7 +14,7 @@ const url = isDev ? "http://127.0.0.1:3030" : "https://tool.hellowmonkey.cc";
 let tray: Tray, win: BrowserWindow;
 
 function toggleWin() {
-  if (win.isVisible()) {
+  if (win?.isVisible()) {
     hideWin();
   } else {
     showWin();
@@ -22,13 +22,13 @@ function toggleWin() {
 }
 
 function showWin() {
-  win.show();
-  win.setSkipTaskbar(false);
+  win?.show();
+  win?.setSkipTaskbar(false);
 }
 
 function hideWin() {
-  win.hide();
-  win.setSkipTaskbar(true);
+  win?.hide();
+  win?.setSkipTaskbar(true);
 }
 
 function destroyApp() {

@@ -54,6 +54,8 @@ import {
 import config from "@/config";
 import { menuRoutes } from "@/router";
 import Logo from "@/static/image/logo.png";
+import { productName } from "electron-builder.json";
+import { version } from "package.json";
 
 export const firstMenus: MenuOption[] = [
   {
@@ -351,7 +353,15 @@ export default defineComponent({
                             <NResult status="403" title="此功能暂不支持在浏览器使用，请下载桌面程序进行食用">
                               {{
                                 footer() {
-                                  return <NButton>下载桌面程序</NButton>;
+                                  return (
+                                    <NButton
+                                      onClick={() => {
+                                        window.open(config.releaseUrl);
+                                      }}
+                                    >
+                                      下载桌面程序
+                                    </NButton>
+                                  );
                                 },
                               }}
                             </NResult>
