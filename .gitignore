@@ -13,6 +13,8 @@ dist-ssr
 release
 *.local
 
+electron/data
+
 # Editor directories and files
 .idea
 .DS_Store

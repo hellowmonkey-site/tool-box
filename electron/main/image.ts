@@ -3,8 +3,7 @@ import toIco from "png-to-ico";
 import { join, sep } from "path";
 import * as fse from "fs-extra";
 import { getFilePath } from "./helper";
-
-const tinifyKeys = ["4RxZwMzdcMT4ksdgYnVYJzMtn2R7cgCT", "XrHtLVmrnvnhGLHH2RCkRN9BPm7ZdJg1", "ZZtYtycXQk4d5P11NmFTt70YnJrJx1Qk"];
+import { tinifyKeys } from "../data/config.json";
 
 // 压缩图片
 export async function compressImage(filePath: string, targetPath?: string, width?: number) {
