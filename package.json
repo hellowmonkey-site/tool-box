@@ -25,7 +25,6 @@
     "qrcode-decoder": "^0.3.1",
     "reset-css": "^5.0.1",
     "vicons": "^0.0.1",
-    "viewerjs": "^1.10.4",
     "vue": "^3.2.25",
     "vue-router": "4"
   },

@@ -6,4 +6,6 @@ export default {
   isElectron,
   title: "沃德工具箱",
   releaseUrl: "https://github.com",
+  dbName: "tool",
+  dbVersion: 1,
 };

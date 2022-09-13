@@ -247,3 +247,14 @@ export function humpToLine(str: string, lineType = "-") {
   }
   return temp;
 }
+
+// 下载
+let a: HTMLAnchorElement;
+export function downLoad(url: string, fileName: string) {
+  if (!a) {
+    a = document.createElement("a");
+  }
+  a.href = url;
+  a.download = fileName;
+  a.click();
+}

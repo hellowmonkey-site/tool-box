@@ -3,7 +3,7 @@ import Cropper from "cropperjs";
 import "cropperjs/dist/cropper.css";
 import { NButton, NIcon, NInput, NInputGroup, NInputGroupLabel, NText, NUpload, NUploadDragger, UploadFileInfo } from "naive-ui";
 import { UploadFileOutlined } from "@vicons/material";
-import { fileToBase64 } from "@/helper";
+import { downLoad, fileToBase64 } from "@/helper";
 import config from "@/config";
 import { dialog, message } from "@/service/common";
 
@@ -81,10 +81,7 @@ export default defineComponent({
             message.error("请先输入文件名称");
             return;
           }
-          const a = document.createElement("a");
-          a.href = src;
-          a.download = fileName.value;
-          a.click();
+          downLoad(src, fileName.value);
         }
       } finally {
         loading.value = false;

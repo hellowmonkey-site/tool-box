@@ -1,6 +1,8 @@
 import { NButton, NCard, NInput } from "naive-ui";
-import { defineComponent, onActivated, ref } from "vue";
+import { defineComponent, nextTick, onActivated, ref } from "vue";
+import { downLoad } from "@/helper";
 import qrcode from "qrcode";
+import Db from "@/helper/db";
 
 export default defineComponent({
   props: {},
@@ -9,20 +11,27 @@ export default defineComponent({
     const text = ref("");
     const canvasEl = ref<HTMLCanvasElement>();
     const iptEl = ref<HTMLInputElement>();
+    const showPreview = ref(false);
 
     function makeQrcode() {
-      qrcode.toCanvas(canvasEl.value, text.value, { width: 260, margin: 2 });
+      if (!text.value) {
+        return;
+      }
+      showPreview.value = true;
+      nextTick(() => {
+        qrcode.toCanvas(canvasEl.value, text.value, { width: 260, margin: 2 });
+      });
     }
 
-    function downCanvas() {
+    async function downCanvas() {
       if (!canvasEl.value) {
         return;
       }
       const imgURL = canvasEl.value.toDataURL("image/png");
-      const a = document.createElement("a");
-      a.download = "qrcode.png";
-      a.href = imgURL;
-      a.click();
+      // const table = await new Db().open("logo").then(t => t.selectTable("logo"));
+      // const data = await table.findAll();
+      // console.log(data);
+      downLoad(imgURL, "qrcode.png");
     }
 
     onActivated(() => {
@@ -32,7 +41,17 @@ export default defineComponent({
     return () => (
       <div class="d-flex align-items-start">
         <div class="d-flex align-items-center direction-column justify-center flex-item-extend mar-r-4-item">
-          <NInput type="textarea" ref={iptEl} placeholder="请输入文字内容" rows={8} class="mar-b-5-item" v-model={[text.value, "value"]} />
+          <NInput
+            type="textarea"
+            onUpdateValue={() => {
+              showPreview.value = false;
+            }}
+            ref={iptEl}
+            placeholder="请输入文字内容"
+            rows={8}
+            class="mar-b-5-item"
+            v-model={[text.value, "value"]}
+          />
           {text.value ? (
             <NButton
               type="primary"
@@ -45,7 +64,7 @@ export default defineComponent({
             </NButton>
           ) : null}
         </div>
-        {text.value ? (
+        {text.value && showPreview.value ? (
           <NCard style={{ width: "300px" }} title="预览区" bordered>
             {{
               default() {

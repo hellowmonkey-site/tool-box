@@ -5194,11 +5194,6 @@ vicons@^0.0.1:
   dependencies:
     vue "^3.0.2"
 
-viewerjs@^1.10.4:
-  version "1.10.5"
-  resolved "https://registry.yarnpkg.com/viewerjs/-/viewerjs-1.10.5.tgz#a0f52fe7c15fa27003099af8e7552378ed5fc94d"
-  integrity sha512-QwKrmXlSfKg5x4y74F/jicpHIRqBMMfHXyboOxHDi5n4XAaejjpalphPq4/HW6venQAoMiD57HpVwBk0JvqpSA==
-
 vite-plugin-electron-renderer@0.9.0:
   version "0.9.0"
   resolved "https://registry.yarnpkg.com/vite-plugin-electron-renderer/-/vite-plugin-electron-renderer-0.9.0.tgz#12da19cf7c6fdb0d1b271a91873ee58883a264cb"

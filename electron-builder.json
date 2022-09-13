@@ -10,7 +10,7 @@
     "icon": "dist/electron/resource/image/logo.png",
     "target": "nsis",
     "legalTrademarks": "hellowmonkey",
-    "artifactName": "${productName}-Windows-${version}-Setup.${ext}"
+    "artifactName": "${productName}-Windows-Setup-${version}.${ext}"
   },
   "nsis": {
     "oneClick": false,

@@ -2,26 +2,23 @@ import { copyText } from "@/helper";
 import { message } from "@/service/common";
 import { NAlert, NButton, NInput, NInputGroup, NInputGroupLabel, NSelect } from "naive-ui";
 import { defineComponent, onActivated, reactive, ref } from "vue";
+import { DateType } from "@/service/util";
 import dayjs from "dayjs";
 
 export default defineComponent({
   props: {},
   emits: [],
   setup: (props, ctx) => {
-    const enum Type {
-      S = "s",
-      MS = "ms",
-    }
-    const form = reactive<{ value: string; type: Type }>({
+    const form = reactive<{ value: string; type: DateType }>({
       value: "",
-      type: Type.S,
+      type: DateType.S,
     });
     const ret = ref<string>("");
     const iptEl = ref<HTMLInputElement>();
 
     function handleSubmit() {
       let value = Number(form.value);
-      if (form.type === Type.S) {
+      if (form.type === DateType.S) {
         value = Math.ceil(value / 1000);
       }
       ret.value = dayjs(value).format("YYYY-MM-DD HH:mm:ss");
@@ -54,11 +51,11 @@ export default defineComponent({
                 options={[
                   {
                     label: "秒(s)",
-                    value: Type.S,
+                    value: DateType.S,
                   },
                   {
                     label: "毫秒(ms)",
-                    value: Type.MS,
+                    value: DateType.MS,
                   },
                 ]}
                 v-model={[form.type, "value"]}
