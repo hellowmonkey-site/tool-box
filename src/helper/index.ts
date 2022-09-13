@@ -1,5 +1,6 @@
 import { ObjType } from "@/config/type";
 import { isNumberLike, isEmpty, isUrl } from "@/helper/validate";
+import { nextTick } from "vue";
 
 // 加零
 export const addZero = (num: number | string): string => {
@@ -257,4 +258,36 @@ export function downLoad(url: string, fileName: string) {
   a.href = url;
   a.download = fileName;
   a.click();
+}
+
+// 等待一段时间
+export function sleep(s: number) {
+  return new Promise<NodeJS.Timeout>(resolve => {
+    const timer = setTimeout(() => {
+      resolve(timer);
+    }, s);
+  });
+}
+
+// nextTick的Promise
+export function awaitNextTick(data?: any) {
+  return new Promise(resolve => {
+    nextTick(() => {
+      resolve(data);
+    });
+  });
+}
+
+// 图片加载
+export function awaitLoadImg(src: string) {
+  const img = new Image();
+  img.src = src;
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    img.onload = () => {
+      resolve(img);
+    };
+    img.onerror = e => {
+      reject(e);
+    };
+  });
 }

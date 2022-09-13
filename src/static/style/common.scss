@@ -519,6 +519,26 @@ a {
   background-color: transparent;
 }
 
+.object-cover {
+  object-fit: cover;
+}
+
+.object-fill {
+  object-fit: fill;
+}
+
+.object-contain {
+  object-fit: contain;
+}
+
+.object-none {
+  object-fit: none;
+}
+
+.object-scale-down {
+  object-fit: scale-down;
+}
+
 .border {
   border: 1PX solid var(--border-color);
 }

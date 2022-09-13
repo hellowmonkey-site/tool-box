@@ -2,7 +2,6 @@ import config from "@/config";
 
 export default class Db {
   db?: IDBDatabase;
-  table: IDBObjectStore | null = null;
   readonly idKey = { keyPath: "id", autoIncrement: true };
 
   open(createTableName?: string) {
@@ -11,7 +10,7 @@ export default class Db {
       request.onupgradeneeded = () => {
         this.db = request.result;
         if (createTableName && !this.db.objectStoreNames.contains(createTableName)) {
-          this.table = this.db.createObjectStore(createTableName, this.idKey);
+          this.db.createObjectStore(createTableName, this.idKey);
         }
       };
       request.onsuccess = () => {
@@ -21,34 +20,14 @@ export default class Db {
     });
   }
 
-  openTable(tableName: string) {
-    return this.open(tableName).then(() => this.selectTable(tableName));
-  }
-
-  checkTable() {
+  // 获取单条记录
+  findOne<T>(tableName: string, id: number) {
     if (!this.db) {
       throw new Error("错误的db");
     }
-    if (!this.table) {
-      throw new Error("错误的table");
-    }
-  }
-
-  // 选择表
-  selectTable(tableName: string) {
-    if (!this.db) {
-      throw new Error("请先选择表");
-    }
-    this.table = this.db!.transaction(tableName, "readwrite").objectStore(tableName);
-    return this;
-  }
-
-  // 获取单条记录
-  findOne<T>(id: number) {
-    this.checkTable();
 
     return new Promise<T>((resolve, reject) => {
-      const request = this.table!.get(id);
+      const request = this.db!.transaction(tableName).objectStore(tableName).get(id);
       request.onerror = event => {
         reject(event);
       };
@@ -60,11 +39,13 @@ export default class Db {
   }
 
   // 获取多条记录
-  findAll<T>(query?: any) {
-    this.checkTable();
+  findAll<T>(tableName: string, query?: any) {
+    if (!this.db) {
+      throw new Error("错误的db");
+    }
 
     return new Promise<T[]>((resolve, reject) => {
-      const request = this.table!.getAll(query);
+      const request = this.db!.transaction(tableName, "readwrite").objectStore(tableName).getAll(query);
       request.onerror = event => {
         reject(event);
       };
@@ -76,11 +57,15 @@ export default class Db {
   }
 
   // 添加
-  insert(data: any) {
-    this.checkTable();
+  insert(tableName: string, data: any) {
+    if (!this.db) {
+      throw new Error("错误的db");
+    }
 
     return new Promise<number>((resolve, reject) => {
-      const request = this.table!.add(data);
+      const request = this.db!.transaction(tableName, "readwrite")
+        .objectStore(tableName)
+        .add({ ...data, createdAt: Date.now() });
       request.onerror = event => {
         reject(event);
       };
@@ -92,11 +77,13 @@ export default class Db {
   }
 
   // 更新
-  update(data: any) {
-    this.checkTable();
+  update(tableName: string, data: any) {
+    if (!this.db) {
+      throw new Error("错误的db");
+    }
 
     return new Promise((resolve, reject) => {
-      const request = this.table!.put(data);
+      const request = this.db!.transaction(tableName, "readwrite").objectStore(tableName).put(data);
       request.onerror = event => {
         reject(event);
       };
@@ -108,11 +95,13 @@ export default class Db {
   }
 
   // 删除
-  delete(id: number) {
-    this.checkTable();
+  delete(tableName: string, id: number) {
+    if (!this.db) {
+      throw new Error("错误的db");
+    }
 
     return new Promise((resolve, reject) => {
-      const request = this.table!.delete(id);
+      const request = this.db!.transaction(tableName, "readwrite").objectStore(tableName).delete(id);
       request.onerror = event => {
         reject(event);
       };

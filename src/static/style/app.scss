@@ -48,3 +48,17 @@ a {
     box-shadow: 0 0 10px -3px var(--primary-color);
   }
 }
+
+.logo-box {
+  width: 80px;
+  height: 80px;
+  border-radius: 5px;
+  overflow: hidden;
+  position: relative;
+
+  .logo-delete-btn {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+  }
+}
