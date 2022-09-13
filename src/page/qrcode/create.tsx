@@ -28,9 +28,9 @@ export default defineComponent({
         return;
       }
       const imgURL = canvasEl.value.toDataURL("image/png");
-      // const table = await new Db().open("logo").then(t => t.selectTable("logo"));
-      // const data = await table.findAll();
-      // console.log(data);
+      const table = await new Db().openTable("logo");
+      const data = await table.findAll();
+      console.log(data);
       downLoad(imgURL, "qrcode.png");
     }
 

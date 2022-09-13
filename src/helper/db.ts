@@ -3,7 +3,7 @@ import config from "@/config";
 export default class Db {
   db?: IDBDatabase;
   table: IDBObjectStore | null = null;
-  idKey = { keyPath: "id", autoIncrement: true };
+  readonly idKey = { keyPath: "id", autoIncrement: true };
 
   open(createTableName?: string) {
     return new Promise<this>(resolve => {
@@ -19,6 +19,10 @@ export default class Db {
         resolve(this);
       };
     });
+  }
+
+  openTable(tableName: string) {
+    return this.open(tableName).then(() => this.selectTable(tableName));
   }
 
   checkTable() {
