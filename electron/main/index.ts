@@ -3,7 +3,7 @@ import { join } from "path";
 import { compressImage, pngToIco } from "./image";
 import { openDirectory, saveDialog, saveBase64File, selectDirectory } from "./file";
 import { getFilePath, notification } from "./helper";
-import config from "../data/config";
+import config from "../config";
 
 let tray: Tray, win: BrowserWindow;
 

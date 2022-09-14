@@ -1,9 +1,9 @@
 import tinify from "tinify";
-import { join, sep } from "path";
+import { join } from "path";
 import * as fse from "fs-extra";
 import { getFilePath } from "./helper";
 import toIco from "png-to-ico";
-import config from "../data/config";
+import config from "../config";
 
 // 压缩图片
 export async function compressImage(filePath: string, targetPath?: string, width?: number) {
