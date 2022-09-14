@@ -81,7 +81,7 @@ export default defineComponent({
     }
 
     return () => (
-      <>
+      <div>
         <NAlert type="info" class="mar-b-5-item" showIcon title={`图片压缩后保存在：${saveDirectory.value || "原位置"}`}>
           <div class="d-flex justify-end">
             <NButton
@@ -200,7 +200,7 @@ export default defineComponent({
             </NCard>
           ))}
         </div>
-      </>
+      </div>
     );
   },
 });

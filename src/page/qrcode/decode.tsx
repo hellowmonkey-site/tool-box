@@ -37,7 +37,7 @@ export default defineComponent({
     }
 
     return () => (
-      <>
+      <div>
         <NUpload
           accept="image/*"
           onBeforeUpload={e => uploadImage(e.file)}
@@ -55,7 +55,7 @@ export default defineComponent({
             </div>
           </NUploadDragger>
         </NUpload>
-      </>
+      </div>
     );
   },
 });

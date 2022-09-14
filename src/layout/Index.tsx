@@ -35,7 +35,7 @@ import {
   useNotification,
   useOsTheme,
 } from "naive-ui";
-import { defineComponent, KeepAlive, onMounted } from "vue";
+import { defineComponent, KeepAlive, onMounted, Transition } from "vue";
 import { RouteLocationNormalizedLoaded, RouterLink, RouterView, useRoute, useRouter } from "vue-router";
 import {
   ChevronLeftRound,
@@ -369,9 +369,11 @@ export default defineComponent({
                         );
                       }
                       return (
-                        <KeepAlive>
-                          <Component key={String(route.name)} />
-                        </KeepAlive>
+                        <Transition name="slider-top">
+                          <KeepAlive>
+                            <Component key={String(route.name)} />
+                          </KeepAlive>
+                        </Transition>
                       );
                     },
                   }}

@@ -29,7 +29,7 @@ export default defineComponent({
     });
 
     return () => (
-      <>
+      <div>
         <div class="d-flex mar-b-5-item">
           <div class="mar-r-3-item flex-item-extend">
             <NInputGroup>
@@ -90,7 +90,7 @@ export default defineComponent({
             </div>
           </NAlert>
         ) : null}
-      </>
+      </div>
     );
   },
 });

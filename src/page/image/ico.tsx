@@ -10,38 +10,38 @@ export default defineComponent({
   setup: (props, ctx) => {
     const fileList = ref<UploadFileInfo[]>([]);
     const icoSizes = ref<number[]>([16, 24, 32, 48, 64, 128, 256]);
-    const icoSize = ref<number>(256);
+    const icoSize = ref<number>(32);
 
     function uploadImage({ file }: UploadFileInfo) {
       if (!file) return;
-      const item: UploadFileInfo = { id: file.name, name: file.name, status: "uploading", file };
+      const item: UploadFileInfo = { id: file.name, name: file.name, status: "uploading", file, percentage: 0 };
       fileList.value.push(item);
       const index = fileList.value.length - 1;
-      const timer = setInterval(() => {
-        const li: UploadFileInfo = fileList.value[index];
-        const percentage = Math.max(99, li.percentage! + random(10, 300) / 100);
-        fileList.value.splice(index, 1, { ...li, percentage });
+      const t = setInterval(() => {
+        const li = fileList.value[index];
+        const percentage = Math.min(99, li.percentage! + random(10, 300) / 100);
+        fileList.value.splice(index, 1, { ...li, percentage: parseFloat(percentage.toFixed(2)), status: "uploading" });
       }, 100);
       const hide = loadingProgressBar();
       electronAPI
         .pngToIco(file.path, icoSize.value)
         .then(data => {
           fileList.value.splice(index, 1, { ...item, status: "finished" });
-          message.success("转化成功，请检查文件目录的favicon.ico文件");
+          message.success(`转化成功，【${data}】`);
         })
         .catch(e => {
           fileList.value.splice(index, 1, { ...item, status: "error" });
           message.error(`${item.name}转化失败`);
         })
         .finally(() => {
-          clearInterval(timer);
+          clearInterval(t);
           hide();
         });
       return false;
     }
 
     return () => (
-      <>
+      <div>
         <div class="d-flex justify-end mar-b-2-item align-items-center">
           <NText>选择尺寸：</NText>
           <NRadioGroup v-model={[icoSize.value, "value"]}>
@@ -73,7 +73,7 @@ export default defineComponent({
             </div>
           </NUploadDragger>
         </NUpload>
-      </>
+      </div>
     );
   },
 });

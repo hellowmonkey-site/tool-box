@@ -17,7 +17,7 @@ declare let electronAPI: {
   ) => Promise<{ fileSize: number; targetSize: number; fullPath: string; fileName: string; filePath: string }>;
   openDirectory: (path: string) => Promise<void>;
   selectDirectory: (title?: string) => Promise<string>;
-  pngToIco: (filePath: string, size?: number) => Promise<Buffer>;
+  pngToIco: (filePath: string, size?: number) => Promise<string>;
   notification: (title: string, content: string) => Promise<void>;
 };
 

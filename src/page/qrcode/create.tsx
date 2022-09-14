@@ -119,7 +119,7 @@ export default defineComponent({
     });
 
     return () => (
-      <>
+      <div>
         <div class="d-flex align-items-start">
           <div class="d-flex align-items-center direction-column justify-center flex-item-extend mar-r-4-item">
             <NInput
@@ -199,9 +199,9 @@ export default defineComponent({
         </div>
         <NDrawer to="body" v-model={[logoDrawer.value, "show"]} placement="right" closeOnEsc resizable defaultWidth={500}>
           <NDrawerContent title="上传logo" closable>
-            <div class="d-flex direction-column">
-              <NUpload accept="image/*" onBeforeUpload={e => uploadImage(e.file)} fileList={[]} class="mar-b-5-item">
-                <NButton size="large" block>
+            <>
+              <NUpload accept="image/*" onBeforeUpload={e => uploadImage(e.file)} fileList={[]} class="mar-b-5-item full-width">
+                <NButton size="large" block class="full-width">
                   {{
                     icon() {
                       return (
@@ -265,10 +265,10 @@ export default defineComponent({
                   ))}
                 </div>
               ) : null}
-            </div>
+            </>
           </NDrawerContent>
         </NDrawer>
-      </>
+      </div>
     );
   },
 });

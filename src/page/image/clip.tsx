@@ -3,7 +3,7 @@ import Cropper from "cropperjs";
 import "cropperjs/dist/cropper.css";
 import { NButton, NIcon, NInput, NInputGroup, NInputGroupLabel, NText, NUpload, NUploadDragger, UploadFileInfo } from "naive-ui";
 import { UploadFileOutlined } from "@vicons/material";
-import { downLoad, fileToBase64 } from "@/helper";
+import { downLoad, fileToBase64, sleep } from "@/helper";
 import config from "@/config";
 import { dialog, message } from "@/service/common";
 
@@ -15,23 +15,20 @@ export default defineComponent({
     const orgImg = ref<HTMLImageElement>();
     const loading = ref(false);
     let cropper: Cropper;
-    let timer: NodeJS.Timeout;
 
     async function uploadImage({ file }: UploadFileInfo) {
       if (!file) return;
       orgSrc.value = await fileToBase64(file).then(v => v as string);
       cropper?.destroy();
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        cropper = new Cropper(orgImg.value!, {
-          viewMode: 1,
-          dragMode: "crop",
-          initialAspectRatio: 1,
-          aspectRatio: 1,
-          preview: ".preview",
-          zoomOnWheel: true,
-        });
-      }, 100);
+      await sleep(100);
+      cropper = new Cropper(orgImg.value!, {
+        viewMode: 1,
+        dragMode: "crop",
+        initialAspectRatio: 1,
+        preview: ".preview",
+        zoomOnWheel: true,
+        aspectRatio: undefined,
+      });
     }
 
     async function handleClip() {
@@ -89,7 +86,7 @@ export default defineComponent({
     }
 
     return () => (
-      <>
+      <div>
         <NUpload
           accept="image/*"
           onBeforeUpload={e => uploadImage(e.file)}
@@ -115,8 +112,10 @@ export default defineComponent({
             <div style="width: calc(100% - 480px)">
               <img src={orgSrc.value} alt="图片裁剪" ref={orgImg} />
             </div>
-            <div class="d-flex direction-column">
-              <div class="border preview overflow-hidden mar-b-4-item" style="width: 450px; height: 450px"></div>
+            <div class="d-flex direction-column flex-item-extend align-items-start mar-l-7">
+              <div class="d-flex align-items-center justify-center full-width mar-b-7-item">
+                <div class="border preview overflow-hidden" style="width: 450px; height: 450px"></div>
+              </div>
               <NButton
                 block
                 type="primary"
@@ -131,7 +130,7 @@ export default defineComponent({
             </div>
           </div>
         ) : null}
-      </>
+      </div>
     );
   },
 });

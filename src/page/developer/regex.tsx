@@ -9,7 +9,7 @@ export default defineComponent({
   emits: [],
   setup: (props, ctx) => {
     return () => (
-      <>
+      <div>
         {regList.map(item => (
           <>
             <NH4 prefix="bar">{item.title}</NH4>
@@ -29,7 +29,7 @@ export default defineComponent({
             </NCard>
           </>
         ))}
-      </>
+      </div>
     );
   },
 });

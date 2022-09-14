@@ -3,13 +3,7 @@ import { join } from "path";
 import { compressImage, pngToIco } from "./image";
 import { openDirectory, saveDialog, saveBase64File, selectDirectory } from "./file";
 import { getFilePath, notification } from "./helper";
-
-const width = 1200;
-const height = 800;
-const title = "沃德工具箱";
-const icon = join(__dirname, "../resource/image/logo.png");
-const isDev = process.env.NODE_ENV === "development";
-const url = isDev ? "http://127.0.0.1:3030" : "https://tool.hellowmonkey.cc";
+import config from "../data/config";
 
 let tray: Tray, win: BrowserWindow;
 
@@ -40,11 +34,11 @@ function destroyApp() {
 
 function createWindow() {
   win = new BrowserWindow({
-    width,
-    height,
-    minWidth: width,
-    minHeight: height,
-    title,
+    width: config.width,
+    height: config.height,
+    title: config.title,
+    minWidth: config.width,
+    minHeight: config.height,
     autoHideMenuBar: true,
     backgroundColor: "#ffffff",
     webPreferences: {
@@ -55,28 +49,28 @@ function createWindow() {
 
   const loading = new BrowserWindow({
     autoHideMenuBar: true,
-    title,
-    width,
-    height,
+    width: config.width,
+    height: config.height,
+    title: config.title,
     hasShadow: false,
     show: false,
     parent: win,
   });
 
   loading.loadFile(join(__dirname, "../resource/html/loading.html"));
-  loading.setIcon(icon);
+  loading.setIcon(config.icon);
   loading.once("ready-to-show", () => {
     if (!loading.isDestroyed()) {
       loading.show();
     }
   });
 
-  win.setIcon(icon);
+  win.setIcon(config.icon);
   win.removeMenu();
 
-  win.loadURL(url).then(() => {
+  win.loadURL(config.url).then(() => {
     win.maximize();
-    if (isDev) {
+    if (config.isDev) {
       win.webContents.openDevTools();
     }
   });
@@ -92,9 +86,9 @@ function createWindow() {
   });
 
   // 新建托盘
-  tray = new Tray(icon);
+  tray = new Tray(config.icon);
   // 托盘名称
-  tray.setToolTip(title);
+  tray.setToolTip(config.title);
   // 托盘菜单
   const contextMenu = Menu.buildFromTemplate([
     {
