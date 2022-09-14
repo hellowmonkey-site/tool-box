@@ -45,7 +45,7 @@ export default class Db {
     }
 
     return new Promise<T[]>((resolve, reject) => {
-      const request = this.db!.transaction(tableName, "readwrite").objectStore(tableName).getAll(query);
+      const request = this.db!.transaction(tableName).objectStore(tableName).getAll(query);
       request.onerror = event => {
         reject(event);
       };

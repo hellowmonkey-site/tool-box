@@ -1,5 +1,12 @@
-import Db from "@/helper/db";
+import Db from "@/lib/db";
 import { ref } from "vue";
+
+export const logoOpts = {
+  radius: 6,
+  border: 4,
+  bgColor: "#fff",
+  width: 54,
+};
 
 const tableName = "logo";
 let db: Db;

@@ -1,10 +1,10 @@
 import { NButton, NCard, NCheckbox, NDrawer, NDrawerContent, NIcon, NInput, NUpload, UploadFileInfo } from "naive-ui";
 import { defineComponent, onActivated, ref } from "vue";
-import { awaitLoadImg, awaitNextTick, downLoad, fileToBase64, sleep } from "@/helper";
+import { awaitLoadImg, awaitNextTick, downLoad, fileToBase64 } from "@/helper";
 import qrcode from "qrcode";
-import { DeleteOutlined, UploadFileOutlined } from "@vicons/material";
-import { addLogo, deleteLogo, getLogoList, logoList } from "@/service/qrcode";
-import config from "@/config";
+import { DeleteOutlined, UploadFileOutlined, UploadOutlined } from "@vicons/material";
+import { addLogo, deleteLogo, getLogoList, logoList, logoOpts } from "@/service/qrcode";
+import { dialog } from "@/service/common";
 
 export default defineComponent({
   props: {},
@@ -17,6 +17,48 @@ export default defineComponent({
     const logo = ref("");
     const logoDrawer = ref(false);
 
+    function clip(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) {
+      ctx.beginPath();
+      ctx.moveTo(x + logoOpts.radius, y);
+      ctx.arcTo(x + w, y, x + w, y + h, logoOpts.radius);
+      ctx.arcTo(x + w, y + h, x, y + h, logoOpts.radius);
+      ctx.arcTo(x, y + h, x, y, logoOpts.radius);
+      ctx.arcTo(x, y, x + w, y, logoOpts.radius);
+      ctx.closePath();
+    }
+
+    async function drawImg(url: string, x: number, y: number, width: number, height: number) {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+      const img = await awaitLoadImg(url);
+      canvas.width = width + x * 2;
+      canvas.height = height + y * 2;
+      ctx.drawImage(img, x, y, width, height);
+      return canvas.toDataURL("image/png");
+    }
+    // 生成有圆角的矩形
+    async function drawRoundedImg(url: string, width: number, height: number, x = 0, y = 0) {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d") as CanvasRenderingContext2D;
+      const imgX = x + logoOpts.border,
+        imgY = y + logoOpts.border,
+        imgW = width - logoOpts.border * 2,
+        imgH = height - logoOpts.border * 2;
+      const src = await drawImg(url, imgX, imgY, imgW, imgH);
+      const img = await awaitLoadImg(src);
+
+      canvas.width = width;
+      canvas.height = height;
+      clip(ctx, x, y, width, height);
+      ctx.fillStyle = logoOpts.bgColor;
+      ctx.fill();
+      clip(ctx, imgX, imgY, imgW, imgH);
+      ctx.fillStyle = ctx.createPattern(img, "no-repeat")!;
+      ctx.fill();
+      const data = canvas.toDataURL("image/png");
+      return data;
+    }
+
     // 生成二维码
     async function makeQrcode() {
       if (!text.value) {
@@ -25,6 +67,34 @@ export default defineComponent({
       showPreview.value = true;
       await awaitNextTick();
       await qrcode.toCanvas(canvasEl.value, text.value, { width: 260, margin: 2 });
+
+      if (!canvasEl.value) {
+        return;
+      }
+      if (!logo.value) {
+        return;
+      }
+
+      const ctx = canvasEl.value.getContext("2d");
+      const w = canvasEl.value.offsetWidth;
+      const h = canvasEl.value.offsetHeight;
+      if (!ctx) {
+        return;
+      }
+      let img = await awaitLoadImg(logo.value);
+      const height = (logoOpts.width * img.height) / img.width;
+      const x = (w - logoOpts.width) / 2;
+      const y = (h - height) / 2;
+
+      const temSrc = canvasEl.value.toDataURL();
+      const temImg = await awaitLoadImg(temSrc);
+      ctx.clearRect(0, 0, w, h);
+      ctx.drawImage(temImg, 0, 0, w, h);
+
+      const src = await drawRoundedImg(logo.value, logoOpts.width, height);
+      img = await awaitLoadImg(src);
+
+      ctx.drawImage(img, x, y, logoOpts.width, height);
     }
 
     // 下载二维码
@@ -42,31 +112,6 @@ export default defineComponent({
       const url = await fileToBase64(file).then(v => v as string);
       await addLogo(url);
       return false;
-    }
-
-    // 渲染logo
-    async function renderLogo() {
-      if (!canvasEl.value) {
-        return;
-      }
-      if (!logo.value) {
-        makeQrcode();
-        return;
-      }
-      const img = await awaitLoadImg(logo.value);
-      await makeQrcode();
-      if (!config.isElectron) {
-        await sleep(1000);
-      }
-      const width = 50;
-      const ctx = canvasEl.value.getContext("2d");
-      const w = canvasEl.value.offsetWidth;
-      const h = canvasEl.value.offsetHeight;
-      if (!ctx) {
-        return;
-      }
-      const height = (width * img.height) / img.width;
-      ctx.drawImage(img, (w - width) / 2, (h - height) / 2, width, height);
     }
 
     onActivated(() => {
@@ -121,7 +166,18 @@ export default defineComponent({
                           getLogoList();
                         }}
                       >
-                        上传logo
+                        {{
+                          icon() {
+                            return (
+                              <NIcon>
+                                <UploadOutlined />
+                              </NIcon>
+                            );
+                          },
+                          default() {
+                            return "上传logo";
+                          },
+                        }}
                       </NButton>
                       <NButton
                         block
@@ -168,7 +224,7 @@ export default defineComponent({
                       value={item.url}
                       onUpdateChecked={checked => {
                         logo.value = checked ? item.url : "";
-                        renderLogo();
+                        makeQrcode();
                         logoDrawer.value = false;
                       }}
                       checked={logo.value === item.url}
@@ -182,7 +238,16 @@ export default defineComponent({
                           size="small"
                           onClick={e => {
                             e.stopPropagation();
-                            deleteLogo(item.id);
+                            dialog.warning({
+                              title: "删除确认",
+                              content: "确认要删除此logo？",
+                              positiveText: "确认",
+                              negativeText: "取消",
+                              onPositiveClick() {
+                                return deleteLogo(item.id);
+                              },
+                              maskClosable: false,
+                            });
                           }}
                         >
                           {{
