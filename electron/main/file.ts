@@ -7,9 +7,9 @@ export function saveDialog(opts: SaveDialogOptions) {
 }
 
 // 保存文件
-export function saveBase64File(base64Str: string) {
+export function saveBase64File(base64Str: string, fileName = "") {
   base64Str = base64Str.replace(/^data:image\/\w+;base64,/, "");
-  return saveDialog({ filters: [{ extensions: ["png"], name: "" }] }).then(filePath => {
+  return saveDialog({ title: "保存图片", filters: [{ extensions: ["png"], name: fileName }] }).then(filePath => {
     if (!filePath) {
       return Promise.reject("位置选择错误");
     }

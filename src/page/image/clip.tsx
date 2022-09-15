@@ -1,11 +1,10 @@
 import { defineComponent, ref } from "vue";
 import Cropper from "cropperjs";
 import "cropperjs/dist/cropper.css";
-import { NButton, NIcon, NInput, NInputGroup, NInputGroupLabel, NText, NUpload, NUploadDragger, UploadFileInfo } from "naive-ui";
+import { NButton, NIcon, NText, NUpload, NUploadDragger, UploadFileInfo } from "naive-ui";
 import { UploadFileOutlined } from "@vicons/material";
-import { downLoad, fileToBase64, sleep } from "@/helper";
-import config from "@/config";
-import { dialog, message } from "@/service/common";
+import { downLoadBase64File, fileToBase64, getFilePathInfo, sleep } from "@/helper";
+// import { dialog, message } from "@/service/common";
 
 export default defineComponent({
   props: {},
@@ -15,9 +14,11 @@ export default defineComponent({
     const orgImg = ref<HTMLImageElement>();
     const loading = ref(false);
     let cropper: Cropper;
+    let fileName: string;
 
     async function uploadImage({ file }: UploadFileInfo) {
       if (!file) return;
+      fileName = file.name;
       orgSrc.value = await fileToBase64(file).then(v => v as string);
       cropper?.destroy();
       await sleep(100);
@@ -37,49 +38,41 @@ export default defineComponent({
           imageSmoothingQuality: "high",
         })
         .toDataURL("image/png");
+      const { width, height } = cropper.getCanvasData();
+      const [name, ext] = getFilePathInfo(fileName);
       loading.value = true;
       try {
-        if (config.isElectron) {
-          const { filePath } = await electronAPI.saveBase64File(src);
-          await electronAPI.openDirectory(filePath);
-          try {
-            await electronAPI.notification("成功提示", "下载成功");
-          } catch (e) {
-            message.success("下载成功");
-          }
-        } else {
-          const iptEl = ref<HTMLInputElement>();
-          const fileName = ref("");
-          await new Promise((resolve, reject) => {
-            dialog.warning({
-              title: "请输入文件名称",
-              content() {
-                return (
-                  <NInputGroup>
-                    <NInput v-model={[fileName.value, "value"]} ref={iptEl} placeholder="请输入文件名称" />
-                    <NInputGroupLabel>.png</NInputGroupLabel>
-                  </NInputGroup>
-                );
-              },
-              negativeText: "取消",
-              positiveText: "确认",
-              onPositiveClick(e) {
-                resolve(e);
-              },
-              onNegativeClick(e) {
-                reject(e);
-              },
-              onAfterEnter() {
-                iptEl.value?.focus();
-              },
-            });
-          });
-          if (!fileName.value) {
-            message.error("请先输入文件名称");
-            return;
-          }
-          downLoad(src, fileName.value);
-        }
+        // const iptEl = ref<HTMLInputElement>();
+        // const fileName = ref("");
+        // await new Promise((resolve, reject) => {
+        //   dialog.warning({
+        //     title: "请输入文件名称",
+        //     content() {
+        //       return (
+        //         <NInputGroup>
+        //           <NInput v-model={[fileName.value, "value"]} ref={iptEl} placeholder="请输入文件名称" />
+        //           <NInputGroupLabel>.png</NInputGroupLabel>
+        //         </NInputGroup>
+        //       );
+        //     },
+        //     negativeText: "取消",
+        //     positiveText: "确认",
+        //     onPositiveClick(e) {
+        //       resolve(e);
+        //     },
+        //     onNegativeClick(e) {
+        //       reject(e);
+        //     },
+        //     onAfterEnter() {
+        //       iptEl.value?.focus();
+        //     },
+        //   });
+        // });
+        // if (!fileName.value) {
+        //   message.error("请先输入文件名称");
+        //   return;
+        // }
+        await downLoadBase64File(src, `${name}-${width}x${height}.${ext}`);
       } finally {
         loading.value = false;
       }

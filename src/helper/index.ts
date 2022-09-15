@@ -1,3 +1,4 @@
+import config from "@/config";
 import { ObjType } from "@/config/type";
 import { isNumberLike, isEmpty, isUrl } from "@/helper/validate";
 import { nextTick } from "vue";
@@ -251,13 +252,23 @@ export function humpToLine(str: string, lineType = "-") {
 
 // 下载
 let a: HTMLAnchorElement;
-export function downLoad(url: string, fileName: string) {
+export function downLoad(url: string, fileName = "") {
   if (!a) {
     a = document.createElement("a");
   }
   a.href = url;
   a.download = fileName;
   a.click();
+}
+
+// 下载图片
+export async function downLoadBase64File(base64Str: string, fileName?: string) {
+  if (config.isElectron) {
+    const { filePath } = await electronAPI.saveBase64File(base64Str, fileName);
+    await electronAPI.openDirectory(filePath);
+  } else {
+    downLoad(base64Str, fileName);
+  }
 }
 
 // 等待一段时间
@@ -290,4 +301,12 @@ export function awaitLoadImg(src: string) {
       reject(e);
     };
   });
+}
+
+// 获取文件名和扩展名
+export function getFilePathInfo(fileName: string): [string, string] {
+  const arr = fileName.split(".");
+  const str = arr.slice(0, arr.length - 2).join("");
+  const ext = arr[arr.length - 1];
+  return [str, ext];
 }

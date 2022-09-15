@@ -1,6 +1,6 @@
 import { NButton, NCard, NCheckbox, NDrawer, NDrawerContent, NIcon, NInput, NUpload, UploadFileInfo } from "naive-ui";
 import { defineComponent, onActivated, ref } from "vue";
-import { awaitLoadImg, awaitNextTick, downLoad, fileToBase64 } from "@/helper";
+import { awaitLoadImg, awaitNextTick, downLoadBase64File, fileToBase64, randomString } from "@/helper";
 import qrcode from "qrcode";
 import { DeleteOutlined, UploadFileOutlined, UploadOutlined } from "@vicons/material";
 import { addLogo, deleteLogo, getLogoList, logoList, logoOpts } from "@/service/qrcode";
@@ -103,7 +103,7 @@ export default defineComponent({
         return;
       }
       const imgURL = canvasEl.value.toDataURL("image/png");
-      downLoad(imgURL, "qrcode.png");
+      downLoadBase64File(imgURL, `qrcode-${randomString(10)}.png`);
     }
 
     // 上传logo

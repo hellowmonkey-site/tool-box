@@ -13,7 +13,8 @@ declare let electronAPI: {
   compressImage: (filePath: string, targetPath?: string, width?: number) => Promise<{ fileSize: number; targetSize: number }>;
   saveDialog: (opts: any) => Promise<string>;
   saveBase64File: (
-    base64Str: string
+    base64Str: string,
+    fileName?: string
   ) => Promise<{ fileSize: number; targetSize: number; fullPath: string; fileName: string; filePath: string }>;
   openDirectory: (path: string) => Promise<void>;
   selectDirectory: (title?: string) => Promise<string>;

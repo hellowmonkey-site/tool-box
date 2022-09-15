@@ -170,7 +170,7 @@ ipcMain.handle("save-dialog", (e, opts: SaveDialogOptions) => {
 });
 
 // 保存base64文件
-ipcMain.handle("save-base64-file", (e, base64Str: string) => {
+ipcMain.handle("save-base64-file", (e, base64Str: string, fileName?: string) => {
   return saveBase64File(base64Str).then(fullPath => {
     return compressImage(fullPath).then(data => {
       const { fileName, filePath } = getFilePath(fullPath);

@@ -62,3 +62,15 @@ a {
     bottom: 0;
   }
 }
+
+.item-label {
+  font-size: var(--font-size-base);
+  margin-right: var(--offset-4);
+  width: 100px;
+  text-align: right;
+  letter-spacing: 2px;
+
+  &::after {
+    content: ":";
+  }
+}
