@@ -1,5 +1,29 @@
 import { Type } from "naive-ui/es/button/src/interface";
 
+export const enum DownloadStatus {
+  WAITING,
+  DOWNLOADING,
+  FINISHED,
+  ERROR,
+}
+export interface ITsItem {
+  status: DownloadStatus;
+  src: string;
+  m3u8Src: string;
+  name: string;
+  filePath: string;
+  file?: Buffer;
+}
+export interface IM3u8Item {
+  status: DownloadStatus;
+  src: string;
+  name: string;
+  filePath: string;
+  percentage: number;
+  total: number;
+  doneNum: number;
+}
+
 export const circuits: { label: string; value: string }[] = [
   {
     label: "vip解析",
