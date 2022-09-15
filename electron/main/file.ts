@@ -1,5 +1,7 @@
 import { dialog, SaveDialogOptions, shell } from "electron";
 import { writeFileSync } from "fs-extra";
+import { getFilePath } from "./helper";
+import { compressImage } from "./image";
 
 // 保存文件弹框
 export function saveDialog(opts: SaveDialogOptions) {
@@ -7,15 +9,21 @@ export function saveDialog(opts: SaveDialogOptions) {
 }
 
 // 保存文件
-export function saveBase64File(base64Str: string, fileName = "") {
+export async function saveBase64File(base64Str: string, name = "") {
   base64Str = base64Str.replace(/^data:image\/\w+;base64,/, "");
-  return saveDialog({ title: "保存图片", filters: [{ extensions: ["png"], name: fileName }] }).then(filePath => {
-    if (!filePath) {
-      return Promise.reject("位置选择错误");
-    }
-    writeFileSync(filePath, Buffer.from(base64Str, "base64"));
-    return filePath;
-  });
+  const fullPath = await saveDialog({ title: "保存图片", filters: [{ extensions: ["png"], name }] });
+  if (!fullPath) {
+    return Promise.reject("位置选择错误");
+  }
+  writeFileSync(fullPath, Buffer.from(base64Str, "base64"));
+  const data = await compressImage(fullPath);
+  const { fileName, filePath } = getFilePath(fullPath);
+  return {
+    ...data,
+    fullPath,
+    fileName,
+    filePath,
+  };
 }
 
 // 选择文件夹

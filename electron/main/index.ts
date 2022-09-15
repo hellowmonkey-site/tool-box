@@ -2,7 +2,7 @@ import { app, BrowserWindow, globalShortcut, ipcMain, Menu, SaveDialogOptions, T
 import { join } from "path";
 import { compressImage, pngToIco } from "./image";
 import { openDirectory, saveDialog, saveBase64File, selectDirectory } from "./file";
-import { getFilePath, notification } from "./helper";
+import { notification } from "./helper";
 import config from "../config";
 
 let tray: Tray, win: BrowserWindow;
@@ -171,17 +171,7 @@ ipcMain.handle("save-dialog", (e, opts: SaveDialogOptions) => {
 
 // 保存base64文件
 ipcMain.handle("save-base64-file", (e, base64Str: string, fileName?: string) => {
-  return saveBase64File(base64Str).then(fullPath => {
-    return compressImage(fullPath).then(data => {
-      const { fileName, filePath } = getFilePath(fullPath);
-      return {
-        ...data,
-        fullPath,
-        fileName,
-        filePath,
-      };
-    });
-  });
+  return saveBase64File(base64Str, fileName);
 });
 
 // 选择文件夹
