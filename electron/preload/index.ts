@@ -19,4 +19,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
   pngToIco: (...args: any[]) => ipcRenderer.invoke("png-to-ico", ...args),
   // 选择文件夹
   notification: (...args: any[]) => ipcRenderer.invoke("notification", ...args),
+  // 保存文件
+  writeFile: (...args: any[]) => ipcRenderer.invoke("write-file", ...args),
 });

@@ -1,11 +1,10 @@
-// import fly from "flyio";
 import config from "@/config";
 import { downLoad, getFullUrl } from "@/helper";
 import ajax from "@/helper/ajax";
-import { message } from "@/service/common";
-import { DownloadStatus, IM3u8Item, ITsItem } from "@/service/video";
-import { NAlert, NButton, NCard, NInput, NInputGroup, NInputGroupLabel, NProgress } from "naive-ui";
-import { computed, defineComponent, reactive, ref } from "vue";
+import { dialog, message } from "@/service/common";
+import { DownloadStatus, downloadStatusList, IM3u8Item, ITsItem } from "@/service/video";
+import { NAlert, NButton, NCard, NInput, NInputGroup, NInputGroupLabel, NProgress, NTag, NText } from "naive-ui";
+import { computed, defineComponent, onActivated, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -13,10 +12,11 @@ export default defineComponent({
   emits: [],
   setup: (props, ctx) => {
     const route = useRoute();
+    const iptEl = ref<HTMLInputElement>();
     const form = reactive({
       name: "",
       filePath: "",
-      url: (route.query.url as string) || "",
+      url: "",
     });
     const loading = ref(false);
     const tsList = ref<ITsItem[]>([]);
@@ -59,15 +59,20 @@ export default defineComponent({
         message.error("此链接已被处理过");
         return;
       }
+      const { origin } = new URL(form.url);
       loading.value = true;
       try {
-        const data = await ajax(form.url);
+        let data = await ajax(form.url);
+        const newUrl = data.split(/\s/).find(item => /\.m3u8(\?.+)?$/i.test(item));
+        if (newUrl) {
+          data = await ajax(getFullUrl(origin, newUrl));
+        }
+
+        const tempArr: ITsItem[] = [];
         data.split(/\s/).forEach(item => {
-          if (/\.ts(\?.+)?$/.test(item)) {
-            const arr = form.url.split("/");
-            const baseUrl = form.url.replace(arr[arr.length - 1], "");
-            const src = getFullUrl(baseUrl, item);
-            tsList.value.push({
+          if (/\.ts(\?.+)?$/i.test(item)) {
+            const src = getFullUrl(origin, item);
+            tempArr.push({
               status: DownloadStatus.WAITING,
               name: form.name,
               m3u8Src: form.url,
@@ -77,15 +82,30 @@ export default defineComponent({
             });
           }
         });
-        for (let i = 0; i < 30; i++) {
-          downloadTs();
+        if (!tempArr.length) {
+          message.error("未解析到相关内容");
+          return;
         }
+        tsList.value.push(...tempArr);
+
+        // 批量下载
+        downloadTsList();
+
+        form.name = "";
+        form.url = "";
+      } catch (e) {
+        message.error("解析错误");
       } finally {
         loading.value = false;
       }
     }
 
     // 批量下载ts
+    function downloadTsList() {
+      for (let i = 0; i < 30 - tsList.value.filter(v => v.status === DownloadStatus.DOWNLOADING).length; i++) {
+        downloadTs();
+      }
+    }
     function downloadTs() {
       const index = tsList.value.findIndex(v => v.status === DownloadStatus.WAITING);
       if (index === -1) {
@@ -110,33 +130,95 @@ export default defineComponent({
     }
 
     // 文件下载
-    function downloadFile(m3u8: IM3u8Item) {
+    async function downloadFile(m3u8: IM3u8Item) {
       const fileDataList = tsList.value
         .filter(v => v.m3u8Src === m3u8.src)
         .map(v => v.file!)
         .filter(v => !!v);
-      const fileBlob = new Blob(fileDataList, { type: "video/MP2T" });
+      const fileBlob = new Blob(fileDataList, { type: "video/mp4" });
       const url = URL.createObjectURL(fileBlob);
-      downLoad(url, `D:\\Soft\\${m3u8.name}.mp4`);
+      if (config.isElectron && m3u8.filePath) {
+        const buf = await new Promise<NodeJS.ArrayBufferView>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsArrayBuffer(fileBlob);
+          reader.onload = () => {
+            if (reader.result && typeof reader.result !== "string") {
+              resolve(new Uint8Array(reader.result));
+            }
+          };
+          reader.onerror = error => reject(error);
+        });
+        const filePath = `${m3u8.filePath}/${m3u8.name}.mp4`;
+        await electronAPI.writeFile(filePath, buf);
+        message.success(`${filePath},下载成功!`);
+      } else {
+        downLoad(url, `${m3u8.name}.mp4`);
+      }
     }
+
+    // 修改文件名称
+    function showFileNameDialog() {
+      const iptEl = ref<HTMLInputElement>();
+      const fileName = ref("");
+      return new Promise<string>((resolve, reject) => {
+        dialog.warning({
+          title: "请输入文件名称",
+          content() {
+            return <NInput v-model={[fileName.value, "value"]} ref={iptEl} placeholder="请输入文件名称" />;
+          },
+          negativeText: "取消",
+          positiveText: "确认",
+          onPositiveClick() {
+            resolve(fileName.value);
+          },
+          onNegativeClick(e) {
+            reject(e);
+          },
+          onAfterEnter() {
+            iptEl.value?.focus();
+          },
+        });
+      });
+    }
+
+    onActivated(() => {
+      iptEl.value?.focus();
+
+      const { url } = route.query;
+      if (url) {
+        form.url = url as string;
+      }
+    });
 
     return () => (
       <div>
         <NCard class="mar-b-5-item">
-          <div class="mar-b-3-item">
+          <div class="mar-b-4-item">
             <NInputGroup>
               <NInputGroupLabel size="large">视频地址</NInputGroupLabel>
-              <NInput size="large" placeholder="请输入m3u8地址" v-model={[form.url, "value"]} class="mar-b-3-item" />
+              <NInput ref={iptEl} size="large" placeholder="请输入m3u8地址" v-model={[form.url, "value"]} />
             </NInputGroup>
           </div>
-          <div class="mar-b-3-item">
+          <div class="mar-b-4-item">
             <NInputGroup>
               <NInputGroupLabel size="large">文件名称</NInputGroupLabel>
-              <NInput size="large" placeholder="请输入保存的文件名称" v-model={[form.name, "value"]} class="mar-b-3-item" />
+              <NInput
+                size="large"
+                placeholder="请输入保存的文件名称"
+                onUpdateValue={e => {
+                  tsList.value
+                    .filter(v => v.m3u8Src === form.url)
+                    .forEach(item => {
+                      item.name = e;
+                    });
+                }}
+                v-model={[form.name, "value"]}
+              />
             </NInputGroup>
           </div>
           <NButton
             block
+            class="mar-b-4-item"
             size="large"
             type="primary"
             loading={loading.value}
@@ -146,63 +228,134 @@ export default defineComponent({
           >
             解析
           </NButton>
+          {config.isElectron ? (
+            <NAlert type="info" class="mar-b-4-item" showIcon title={`视频下载后保存在：${form.filePath || "下载后询问"}`}>
+              <div class="d-flex justify-end">
+                <NButton
+                  type="primary"
+                  class="mar-r-4-item"
+                  onClick={() => {
+                    electronAPI.selectDirectory("视频下载后保存的位置").then(data => {
+                      if (data) {
+                        form.filePath = data;
+                      }
+                    });
+                  }}
+                  size="small"
+                >
+                  选择位置
+                </NButton>
+              </div>
+            </NAlert>
+          ) : null}
         </NCard>
-        {config.isElectron ? (
-          <NAlert type="info" class="mar-b-5-item" showIcon title={`视频下载后保存在：${form.filePath || "下载后询问"}`}>
-            <div class="d-flex justify-end">
-              <NButton
-                type="primary"
-                class="mar-r-4-item"
-                onClick={() => {
-                  electronAPI.selectDirectory("视频下载后保存的位置").then(data => {
-                    if (data) {
-                      form.filePath = data;
-                    }
-                  });
-                }}
-                size="small"
-              >
-                选择位置
-              </NButton>
-            </div>
-          </NAlert>
-        ) : null}
+
         {m3u8List.value.map(item => (
           <NCard size="small" class="mar-b-3-item">
             {{
               default() {
                 return (
-                  <div class="d-flex align-items-center justify-between">
-                    <div class="mar-r-3-item d-flex align-items-center">
-                      {item.name ? <span class="mar-r-5-item space-nowrap">{item.name}</span> : null}
-                      <span class="mar-r-5-item font-small flex-item-extend">{item.src}</span>
-                    </div>
-                    <div class="flex-item-extend d-flex justify-end">
-                      {item.status === DownloadStatus.DOWNLOADING ? null : item.status === DownloadStatus.ERROR ? (
+                  <>
+                    <div class="d-flex align-items-center justify-between mar-b-3-item">
+                      <div class="mar-r-3-item d-flex align-items-center">
+                        {(() => {
+                          const data = downloadStatusList.find(v => v.value === item.status);
+                          if (data) {
+                            return (
+                              <NTag class="mar-r-3-item" type={data.color}>
+                                {data.text}
+                              </NTag>
+                            );
+                          }
+                          return null;
+                        })()}
+                        {item.name ? <span class="mar-r-2-item space-nowrap">{item.name}</span> : null}
+                        {item.filePath ? (
+                          <NText class="font-small mar-r-5-item" depth="3">
+                            ({item.filePath})
+                          </NText>
+                        ) : null}
+                      </div>
+                      <div class="flex-item-extend d-flex justify-end">
+                        {item.status === DownloadStatus.ERROR ? (
+                          <NButton
+                            class="mar-r-3-item"
+                            onClick={() => {
+                              tsList.value
+                                .filter(v => v.m3u8Src === item.src && v.status === DownloadStatus.ERROR)
+                                .forEach(item => {
+                                  item.status = DownloadStatus.WAITING;
+                                });
+                              downloadTsList();
+                            }}
+                          >
+                            重试下载
+                          </NButton>
+                        ) : null}
+                        {item.status === DownloadStatus.FINISHED ? (
+                          <NButton
+                            class="mar-r-3-item"
+                            onClick={() => {
+                              downloadFile(item);
+                            }}
+                          >
+                            保存视频
+                          </NButton>
+                        ) : null}
+                        {config.isElectron ? (
+                          <>
+                            {item.filePath && item.status === DownloadStatus.FINISHED ? (
+                              <NButton
+                                class="mar-r-3-item"
+                                onClick={() => {
+                                  electronAPI.openDirectory(item.filePath);
+                                }}
+                              >
+                                打开视频位置
+                              </NButton>
+                            ) : null}
+                            <NButton
+                              class="mar-r-3-item"
+                              onClick={() => {
+                                electronAPI.selectDirectory("视频下载后保存的位置").then(data => {
+                                  if (data) {
+                                    tsList.value
+                                      .filter(v => v.m3u8Src === item.src)
+                                      .forEach(item => {
+                                        item.filePath = data;
+                                      });
+                                  }
+                                });
+                              }}
+                            >
+                              存放位置
+                            </NButton>
+                          </>
+                        ) : null}
                         <NButton
+                          class="mar-r-3-item"
                           onClick={() => {
-                            tsList.value
-                              .filter(v => v.m3u8Src === item.src && v.status === DownloadStatus.ERROR)
-                              .forEach(item => {
-                                item.status = DownloadStatus.WAITING;
-                              });
+                            showFileNameDialog().then(name => {
+                              if (name) {
+                                tsList.value
+                                  .filter(v => v.m3u8Src === item.src)
+                                  .forEach(item => {
+                                    item.name = name;
+                                  });
+                              }
+                            });
                           }}
                         >
-                          重试
+                          文件名称
                         </NButton>
-                      ) : item.status === DownloadStatus.FINISHED ? (
-                        <NButton
-                          onClick={() => {
-                            downloadFile(item);
-                          }}
-                        >
-                          下载文件
-                        </NButton>
-                      ) : (
-                        <span>等待下载</span>
-                      )}
+                      </div>
                     </div>
-                  </div>
+                    <div class="mar-b-3-item">
+                      <NText class="font-small" depth="3">
+                        {item.src}
+                      </NText>
+                    </div>
+                  </>
                 );
               },
               footer() {

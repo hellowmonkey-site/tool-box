@@ -8,10 +8,10 @@ export function saveDialog(opts: SaveDialogOptions) {
   return dialog.showSaveDialog(opts).then(data => data.filePath);
 }
 
-// 保存文件
+// 保存base64文件
 export async function saveBase64File(base64Str: string, name = "") {
   base64Str = base64Str.replace(/^data:image\/\w+;base64,/, "");
-  const fullPath = await saveDialog({ title: "保存图片", filters: [{ extensions: ["png"], name }] });
+  const fullPath = await saveDialog({ title: "保存图片", defaultPath: name, filters: [{ extensions: ["png"], name }] });
   if (!fullPath) {
     return Promise.reject("位置选择错误");
   }
@@ -34,4 +34,9 @@ export function selectDirectory(title = "选择文件夹") {
 // 打开文件夹
 export function openDirectory(path: string) {
   return shell.openPath(path);
+}
+
+// 保存文件
+export async function writeFile(filePath: string, buf: NodeJS.ArrayBufferView) {
+  writeFileSync(filePath, buf);
 }

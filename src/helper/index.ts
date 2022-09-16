@@ -123,7 +123,10 @@ export const random = (n: number, m: number) => {
 // 随机字符串
 const stringTemplate = "1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
 export const randomString = (length = 6) => {
-  return new Array(length).map(() => stringTemplate[random(0, stringTemplate.length - 1)]).join("");
+  return new Array(length)
+    .fill(1)
+    .map(() => stringTemplate[random(0, stringTemplate.length - 1)])
+    .join("");
 };
 
 // 深度拷贝
@@ -306,7 +309,7 @@ export function awaitLoadImg(src: string) {
 // 获取文件名和扩展名
 export function getFilePathInfo(fileName: string): [string, string] {
   const arr = fileName.split(".");
-  const str = arr.slice(0, arr.length - 2).join("");
+  const str = arr.slice(0, arr.length - 1).join("");
   const ext = arr[arr.length - 1];
   return [str, ext];
 }

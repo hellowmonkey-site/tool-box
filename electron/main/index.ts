@@ -1,7 +1,7 @@
 import { app, BrowserWindow, globalShortcut, ipcMain, Menu, SaveDialogOptions, Tray } from "electron";
 import { join } from "path";
 import { compressImage, pngToIco } from "./image";
-import { openDirectory, saveDialog, saveBase64File, selectDirectory } from "./file";
+import { openDirectory, saveDialog, saveBase64File, selectDirectory, writeFile } from "./file";
 import { notification } from "./helper";
 import config from "../config";
 
@@ -192,4 +192,9 @@ ipcMain.handle("png-to-ico", (e, filePath: string, size: number) => {
 // 通知
 ipcMain.handle("notification", (e, title: string, content: string) => {
   return notification(title, content);
+});
+
+// 保存文件
+ipcMain.handle("write-file", (e, filePath: string, buf: NodeJS.ArrayBufferView) => {
+  return writeFile(filePath, buf);
 });

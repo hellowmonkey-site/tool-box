@@ -22,3 +22,11 @@ export const enum StatusType {
   OFFLINE,
   ONLINE,
 }
+
+// 类型列表
+export type ColorType = "default" | "success" | "warning" | "info" | "error" | "primary";
+export type TypeItem = {
+  text: string;
+  value: number | undefined;
+  color?: ColorType;
+};

@@ -1,3 +1,4 @@
+import { TypeItem } from "@/config/type";
 import { Type } from "naive-ui/es/button/src/interface";
 
 export const enum DownloadStatus {
@@ -6,6 +7,29 @@ export const enum DownloadStatus {
   FINISHED,
   ERROR,
 }
+export const downloadStatusList: TypeItem[] = [
+  {
+    text: "等待下载",
+    value: DownloadStatus.WAITING,
+    color: "default",
+  },
+  {
+    text: "下载中",
+    value: DownloadStatus.DOWNLOADING,
+    color: "info",
+  },
+  {
+    text: "下载完成",
+    value: DownloadStatus.FINISHED,
+    color: "success",
+  },
+  {
+    text: "下载失败",
+    value: DownloadStatus.ERROR,
+    color: "error",
+  },
+];
+
 export interface ITsItem {
   status: DownloadStatus;
   src: string;
