@@ -16,6 +16,7 @@ export default defineComponent({
     const showPreview = ref(false);
     const logo = ref("");
     const logoDrawer = ref(false);
+    const loading = ref(false);
 
     function clip(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) {
       ctx.beginPath();
@@ -98,12 +99,15 @@ export default defineComponent({
     }
 
     // 下载二维码
-    async function downCanvas() {
+    function downCanvas() {
       if (!canvasEl.value) {
         return;
       }
       const imgURL = canvasEl.value.toDataURL("image/png");
-      downLoadBase64File(imgURL, `qrcode-${randomString(10)}.png`);
+      loading.value = true;
+      downLoadBase64File(imgURL, `qrcode-${randomString(10)}.png`).finally(() => {
+        loading.value = false;
+      });
     }
 
     // 上传logo
@@ -187,6 +191,7 @@ export default defineComponent({
                         onClick={() => {
                           downCanvas();
                         }}
+                        loading={loading.value}
                       >
                         下载
                       </NButton>

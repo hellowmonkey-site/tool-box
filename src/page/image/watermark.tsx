@@ -8,6 +8,8 @@ export default defineComponent({
   emits: [],
   setup: (props, ctx) => {
     const canvasEl = ref<HTMLCanvasElement>();
+    const iptEl = ref<HTMLInputElement>();
+    const loading = ref(false);
     const form = reactive({
       color: "rgba(0, 0, 0, 0.6)",
       fontSize: 12,
@@ -30,17 +32,21 @@ export default defineComponent({
       form.src = await fileToBase64(file).then(v => v as string);
       await awaitNextTick();
       render();
+      iptEl.value?.focus();
       return false;
     }
 
     // 下载二维码
-    async function downCanvas() {
+    function downCanvas() {
       if (!canvasEl.value) {
         return;
       }
       const imgURL = canvasEl.value.toDataURL("image/png");
       const [name, ext] = getFilePathInfo(form.fileName);
-      downLoadBase64File(imgURL, `${name}-watermark.${ext}`);
+      loading.value = true;
+      downLoadBase64File(imgURL, `${name}-watermark.${ext}`).finally(() => {
+        loading.value = false;
+      });
     }
 
     // 渲染
@@ -108,6 +114,7 @@ export default defineComponent({
             <div class="d-flex align-items-center mar-b-4-item">
               <NText class="item-label">水印文字</NText>
               <NInput
+                ref={iptEl}
                 v-model={[form.text, "value"]}
                 placeholder="请输入水印文字, 回车渲染"
                 onKeydown={e => {
@@ -153,6 +160,7 @@ export default defineComponent({
               onClick={() => {
                 downCanvas();
               }}
+              loading={loading.value}
             >
               下载
             </NButton>

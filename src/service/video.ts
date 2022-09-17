@@ -51,11 +51,11 @@ export interface IM3u8Item {
 export const circuits: { label: string; value: string }[] = [
   {
     label: "vip解析",
-    value: "http://www.ckmov.vip/api.php?url=__URL__",
+    value: "https://www.ckmov.vip/api.php?url=__URL__",
   },
   {
     label: "云解析",
-    value: "http://jx.aidouer.net/?url=__URL__",
+    value: "https://jx.aidouer.net/?url=__URL__",
   },
 ];
 export const videoList: { name: string; url: string; type: Type }[] = [

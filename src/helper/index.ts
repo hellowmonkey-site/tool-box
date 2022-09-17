@@ -1,6 +1,7 @@
 import config from "@/config";
 import { ObjType } from "@/config/type";
 import { isNumberLike, isEmpty, isUrl } from "@/helper/validate";
+import { message } from "@/service/common";
 import { nextTick } from "vue";
 
 // 加零
@@ -269,6 +270,7 @@ export async function downLoadBase64File(base64Str: string, fileName?: string) {
   if (config.isElectron) {
     const { filePath } = await electronAPI.saveBase64File(base64Str, fileName);
     await electronAPI.openDirectory(filePath);
+    message.success(`下载成功：【${filePath}/${fileName!}】`);
   } else {
     downLoad(base64Str, fileName);
   }
