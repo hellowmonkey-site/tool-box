@@ -1,12 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>加载中...</title>
+  <title></title>
+  <style>
+    body {
+      background-color: #fff;
+      height: 93vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 400px;
+    }
+
+    .logo-box .logo-img {
+      width: 80px;
+      margin-bottom: 12px;
+    }
+
+    .signature {
+      margin-top: 150px;
+      color: #888;
+    }
+  </style>
 </head>
+
 <body>
-  <div style="text-align: center; padding: 20% 0; color: #888; font-size: 14px">玩命加载中...</div>
+  <div class="logo-box">
+    <img src="../image/logo.png" class="logo-img" alt="logo" />
+    <div>沃德工具箱</div>
+  </div>
+  <img src="../image/loading.svg" alt="loading">
+  <div class="signature">Create by parker</div>
 </body>
+
 </html>
