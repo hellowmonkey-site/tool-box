@@ -1,16 +1,14 @@
 import { copyText, fileToBase64 } from "@/helper";
 import { UploadFileOutlined } from "@vicons/material";
-import { NIcon, NText, NUpload, NUploadDragger, UploadFileInfo, useDialog } from "naive-ui";
+import { NIcon, NText, NUpload, NUploadDragger, UploadFileInfo } from "naive-ui";
 import { defineComponent } from "vue";
 import qrcodeDecoder from "qrcode-decoder";
-import { message } from "@/service/common";
+import { dialog, message } from "@/service/common";
 
 export default defineComponent({
   props: {},
   emits: [],
   setup: (props, ctx) => {
-    const dialog = useDialog();
-
     async function uploadImage({ file }: UploadFileInfo) {
       if (!file) {
         return;
