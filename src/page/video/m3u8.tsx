@@ -184,9 +184,12 @@ export default defineComponent({
     onActivated(() => {
       iptEl.value?.focus();
 
-      const { url } = route.query;
+      const { url, name } = route.query;
       if (url) {
         form.url = url as string;
+      }
+      if (name) {
+        form.name = name as string;
       }
     });
 
