@@ -181,7 +181,7 @@ router.beforeEach(to => {
 
   NProgress.done().start();
 
-  setTitle(String(to.meta.title || config.title));
+  setTitle(to.meta.title as string);
 
   return true;
 });

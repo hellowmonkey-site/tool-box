@@ -1,9 +1,11 @@
 import { app, BrowserWindow, globalShortcut, ipcMain, Menu, SaveDialogOptions, Tray } from "electron";
 import { join } from "path";
+import { writeJSONSync } from "fs-extra";
 import { compressImage, pngToIco } from "./image";
 import { openDirectory, saveDialog, saveBase64File, selectDirectory, writeFile } from "./file";
 import { notification } from "./helper";
 import config from "../config";
+import dataConfig from "../data/config.json";
 
 let tray: Tray, win: BrowserWindow;
 
@@ -64,6 +66,9 @@ function createWindow() {
       loading.show();
     }
   });
+  loading.on("close", () => {
+    showWin();
+  });
 
   win.setIcon(config.icon);
   win.removeMenu();
@@ -75,10 +80,9 @@ function createWindow() {
     }
   });
   win.once("ready-to-show", () => {
-    win.show();
+    showWin();
     loading.hide();
     loading.close();
-    win.focus();
   });
   win.on("close", e => {
     e.preventDefault();
@@ -127,9 +131,11 @@ app
     });
   })
   .then(() => {
-    globalShortcut.register("Alt+CommandOrControl+A", () => {
-      toggleWin();
-    });
+    if (dataConfig.keyboard) {
+      globalShortcut.register(dataConfig.keyboard, () => {
+        toggleWin();
+      });
+    }
   });
 
 app.on("window-all-closed", () => {
@@ -197,4 +203,12 @@ ipcMain.handle("notification", (e, title: string, content: string) => {
 // 保存文件
 ipcMain.handle("write-file", (e, filePath: string, buf: NodeJS.ArrayBufferView) => {
   return writeFile(filePath, buf);
+});
+
+// 设置config
+ipcMain.handle("set-config", (e, data: unknown) => {
+  Object.assign(dataConfig, data);
+  writeJSONSync(join(__dirname, "../data/config.json"), dataConfig);
+  app.relaunch({ args: process.argv.slice(1).concat(["--relaunch"]) });
+  app.exit(0);
 });

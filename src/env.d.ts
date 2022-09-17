@@ -8,6 +8,7 @@ declare module "*.vue" {
 }
 
 declare let electronAPI: {
+  keyboard: string;
   setProgressBar: (progress: number) => void;
   setTitle: (title: string) => void;
   compressImage: (filePath: string, targetPath?: string, width?: number) => Promise<{ fileSize: number; targetSize: number }>;
@@ -21,6 +22,7 @@ declare let electronAPI: {
   pngToIco: (filePath: string, size?: number) => Promise<string>;
   notification: (title: string, content: string) => Promise<void>;
   writeFile: (filePath: string, buf: NodeJS.ArrayBufferView) => Promise<void>;
+  setConfig: (data: unknown) => void;
 };
 
 declare module "qrcode-decoder";

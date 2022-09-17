@@ -1,16 +1,5 @@
 import { isIE } from "@/helper/validate";
-import {
-  appConfig,
-  isShowBackTop,
-  setAppConfig,
-  setDialog,
-  setMessage,
-  setNotification,
-  settingOpen,
-  themeColors,
-  ThemeTypes,
-  visitedPageNum,
-} from "@/service/common";
+import { appConfig, dialog, isShowBackTop, setAppConfig, settingOpen, themeColors, ThemeTypes, visitedPageNum } from "@/service/common";
 import { globalTheme, themeTypes } from "@/service/common";
 import {
   MenuOption,
@@ -22,6 +11,7 @@ import {
   NDropdown,
   NH2,
   NIcon,
+  NInput,
   NLayout,
   NLayoutHeader,
   NLayoutSider,
@@ -30,19 +20,19 @@ import {
   NSelect,
   NText,
   NTooltip,
-  useDialog,
-  useMessage,
-  useNotification,
   useOsTheme,
 } from "naive-ui";
-import { defineComponent, KeepAlive, onMounted, Transition } from "vue";
+import { defineComponent, KeepAlive, onMounted, ref, Transition } from "vue";
 import { RouteLocationNormalizedLoaded, RouterLink, RouterView, useRoute, useRouter } from "vue-router";
 import {
   ChevronLeftRound,
   ChevronRightRound,
   DeveloperBoardOutlined,
+  DownloadFilled,
+  DownloadOutlined,
   HomeOutlined,
   ImageOutlined,
+  PanToolAltOutlined,
   QrCodeOutlined,
   ReplayOutlined,
   SettingsFilled,
@@ -54,8 +44,7 @@ import {
 import config from "@/config";
 import { menuRoutes } from "@/router";
 import Logo from "@/static/image/logo.png";
-import { productName } from "electron-builder.json";
-import { version } from "package.json";
+import { downLoad } from "@/helper";
 
 export const firstMenus: MenuOption[] = [
   {
@@ -108,7 +97,7 @@ export const firstMenus: MenuOption[] = [
     icon() {
       return (
         <NIcon>
-          <SettingsOutlined />
+          <PanToolAltOutlined />
         </NIcon>
       );
     },
@@ -122,12 +111,7 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const os = useOsTheme();
-    const message = useMessage();
-    const notification = useNotification();
-    const dialog = useDialog();
-    setNotification(notification);
-    setDialog(dialog);
-    setMessage(message);
+    const keyboard = ref<string>(config.isElectron ? electronAPI?.keyboard || "" : "");
 
     function renderMenu(item: MenuOption): MenuOption {
       return {
@@ -161,6 +145,43 @@ export default defineComponent({
       },
       ...firstMenus.map(v => renderMenu(v)),
     ];
+
+    // 设置系统快捷键
+    function setAppKeyboard(e: KeyboardEvent) {
+      e.stopPropagation();
+      e.preventDefault();
+      // 清空
+      if (e.key === "Backspace") {
+        keyboard.value = "";
+        return;
+      }
+      const arr: string[] = [];
+      if (e.altKey) {
+        arr.push("Alt");
+      }
+      if (e.shiftKey) {
+        arr.push("Shift");
+      }
+      if (e.ctrlKey) {
+        arr.push("CommandOrControl");
+      }
+      if (arr.length && e.key.length === 1 && /[a-z]/i.test(e.key)) {
+        arr.push(e.key.toLocaleUpperCase());
+        const val = [...new Set(arr)].join("+");
+        if (keyboard.value !== val) {
+          dialog.warning({
+            title: "设置快捷键",
+            content: `确认修改打开工具的快捷键为【${val}】吗？\n
+                              设置后自动重启软件!`,
+            positiveText: "确认",
+            negativeText: "取消",
+            onPositiveClick() {
+              electronAPI.setConfig({ keyboard: val });
+            },
+          });
+        }
+      }
+    }
 
     onMounted(() => {
       // 判断是不是IE浏览器
@@ -262,10 +283,33 @@ export default defineComponent({
             <div class="d-flex align-items-center">
               <img src={Logo} class="logo mar-r-3-item" />
               <RouterLink to={{ name: "index" }} class="font-large mar-r-5-item space-nowrap">
-                {config.title}
+                {config.productName}
               </RouterLink>
             </div>
             <div class="flex-item-extend d-flex justify-end">
+              {!config.isElectron ? (
+                <NTooltip>
+                  {{
+                    default: () => <span>下载桌面程序</span>,
+                    trigger: () => (
+                      <NButton
+                        size="large"
+                        type="primary"
+                        ghost
+                        class="mar-r-3-item"
+                        circle
+                        onClick={() => {
+                          downLoad(config.releaseUrl, config.releaseName);
+                        }}
+                      >
+                        {{
+                          icon: () => <NIcon>{globalTheme.value === null ? <DownloadOutlined /> : <DownloadFilled />}</NIcon>,
+                        }}
+                      </NButton>
+                    ),
+                  }}
+                </NTooltip>
+              ) : null}
               <NDropdown
                 options={themeTypes.map(v => {
                   return {
@@ -356,7 +400,7 @@ export default defineComponent({
                                   return (
                                     <NButton
                                       onClick={() => {
-                                        window.open(config.releaseUrl);
+                                        downLoad(config.releaseUrl, config.releaseName);
                                       }}
                                     >
                                       下载桌面程序
@@ -391,42 +435,72 @@ export default defineComponent({
           </NLayout>
         </NLayout>
         <NDrawer v-model={[settingOpen.value, "show"]} class="setting-drawer" width="500px">
-          <NDrawerContent title="系统设置" closable>
-            <NDivider titlePlacement="left">主题</NDivider>
-            <div class="d-flex justify-between align-items-center mar-b-6-item">
-              <span class="font-gray font-small mar-r-7 flex-item-extend">选择主题</span>
-              <NSelect
-                style={{ width: "65%" }}
-                value={appConfig.value.themeType}
-                onUpdateValue={themeType => setAppConfig({ themeType })}
-                options={themeTypes.map(v => {
-                  return {
-                    label: v.label,
-                    value: v.key,
-                  };
-                })}
-              ></NSelect>
-            </div>
-            <div class="d-flex justify-between align-items-center mar-b-6-item">
-              <span class="font-gray font-small mar-r-7 flex-item-extend">主题颜色</span>
-              <NSelect
-                style={{ width: "65%" }}
-                value={appConfig.value.themeColor}
-                onUpdateValue={themeColor => setAppConfig({ themeColor })}
-                options={themeColors.map(v => {
-                  return {
-                    label() {
-                      return (
-                        <div class="d-flex align-items-center">
-                          <span class="color-box mar-r-3-item" style={{ backgroundColor: v.color }}></span>
-                          <span style={{ color: v.color }}>{v.label}</span>
-                        </div>
-                      );
-                    },
-                    value: v.key,
-                  };
-                })}
-              ></NSelect>
+          <NDrawerContent title="系统设置" closable class="d-flex direction-column justify-between">
+            <div>
+              <NDivider titlePlacement="left">主题</NDivider>
+              <div class="d-flex justify-between align-items-center mar-b-6-item">
+                <span class="font-gray font-small mar-r-7 flex-item-extend">选择主题</span>
+                <NSelect
+                  style={{ width: "65%" }}
+                  value={appConfig.value.themeType}
+                  onUpdateValue={themeType => setAppConfig({ themeType })}
+                  options={themeTypes.map(v => {
+                    return {
+                      label: v.label,
+                      value: v.key,
+                    };
+                  })}
+                ></NSelect>
+              </div>
+              <div class="d-flex justify-between align-items-center mar-b-6-item">
+                <span class="font-gray font-small mar-r-7 flex-item-extend">主题颜色</span>
+                <NSelect
+                  style={{ width: "65%" }}
+                  value={appConfig.value.themeColor}
+                  onUpdateValue={themeColor => setAppConfig({ themeColor })}
+                  options={themeColors.map(v => {
+                    return {
+                      label() {
+                        return (
+                          <div class="d-flex align-items-center">
+                            <span class="color-box mar-r-3-item" style={{ backgroundColor: v.color }}></span>
+                            <span style={{ color: v.color }}>{v.label}</span>
+                          </div>
+                        );
+                      },
+                      value: v.key,
+                    };
+                  })}
+                ></NSelect>
+              </div>
+              {config.isElectron ? (
+                <>
+                  <NDivider titlePlacement="left">快捷键</NDivider>
+                  <div class="d-flex justify-between align-items-center mar-b-6-item">
+                    <span class="font-gray font-small mar-r-7 flex-item-extend">打开工具</span>
+                    <div class="d-flex direction-column" style={{ width: "65%" }}>
+                      <NInput
+                        placeholder="请输入快捷键"
+                        class="mar-b-2-item"
+                        value={keyboard.value || "无"}
+                        onKeydown={e => {
+                          setAppKeyboard(e);
+                        }}
+                      />
+                      <NText depth="3" class="font-small">
+                        Ctrl或Alt或Shift的任意组合+字母
+                      </NText>
+                    </div>
+                  </div>
+                </>
+              ) : null}
+              <NDivider titlePlacement="left">系统信息</NDivider>
+              <div class="d-flex justify-between align-items-center mar-b-6-item">
+                <span class="font-gray font-small mar-r-7 flex-item-extend">版本</span>
+                <NText depth="3" class="font-small">
+                  v {config.version}
+                </NText>
+              </div>
             </div>
           </NDrawerContent>
         </NDrawer>

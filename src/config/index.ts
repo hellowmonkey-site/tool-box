@@ -1,11 +1,18 @@
 const isDev = import.meta.env.DEV;
 const isElectron = typeof electronAPI !== "undefined";
+import { version } from "../../package.json";
+import { productName } from "../../electron-builder.json";
+
+const releaseName = `${productName}-Windows-Setup-${version}.exe`;
+const releaseUrl = `/release/${releaseName}`;
 
 export default {
   isDev,
   isElectron,
-  title: "沃德工具箱",
-  releaseUrl: "https://github.com",
   dbName: "tool",
   dbVersion: 1,
+  version,
+  productName,
+  releaseName,
+  releaseUrl,
 };

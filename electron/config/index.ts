@@ -1,10 +1,9 @@
 import { join } from "path";
-import { tinifyKeys } from "../data/keys.json";
 const isDev = process.env.NODE_ENV === "development";
 
 export default {
   isDev,
-  tinifyKeys,
+  tinifyKeys: ["4RxZwMzdcMT4ksdgYnVYJzMtn2R7cgCT", "XrHtLVmrnvnhGLHH2RCkRN9BPm7ZdJg1", "ZZtYtycXQk4d5P11NmFTt70YnJrJx1Qk"],
   width: 1200,
   height: 800,
   title: "沃德工具箱",

@@ -27,19 +27,6 @@ export default defineComponent({
 
     return () => (
       <div class="content">
-        <div class="mar-b-4-item">
-          <NInputGroup>
-            <NInputGroupLabel size="large">线路节点</NInputGroupLabel>
-            <NSelect
-              size="large"
-              onUpdateValue={() => {
-                handleParse();
-              }}
-              options={circuits}
-              v-model={[circuit.value, "value"]}
-            />
-          </NInputGroup>
-        </div>
         <div class="mar-b-5-item">
           <NInputGroup>
             <NInputGroupLabel size="large">播放地址</NInputGroupLabel>
@@ -54,6 +41,19 @@ export default defineComponent({
               }}
               ref={iptEl}
               placeholder="请输入播放地址"
+            />
+          </NInputGroup>
+        </div>
+        <div class="mar-b-4-item">
+          <NInputGroup>
+            <NInputGroupLabel size="large">线路节点</NInputGroupLabel>
+            <NSelect
+              size="large"
+              onUpdateValue={() => {
+                handleParse();
+              }}
+              options={circuits}
+              v-model={[circuit.value, "value"]}
             />
           </NInputGroup>
         </div>

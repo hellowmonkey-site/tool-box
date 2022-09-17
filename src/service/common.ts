@@ -1,27 +1,10 @@
 import config from "@/config";
-import { DialogApiInjection } from "naive-ui/lib/dialog/src/DialogProvider";
-import { NotificationApiInjection } from "naive-ui/lib/notification/src/NotificationProvider";
 import { computed, ref } from "vue";
-import { darkTheme, GlobalTheme, GlobalThemeOverrides, useOsTheme } from "naive-ui";
+import { ConfigProviderProps, createDiscreteApi, darkTheme, GlobalTheme, GlobalThemeOverrides, useOsTheme } from "naive-ui";
 import { localStorage } from "@/helper/storage";
-import { MessageApiInjection } from "naive-ui/lib/message/src/MessageProvider";
 import { random } from "@/helper";
 
 const os = useOsTheme();
-
-export let notification: NotificationApiInjection;
-export function setNotification(e: NotificationApiInjection) {
-  notification = e;
-}
-export let dialog: DialogApiInjection;
-export function setDialog(e: DialogApiInjection) {
-  dialog = e;
-}
-
-export let message: MessageApiInjection;
-export function setMessage(e: MessageApiInjection) {
-  message = e;
-}
 
 // 返回顶部按钮
 export const isShowBackTop = ref(false);
@@ -143,10 +126,6 @@ export function setAppConfig(params: Partial<IConfig>) {
 }
 setAppConfig(localConfig);
 
-// export const themeType = ref<ThemeTypes>(appConfig.value.themeType);
-// export function changeThemeType(type: ThemeTypes) {
-//   themeType.value = type;
-// }
 export const globalTheme = computed<GlobalTheme | null>(() => {
   if (appConfig.value.themeType === ThemeTypes.DARK || (appConfig.value.themeType === ThemeTypes.OS && os.value === "dark")) {
     return darkTheme;
@@ -154,9 +133,21 @@ export const globalTheme = computed<GlobalTheme | null>(() => {
   return null;
 });
 
+// 弹框
+const configProviderPropsRef = computed<ConfigProviderProps>(() => ({
+  theme: globalTheme.value,
+}));
+const discrete = createDiscreteApi(["message", "dialog", "notification"], {
+  configProviderProps: configProviderPropsRef,
+});
+export const message = discrete.message;
+export const notification = discrete.notification;
+export const dialog = discrete.dialog;
+
 // 设置标题
 export const setTitle = (title: string) => {
-  document.title = title || config.title;
+  title = title || config.productName;
+  document.title = title;
   if (config.isElectron) {
     electronAPI?.setTitle(title);
   }

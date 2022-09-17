@@ -13,7 +13,7 @@ dist-ssr
 release
 *.local
 
-electron/data
+# electron/data
 
 # Editor directories and files
 .idea
