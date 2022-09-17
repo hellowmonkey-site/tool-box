@@ -29,7 +29,7 @@ export default defineComponent({
         let status = item.status;
         const total = list.length;
         const doneNum = list.filter(li => li.status === DownloadStatus.FINISHED).length;
-        const percentage = Number((doneNum / total).toFixed(2)) * 100;
+        const percentage = Number(((doneNum / total) * 100).toFixed(2));
         if (tsList.value.some(t => t.status === DownloadStatus.DOWNLOADING)) {
           status = DownloadStatus.DOWNLOADING;
         } else if (tsList.value.some(t => t.status === DownloadStatus.ERROR)) {
@@ -70,7 +70,7 @@ export default defineComponent({
 
         const tempArr: ITsItem[] = [];
         data.split(/\s/).forEach(item => {
-          if (/\.ts(\?.+)?$/i.test(item)) {
+          if (/((\.ts)|(\.jpg)|(\.png)|(\.gif)|(\.image))(\?.+)?$/i.test(item)) {
             const src = getFullUrl(origin, item);
             tempArr.push({
               status: DownloadStatus.WAITING,
