@@ -133,6 +133,19 @@ export const globalTheme = computed<GlobalTheme | null>(() => {
   return null;
 });
 
+// 窗口宽度
+export const windowWidth = ref(window.innerWidth);
+export const isMobileWidth = computed(() => {
+  return windowWidth.value < 640;
+});
+
+// 菜单
+export const menuCollapsed = ref(isMobileWidth.value);
+window.addEventListener("resize", () => {
+  windowWidth.value = window.innerWidth;
+  menuCollapsed.value = isMobileWidth.value;
+});
+
 // 弹框
 const configProviderPropsRef = computed<ConfigProviderProps>(() => ({
   theme: globalTheme.value,

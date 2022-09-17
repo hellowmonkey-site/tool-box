@@ -1,5 +1,15 @@
 import { isIE } from "@/helper/validate";
-import { appConfig, dialog, isShowBackTop, setAppConfig, settingOpen, themeColors, ThemeTypes, visitedPageNum } from "@/service/common";
+import {
+  appConfig,
+  dialog,
+  isShowBackTop,
+  menuCollapsed,
+  setAppConfig,
+  settingOpen,
+  themeColors,
+  ThemeTypes,
+  visitedPageNum,
+} from "@/service/common";
 import { globalTheme, themeTypes } from "@/service/common";
 import {
   MenuOption,
@@ -290,7 +300,7 @@ export default defineComponent({
               {!config.isElectron ? (
                 <NTooltip>
                   {{
-                    default: () => <span>下载桌面程序</span>,
+                    default: () => <span>下载客户端</span>,
                     trigger: () => (
                       <NButton
                         size="large"
@@ -374,7 +384,7 @@ export default defineComponent({
             </div>
           </NLayoutHeader>
           <NLayout hasSider position="absolute" style={{ top: "61px" }}>
-            <NLayoutSider bordered showTrigger collapseMode="width">
+            <NLayoutSider bordered showTrigger collapseMode="width" v-model={[menuCollapsed.value, "collapsed"]}>
               <NMenu
                 options={menus}
                 value={route.name as string}
@@ -394,7 +404,7 @@ export default defineComponent({
                       if (route.meta.electron && !config.isElectron) {
                         return (
                           <div class="d-flex direction-column align-items-center justify-center" style="height: 60vh">
-                            <NResult status="403" title="此功能暂不支持在浏览器使用，请下载桌面程序进行食用">
+                            <NResult status="403" title="此功能暂不支持在浏览器使用，请下载客户端进行食用">
                               {{
                                 footer() {
                                   return (
@@ -403,7 +413,7 @@ export default defineComponent({
                                         downLoad(config.releaseUrl, config.releaseName);
                                       }}
                                     >
-                                      下载桌面程序
+                                      下载客户端
                                     </NButton>
                                   );
                                 },
@@ -434,7 +444,7 @@ export default defineComponent({
             </NLayout>
           </NLayout>
         </NLayout>
-        <NDrawer v-model={[settingOpen.value, "show"]} class="setting-drawer" width="500px">
+        <NDrawer v-model={[settingOpen.value, "show"]} class="setting-drawer" style="width: 90vw; max-width: 500px;">
           <NDrawerContent title="系统设置" closable class="d-flex direction-column justify-between">
             <div>
               <NDivider titlePlacement="left">主题</NDivider>
