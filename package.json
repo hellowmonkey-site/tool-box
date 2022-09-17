@@ -3,6 +3,8 @@
   "private": true,
   "version": "1.0.3",
   "main": "dist/electron/main/index.js",
+  "author": "parker",
+  "description": "沃德工具箱",
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
