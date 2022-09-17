@@ -1,9 +1,6 @@
 import { contextBridge, ipcRenderer } from "electron";
-import { keyboard } from "../data/config.json";
 
 contextBridge.exposeInMainWorld("electronAPI", {
-  // 快捷键
-  keyboard,
   // 设置进度条
   setProgressBar: (...args: any[]) => ipcRenderer.send("set-progress-bar", ...args),
   // 设置title
@@ -26,4 +23,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
   writeFile: (...args: any[]) => ipcRenderer.invoke("write-file", ...args),
   // 设置config
   setConfig: (...args: any[]) => ipcRenderer.invoke("set-config", ...args),
+  // 获取config
+  getConfig: (...args: any[]) => ipcRenderer.invoke("get-config", ...args),
 });

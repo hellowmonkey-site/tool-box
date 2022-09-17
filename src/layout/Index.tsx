@@ -121,7 +121,7 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const os = useOsTheme();
-    const keyboard = ref<string>(config.isElectron ? electronAPI?.keyboard || "" : "");
+    const keyboard = ref<string>("");
 
     function renderMenu(item: MenuOption): MenuOption {
       return {
@@ -162,7 +162,15 @@ export default defineComponent({
       e.preventDefault();
       // 清空
       if (e.key === "Backspace") {
-        keyboard.value = "";
+        dialog.warning({
+          title: "取消快捷键",
+          content: `确认取消打开工具的快捷键吗？\n设置后自动重启软件!`,
+          positiveText: "确认",
+          negativeText: "取消",
+          onPositiveClick() {
+            electronAPI.setConfig({ keyboard: "" });
+          },
+        });
         return;
       }
       const arr: string[] = [];
@@ -181,8 +189,7 @@ export default defineComponent({
         if (keyboard.value !== val) {
           dialog.warning({
             title: "设置快捷键",
-            content: `确认修改打开工具的快捷键为【${val}】吗？\n
-                              设置后自动重启软件!`,
+            content: `确认修改打开工具的快捷键为【${val}】吗？\n设置后自动重启软件!`,
             positiveText: "确认",
             negativeText: "取消",
             onPositiveClick() {
@@ -193,7 +200,13 @@ export default defineComponent({
       }
     }
 
-    onMounted(() => {
+    onMounted(async () => {
+      if (config.isElectron) {
+        await electronAPI.getConfig().then(data => {
+          keyboard.value = data.keyboard;
+        });
+      }
+
       // 判断是不是IE浏览器
       if (isIE) {
         dialog.warning({

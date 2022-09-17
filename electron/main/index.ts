@@ -1,13 +1,21 @@
 import { app, BrowserWindow, globalShortcut, ipcMain, Menu, SaveDialogOptions, Tray } from "electron";
 import { join } from "path";
-import { writeJSONSync } from "fs-extra";
+import { writeJSONSync, readJSONSync, existsSync, mkdirSync } from "fs-extra";
 import { compressImage, pngToIco } from "./image";
 import { openDirectory, saveDialog, saveBase64File, selectDirectory, writeFile } from "./file";
 import { notification } from "./helper";
 import config from "../config";
-import dataConfig from "../data/config.json";
+import defaultUserConfig from "../data/config.json";
 
 let tray: Tray, win: BrowserWindow;
+
+const userConfigPath = app.getPath("userData");
+const userConfigFile = join(userConfigPath, "config.json");
+if (!existsSync(userConfigPath)) {
+  mkdirSync(userConfigPath);
+}
+const userConfig = Object.assign({}, defaultUserConfig, readJSONSync(userConfigFile));
+writeJSONSync(userConfigFile, userConfig);
 
 function toggleWin() {
   if (win?.isVisible()) {
@@ -22,6 +30,7 @@ function showWin() {
   win?.show();
   win?.focus();
   win?.setSkipTaskbar(false);
+  win?.maximize();
 }
 
 function hideWin() {
@@ -30,6 +39,7 @@ function hideWin() {
 }
 
 function destroyApp() {
+  win?.destroy();
   app.quit();
   tray?.destroy();
 }
@@ -51,8 +61,8 @@ function createWindow() {
 
   const loading = new BrowserWindow({
     autoHideMenuBar: true,
-    width: config.width,
-    height: config.height,
+    width: 375,
+    height: 650,
     title: config.title,
     hasShadow: false,
     show: false,
@@ -74,15 +84,12 @@ function createWindow() {
   win.removeMenu();
 
   win.loadURL(config.url).then(() => {
-    win.maximize();
-    if (config.isDev) {
-      win.webContents.openDevTools();
-    }
-  });
-  win.once("ready-to-show", () => {
     showWin();
     loading.hide();
     loading.close();
+    if (config.isDev) {
+      win.webContents.openDevTools();
+    }
   });
   win.on("close", e => {
     e.preventDefault();
@@ -131,8 +138,8 @@ app
     });
   })
   .then(() => {
-    if (dataConfig.keyboard) {
-      globalShortcut.register(dataConfig.keyboard, () => {
+    if (userConfig.keyboard) {
+      globalShortcut.register(userConfig.keyboard, () => {
         toggleWin();
       });
     }
@@ -207,8 +214,12 @@ ipcMain.handle("write-file", (e, filePath: string, buf: NodeJS.ArrayBufferView) 
 
 // 设置config
 ipcMain.handle("set-config", (e, data: unknown) => {
-  Object.assign(dataConfig, data);
-  writeJSONSync(join(__dirname, "../data/config.json"), dataConfig);
+  Object.assign(userConfig, data);
+  writeJSONSync(userConfigFile, userConfig);
+  tray?.destroy();
   app.relaunch({ args: process.argv.slice(1).concat(["--relaunch"]) });
   app.exit(0);
 });
+
+// 获取config
+ipcMain.handle("get-config", () => userConfig);
