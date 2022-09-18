@@ -1,3 +1,4 @@
 {
-  "keyboard": "Alt+CommandOrControl+E"
+  "keyboard": "Alt+CommandOrControl+E",
+  "openAtLogin": true
 }

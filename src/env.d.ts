@@ -22,7 +22,7 @@ declare let electronAPI: {
   notification: (title: string, content: string) => Promise<void>;
   writeFile: (filePath: string, buf: NodeJS.ArrayBufferView) => Promise<void>;
   setConfig: (data: unknown) => void;
-  getConfig: () => Promise<{ keyboard: string }>;
+  getConfig: () => Promise<{ keyboard: string; openAtLogin: boolean }>;
 };
 
 declare module "qrcode-decoder";

@@ -11,10 +11,11 @@ let tray: Tray, win: BrowserWindow;
 
 const userConfigPath = app.getPath("userData");
 const userConfigFile = join(userConfigPath, "config.json");
+console.log(userConfigPath);
 if (!existsSync(userConfigPath)) {
   mkdirSync(userConfigPath);
 }
-const userConfig = Object.assign({}, defaultUserConfig, readJSONSync(userConfigFile));
+const userConfig: { keyboard: string; openAtLogin: boolean } = Object.assign({}, defaultUserConfig, readJSONSync(userConfigFile));
 writeJSONSync(userConfigFile, userConfig);
 
 function toggleWin() {
@@ -77,19 +78,21 @@ function createWindow() {
     }
   });
   loading.on("close", () => {
-    showWin();
+    const { openAsHidden } = app.getLoginItemSettings();
+    if (!(process.argv.indexOf("--openAsHidden") !== -1 || openAsHidden)) {
+      showWin();
+      if (config.isDev) {
+        win.webContents.openDevTools();
+      }
+    }
   });
 
   win.setIcon(config.icon);
   win.removeMenu();
 
   win.loadURL(config.url).then(() => {
-    showWin();
     loading.hide();
     loading.close();
-    if (config.isDev) {
-      win.webContents.openDevTools();
-    }
   });
   win.on("close", e => {
     e.preventDefault();
@@ -138,11 +141,18 @@ app
     });
   })
   .then(() => {
+    // 快捷键
     if (userConfig.keyboard) {
       globalShortcut.register(userConfig.keyboard, () => {
         toggleWin();
       });
     }
+    // 开机自启
+    app.setLoginItemSettings({
+      openAtLogin: app.isPackaged && userConfig.openAtLogin,
+      args: ["--openAsHidden"],
+      openAsHidden: true,
+    });
   });
 
 app.on("window-all-closed", () => {

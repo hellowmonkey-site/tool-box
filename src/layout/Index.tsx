@@ -12,6 +12,7 @@ import {
 } from "@/service/common";
 import { globalTheme, themeTypes } from "@/service/common";
 import {
+  DialogOptions,
   MenuOption,
   NBackTop,
   NButton,
@@ -28,11 +29,12 @@ import {
   NMenu,
   NResult,
   NSelect,
+  NSwitch,
   NText,
   NTooltip,
   useOsTheme,
 } from "naive-ui";
-import { defineComponent, KeepAlive, onMounted, ref, Transition } from "vue";
+import { defineComponent, KeepAlive, onMounted, reactive, ref, Transition } from "vue";
 import { RouteLocationNormalizedLoaded, RouterLink, RouterView, useRoute, useRouter } from "vue-router";
 import {
   ChevronLeftRound,
@@ -121,7 +123,10 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const os = useOsTheme();
-    const keyboard = ref<string>("");
+    const electronConfig = reactive({
+      keyboard: "",
+      openAtLogin: true,
+    });
 
     function renderMenu(item: MenuOption): MenuOption {
       return {
@@ -162,15 +167,13 @@ export default defineComponent({
       e.preventDefault();
       // 清空
       if (e.key === "Backspace") {
-        dialog.warning({
-          title: "取消快捷键",
-          content: `确认取消打开工具的快捷键吗？\n设置后自动重启软件!`,
-          positiveText: "确认",
-          negativeText: "取消",
-          onPositiveClick() {
-            electronAPI.setConfig({ keyboard: "" });
+        showConfigDialog(
+          {
+            title: "取消快捷键",
+            content: "确认取消打开工具的快捷键吗？",
           },
-        });
+          { keyboard: "" }
+        );
         return;
       }
       const arr: string[] = [];
@@ -186,24 +189,44 @@ export default defineComponent({
       if (arr.length && e.key.length === 1 && /[a-z]/i.test(e.key)) {
         arr.push(e.key.toLocaleUpperCase());
         const val = [...new Set(arr)].join("+");
-        if (keyboard.value !== val) {
-          dialog.warning({
-            title: "设置快捷键",
-            content: `确认修改打开工具的快捷键为【${val}】吗？\n设置后自动重启软件!`,
-            positiveText: "确认",
-            negativeText: "取消",
-            onPositiveClick() {
-              electronAPI.setConfig({ keyboard: val });
+        if (electronConfig.keyboard !== val) {
+          showConfigDialog(
+            {
+              title: "设置快捷键",
+              content: `确认修改打开工具的快捷键为【${val}】吗？`,
             },
-          });
+            { keyboard: val }
+          );
         }
       }
+    }
+
+    function showConfigDialog(opts: DialogOptions, data: unknown) {
+      dialog.warning({
+        positiveText: "确认",
+        negativeText: "取消",
+        onPositiveClick() {
+          electronAPI.setConfig(data);
+        },
+        ...opts,
+        content() {
+          return (
+            <>
+              <div class="mar-b-2-item font-large">{opts.content}</div>
+              <NText depth="3" class="mar-b-2-item font-small">
+                设置后将自动重启软件!
+              </NText>
+            </>
+          );
+        },
+      });
     }
 
     onMounted(async () => {
       if (config.isElectron) {
         await electronAPI.getConfig().then(data => {
-          keyboard.value = data.keyboard;
+          electronConfig.keyboard = data.keyboard;
+          electronConfig.openAtLogin = data.openAtLogin;
         });
       }
 
@@ -460,7 +483,7 @@ export default defineComponent({
         <NDrawer v-model={[settingOpen.value, "show"]} class="setting-drawer" style="width: 90vw; max-width: 500px;">
           <NDrawerContent title="系统设置" closable class="d-flex direction-column justify-between">
             <div>
-              <NDivider titlePlacement="left">主题</NDivider>
+              <NDivider titlePlacement="left">主题设置</NDivider>
               <div class="d-flex justify-between align-items-center mar-b-6-item">
                 <span class="font-gray font-small mar-r-7 flex-item-extend">选择主题</span>
                 <NSelect
@@ -498,6 +521,22 @@ export default defineComponent({
               </div>
               {config.isElectron ? (
                 <>
+                  <NDivider titlePlacement="left">通用设置</NDivider>
+                  <div class="d-flex justify-between align-items-center mar-b-6-item">
+                    <span class="font-gray font-small mar-r-7">开机自启</span>
+                    <NSwitch
+                      value={electronConfig.openAtLogin}
+                      onUpdateValue={val => {
+                        showConfigDialog(
+                          {
+                            title: "开机自启",
+                            content: `确认要${val ? "启动" : "取消"}开机自启吗？`,
+                          },
+                          { openAtLogin: val }
+                        );
+                      }}
+                    />
+                  </div>
                   <NDivider titlePlacement="left">快捷键</NDivider>
                   <div class="d-flex justify-between align-items-center mar-b-6-item">
                     <span class="font-gray font-small mar-r-7 flex-item-extend">打开工具</span>
@@ -505,7 +544,7 @@ export default defineComponent({
                       <NInput
                         placeholder="请输入快捷键"
                         class="mar-b-2-item"
-                        value={keyboard.value || "无"}
+                        value={electronConfig.keyboard || "无"}
                         onKeydown={e => {
                           setAppKeyboard(e);
                         }}
@@ -517,7 +556,7 @@ export default defineComponent({
                   </div>
                 </>
               ) : null}
-              <NDivider titlePlacement="left">系统信息</NDivider>
+              <NDivider titlePlacement="left">关于</NDivider>
               <div class="d-flex justify-between align-items-center mar-b-6-item">
                 <span class="font-gray font-small mar-r-7 flex-item-extend">版本</span>
                 <NText depth="3" class="font-small">
