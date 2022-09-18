@@ -13,9 +13,11 @@ export default defineComponent({
     const iframeSrc = ref<string>("");
     const iptEl = ref<HTMLInputElement>();
 
-    function handleParse() {
+    function handleParse(check = true) {
       if (!url.value) {
-        message.error("请先输入播放地址");
+        if (check) {
+          message.error("请先输入播放地址");
+        }
         return;
       }
       iframeSrc.value = circuit.value.replace("__URL__", url.value);
@@ -40,7 +42,7 @@ export default defineComponent({
                 }
               }}
               ref={iptEl}
-              placeholder="请输入播放地址"
+              placeholder="请输入播放地址，回车解析"
             />
           </NInputGroup>
         </div>
@@ -50,7 +52,7 @@ export default defineComponent({
             <NSelect
               size="large"
               onUpdateValue={() => {
-                handleParse();
+                handleParse(false);
               }}
               options={circuits}
               v-model={[circuit.value, "value"]}

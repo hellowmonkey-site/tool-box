@@ -59,9 +59,9 @@ export default defineComponent({
         message.error("此链接已被处理过");
         return;
       }
-      const { origin } = new URL(form.url);
-      loading.value = true;
       try {
+        const { origin } = new URL(form.url);
+        loading.value = true;
         let data = await ajax(form.url);
         const newUrl = data.split(/\s/).find(item => /\.m3u8(\?.+)?$/i.test(item));
         if (newUrl) {
@@ -199,7 +199,18 @@ export default defineComponent({
           <div class="mar-b-4-item">
             <NInputGroup>
               <NInputGroupLabel size="large">视频地址</NInputGroupLabel>
-              <NInput ref={iptEl} size="large" placeholder="请输入m3u8地址" v-model={[form.url, "value"]} />
+              <NInput
+                ref={iptEl}
+                size="large"
+                onKeydown={e => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    downloadM3u8();
+                  }
+                }}
+                placeholder="请输入m3u8地址，回车解析"
+                v-model={[form.url, "value"]}
+              />
             </NInputGroup>
           </div>
           <div class="mar-b-4-item">
