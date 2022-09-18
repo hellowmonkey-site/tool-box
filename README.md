@@ -1,11 +1,23 @@
-# Vue 3 + Typescript + Vite
+# 沃德工具箱
 
-This template should help get you started developing with Vue 3 and Typescript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+项目基于`Vue3`+`TypeScript`+`Vite`+`Naive UI`+`Electron`开发，旨在通过一些常用工具的开发为日常工作提供方便。
 
-## Recommended IDE Setup
-
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
-
-## Type Support For `.vue` Imports in TS
-
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's `.vue` type support plugin by running `Volar: Switch TS Plugin on/off` from VSCode command palette.
+## 主要功能（持续迭代中...)
+- 图片
+  - [图片压缩](https://tool.hellowmonkey.cc/image/compress)
+  - [图片裁剪](https://tool.hellowmonkey.cc/image/clip)
+  - [图片加水印](https://tool.hellowmonkey.cc/image/watermark)
+  - [ico生成](https://tool.hellowmonkey.cc/image/ico)
+- 视频
+  - [m3u8下载](https://tool.hellowmonkey.cc/video/m3u8)
+  - [视频在线解析](https://tool.hellowmonkey.cc/video/parse)
+- 二维码
+  - [生成二维码](https://tool.hellowmonkey.cc/qrcode/create)
+  - [解析二维码](https://tool.hellowmonkey.cc/qrcode/decode)
+- 开发
+  - [常用正则](https://tool.hellowmonkey.cc/developer/regex)
+- 日常
+  - [数字转大写金额](https://tool.hellowmonkey.cc/util/num-money)
+  - [时间戳转日期](https://tool.hellowmonkey.cc/util/timestamp-date)
+  - [日期转时间戳](https://tool.hellowmonkey.cc/util/date-timestamp)
+> 其中[m3u8下载](https://tool.hellowmonkey.cc/video/m3u8)功能为[沃德影视](https://movie.hellowmonkey.cc/)提供视频了下载支持
