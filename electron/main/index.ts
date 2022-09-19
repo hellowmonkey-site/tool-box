@@ -11,9 +11,11 @@ let tray: Tray, win: BrowserWindow;
 
 const userConfigPath = app.getPath("userData");
 const userConfigFile = join(userConfigPath, "config.json");
-console.log(userConfigPath);
 if (!existsSync(userConfigPath)) {
   mkdirSync(userConfigPath);
+}
+if (!existsSync(userConfigFile)) {
+  writeJSONSync(userConfigFile, defaultUserConfig);
 }
 const userConfig: { keyboard: string; openAtLogin: boolean } = Object.assign({}, defaultUserConfig, readJSONSync(userConfigFile));
 writeJSONSync(userConfigFile, userConfig);
