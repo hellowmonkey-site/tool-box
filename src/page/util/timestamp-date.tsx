@@ -19,7 +19,7 @@ export default defineComponent({
     function handleSubmit() {
       let value = Number(form.value);
       if (form.type === DateType.S) {
-        value = Math.ceil(value / 1000);
+        value = Math.ceil(value * 1000);
       }
       ret.value = dayjs(value).format("YYYY-MM-DD HH:mm:ss");
     }
