@@ -229,6 +229,36 @@ export async function copyText(text: string): Promise<void> {
   }
 }
 
+// 复制图片到剪贴板
+export async function copyImg(src: string) {
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  if (!ctx) {
+    return;
+  }
+
+  const img = await awaitLoadImg(src);
+  const { width, height } = img;
+  canvas.width = width;
+  canvas.height = height;
+  ctx.clearRect(0, 0, width, height);
+  ctx.drawImage(img, 0, 0);
+  const blob = await new Promise<Blob | null>(resolve => {
+    canvas.toBlob(blob => {
+      resolve(blob);
+    });
+  });
+  if (!blob) {
+    return;
+  }
+  const data = [
+    new ClipboardItem({
+      [blob.type]: blob,
+    }),
+  ];
+  await navigator.clipboard.write(data);
+}
+
 // 横线转驼峰
 export function lineToHump(str: string, lineType = "-") {
   const reg = new RegExp(`${lineType}(\\w)`, "g");
@@ -297,6 +327,7 @@ export function awaitNextTick(data?: any) {
 // 图片加载
 export function awaitLoadImg(src: string) {
   const img = new Image();
+  img.crossOrigin = "Anonymous";
   img.src = src;
   return new Promise<HTMLImageElement>((resolve, reject) => {
     img.onload = () => {

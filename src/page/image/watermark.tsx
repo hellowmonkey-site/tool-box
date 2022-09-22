@@ -1,4 +1,5 @@
-import { awaitLoadImg, awaitNextTick, downLoadBase64File, fileToBase64, getFilePathInfo } from "@/helper";
+import { awaitLoadImg, awaitNextTick, copyImg, downLoadBase64File, fileToBase64, getFilePathInfo } from "@/helper";
+import { message } from "@/service/common";
 import { UploadFileOutlined } from "@vicons/material";
 import { NButton, NColorPicker, NIcon, NInput, NSlider, NSwitch, NText, NUpload, NUploadDragger, UploadFileInfo } from "naive-ui";
 import { defineComponent, reactive, ref } from "vue";
@@ -157,12 +158,27 @@ export default defineComponent({
               block
               size="large"
               type="primary"
+              ghost
+              class="mar-b-3-item"
+              onClick={() => {
+                copyImg(canvasEl.value!.toDataURL("image/png")).then(() => {
+                  message.success("复制成功");
+                });
+              }}
+            >
+              复制图片
+            </NButton>
+            <NButton
+              block
+              size="large"
+              type="primary"
+              class="mar-b-3-item"
               onClick={() => {
                 downCanvas();
               }}
               loading={loading.value}
             >
-              下载
+              下载图片
             </NButton>
           </>
         ) : null}

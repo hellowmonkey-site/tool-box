@@ -1,10 +1,10 @@
 import { NButton, NCard, NCheckbox, NDrawer, NDrawerContent, NIcon, NInput, NUpload, UploadFileInfo } from "naive-ui";
 import { defineComponent, onActivated, ref } from "vue";
-import { awaitLoadImg, awaitNextTick, downLoadBase64File, fileToBase64, randomString } from "@/helper";
+import { awaitLoadImg, awaitNextTick, copyImg, downLoadBase64File, fileToBase64, randomString } from "@/helper";
 import qrcode from "qrcode";
 import { DeleteOutlined, UploadFileOutlined, UploadOutlined } from "@vicons/material";
 import { addLogo, deleteLogo, getLogoList, logoList, logoOpts } from "@/service/qrcode";
-import { dialog } from "@/service/common";
+import { dialog, message } from "@/service/common";
 
 export default defineComponent({
   props: {},
@@ -187,13 +187,27 @@ export default defineComponent({
                         block
                         size="large"
                         type="primary"
+                        ghost
+                        class="mar-b-3-item"
+                        onClick={() => {
+                          copyImg(canvasEl.value!.toDataURL("image/png")).then(() => {
+                            message.success("复制成功");
+                          });
+                        }}
+                      >
+                        复制图片
+                      </NButton>
+                      <NButton
+                        block
+                        size="large"
+                        type="primary"
                         class="mar-b-3-item"
                         onClick={() => {
                           downCanvas();
                         }}
                         loading={loading.value}
                       >
-                        下载
+                        下载图片
                       </NButton>
                     </div>
                   );

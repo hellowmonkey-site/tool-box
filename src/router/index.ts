@@ -4,7 +4,6 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Index from "@/layout/Index";
 import { filterParams, putStyle } from "@/helper";
 import { setTitle, themeOverrides, visitedPageNum } from "@/service/common";
-import config from "@/config";
 
 NProgress.inc(0.2);
 NProgress.configure({ easing: "ease", speed: 500, showSpinner: false });

@@ -71,23 +71,23 @@ export const firstMenus: MenuOption[] = [
     },
   },
   {
-    label: "视频",
-    key: "video",
-    icon() {
-      return (
-        <NIcon>
-          <VideocamOutlined />
-        </NIcon>
-      );
-    },
-  },
-  {
     label: "二维码",
     key: "qrcode",
     icon() {
       return (
         <NIcon>
           <QrCodeOutlined />
+        </NIcon>
+      );
+    },
+  },
+  {
+    label: "视频",
+    key: "video",
+    icon() {
+      return (
+        <NIcon>
+          <VideocamOutlined />
         </NIcon>
       );
     },
