@@ -151,6 +151,9 @@ export default defineComponent({
         const filePath = `${m3u8.filePath}/${m3u8.name}.mp4`;
         await electronAPI.writeFile(filePath, buf);
         message.success(`下载成功：【${filePath}】`);
+        if (config.isElectron) {
+          electronAPI.notification("下载成功", filePath);
+        }
       } else {
         downLoad(url, `${m3u8.name}.mp4`);
       }

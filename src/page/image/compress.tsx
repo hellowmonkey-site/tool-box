@@ -3,6 +3,7 @@ import { UploadFileOutlined } from "@vicons/material";
 import { NAlert, NButton, NCard, NCheckbox, NIcon, NInput, NProgress, NText, NUpload, NUploadDragger, UploadFileInfo } from "naive-ui";
 import { defineComponent, ref } from "vue";
 import { loadingProgressBar, message } from "@/service/common";
+import config from "@/config";
 
 type UploadFile = UploadFileInfo & {
   fileSize: number;
@@ -71,7 +72,10 @@ export default defineComponent({
                 });
             })
         );
-        message.success("压缩成功");
+        message.success("图片压缩成功");
+        if (config.isElectron) {
+          electronAPI.notification("图片压缩成功", list.map(v => v.name).join(","));
+        }
         if (checkOpen.value && saveDirectory.value) {
           electronAPI.openDirectory(saveDirectory.value);
         }
