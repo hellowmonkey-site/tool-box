@@ -1,6 +1,7 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 contextBridge.exposeInMainWorld("electronAPI", {
+  on: ipcRenderer.on,
   // 设置进度条
   setProgressBar: (...args: any[]) => ipcRenderer.send("set-progress-bar", ...args),
   // 设置title
@@ -13,16 +14,16 @@ contextBridge.exposeInMainWorld("electronAPI", {
   saveBase64File: (...args: any[]) => ipcRenderer.invoke("save-base64-file", ...args),
   // 选择文件夹
   selectDirectory: (...args: any[]) => ipcRenderer.invoke("select-directory", ...args),
-  // 选择文件夹
+  // 打开文件夹
   openDirectory: (...args: any[]) => ipcRenderer.invoke("open-directory", ...args),
-  // 选择文件夹
+  // ico
   pngToIco: (...args: any[]) => ipcRenderer.invoke("png-to-ico", ...args),
-  // 选择文件夹
-  notification: (...args: any[]) => ipcRenderer.invoke("notification", ...args),
   // 保存文件
   writeFile: (...args: any[]) => ipcRenderer.invoke("write-file", ...args),
   // 设置config
   setConfig: (...args: any[]) => ipcRenderer.invoke("set-config", ...args),
   // 获取config
   getConfig: (...args: any[]) => ipcRenderer.invoke("get-config", ...args),
+  // 通知
+  notification: (...args: any[]) => ipcRenderer.invoke("notification", ...args),
 });

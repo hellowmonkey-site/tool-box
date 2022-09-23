@@ -1,9 +1,10 @@
-import { app, BrowserWindow, globalShortcut, ipcMain, Menu, SaveDialogOptions, Tray } from "electron";
+import { app, BrowserWindow, globalShortcut, ipcMain, Menu, SaveDialogOptions, Tray, Notification } from "electron";
 import { join } from "path";
 import { writeJSONSync, readJSONSync, existsSync, mkdirSync } from "fs-extra";
+import chokidar from "chokidar";
 import { compressImage, pngToIco } from "./image";
 import { openDirectory, saveDialog, saveBase64File, selectDirectory, writeFile } from "./file";
-import { notification } from "./helper";
+import { getFilePath, notification } from "./helper";
 import config from "../config";
 import defaultUserConfig from "../data/config.json";
 
@@ -17,7 +18,11 @@ if (!existsSync(userConfigPath)) {
 if (!existsSync(userConfigFile)) {
   writeJSONSync(userConfigFile, defaultUserConfig);
 }
-const userConfig: { keyboard: string; openAtLogin: boolean } = Object.assign({}, defaultUserConfig, readJSONSync(userConfigFile));
+const userConfig: { keyboard: string; openAtLogin: boolean; compressDirs: string[]; compressNotify: boolean } = Object.assign(
+  {},
+  defaultUserConfig,
+  readJSONSync(userConfigFile)
+);
 writeJSONSync(userConfigFile, userConfig);
 
 function toggleWin() {
@@ -155,6 +160,32 @@ app
       args: ["--openAsHidden"],
       openAsHidden: true,
     });
+    // 文件压缩目录
+    if (userConfig.compressDirs.length) {
+      chokidar
+        .watch(userConfig.compressDirs, {
+          persistent: true,
+          depth: 9,
+        })
+        .on("add", (path, stat) => {
+          if (stat?.birthtime && Date.now() - stat.birthtime.getTime() < 60 * 1000) {
+            compressImage(path).then(() => {
+              if (userConfig.compressNotify) {
+                const { filePath } = getFilePath(path);
+                const notify = new Notification({
+                  title: "图片压缩成功",
+                  body: path,
+                  icon: config.icon,
+                });
+                notify.on("click", () => {
+                  openDirectory(filePath);
+                });
+                notify.show();
+              }
+            });
+          }
+        });
+    }
   });
 
 app.on("window-all-closed", () => {
@@ -200,8 +231,8 @@ ipcMain.handle("save-base64-file", (e, base64Str: string, fileName?: string) => 
 });
 
 // 选择文件夹
-ipcMain.handle("select-directory", (e, path: string) => {
-  return selectDirectory(path);
+ipcMain.handle("select-directory", (e, path: string, defaultPath?: string) => {
+  return selectDirectory(path, defaultPath);
 });
 
 // 打开文件夹

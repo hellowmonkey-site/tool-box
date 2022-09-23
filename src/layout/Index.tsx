@@ -20,6 +20,7 @@ import {
   NDrawer,
   NDrawerContent,
   NDropdown,
+  NDynamicInput,
   NH2,
   NIcon,
   NInput,
@@ -34,7 +35,7 @@ import {
   NTooltip,
   useOsTheme,
 } from "naive-ui";
-import { defineComponent, KeepAlive, onMounted, reactive, ref, Transition } from "vue";
+import { computed, defineComponent, KeepAlive, onMounted, reactive, ref, Transition } from "vue";
 import { RouteLocationNormalizedLoaded, RouterLink, RouterView, useRoute, useRouter } from "vue-router";
 import {
   ChevronLeftRound,
@@ -123,9 +124,15 @@ export default defineComponent({
     const route = useRoute();
     const router = useRouter();
     const os = useOsTheme();
-    const electronConfig = reactive({
+    const electronConfig = reactive<{ keyboard: string; openAtLogin: boolean; compressDirs: string[]; compressNotify: boolean }>({
       keyboard: "",
       openAtLogin: true,
+      compressDirs: [],
+      compressNotify: true,
+    });
+    const compressDirs = ref<string[]>([]);
+    const showCompressDirsBtn = computed(() => {
+      return electronConfig.compressDirs.join("") !== [...new Set(compressDirs.value.filter(v => !!v))].join("");
     });
 
     function renderMenu(item: MenuOption): MenuOption {
@@ -222,11 +229,25 @@ export default defineComponent({
       });
     }
 
-    onMounted(async () => {
+    // 图片自动压缩位置保存
+    function saveCompressDirs() {
+      compressDirs.value = compressDirs.value.filter(v => !!v);
+      showConfigDialog(
+        {
+          title: "修改需要自动压缩的图片目录",
+          content: `${compressDirs.value.length ? "确认修改需要自动压缩的图片目录？" : "确认关闭图片自动压缩监听？"}`,
+        },
+        { compressDirs: Array.from(compressDirs.value) }
+      );
+    }
+
+    onMounted(() => {
       if (config.isElectron) {
-        await electronAPI.getConfig().then(data => {
+        electronAPI.getConfig().then(data => {
           electronConfig.keyboard = data.keyboard;
           electronConfig.openAtLogin = data.openAtLogin;
+          electronConfig.compressDirs = data.compressDirs;
+          compressDirs.value = Array.from(electronConfig.compressDirs);
         });
       }
 
@@ -552,6 +573,68 @@ export default defineComponent({
                       <NText depth="3" class="font-small">
                         Ctrl或Alt或Shift的任意组合+字母
                       </NText>
+                    </div>
+                  </div>
+                  <NDivider titlePlacement="left">自动化</NDivider>
+                  <div class="mar-b-6-item">
+                    <div class="d-flex justify-between align-items-center mar-b-3-item">
+                      <span class="font-gray font-small mar-r-7 flex-item-extend">图片自动压缩目录</span>
+                      {showCompressDirsBtn.value ? (
+                        <NButton
+                          onClick={() => {
+                            saveCompressDirs();
+                          }}
+                        >
+                          保存
+                        </NButton>
+                      ) : null}
+                    </div>
+                    <NDynamicInput
+                      class="mar-b-6-item"
+                      value={compressDirs.value}
+                      onCreate={index => {
+                        compressDirs.value.splice(index, 0, "");
+                      }}
+                      onRemove={index => {
+                        compressDirs.value.splice(index, 1);
+                      }}
+                    >
+                      {{
+                        "create-button-default"() {
+                          return "添加目录";
+                        },
+                        default({ value, index }: { value: string; index: number }) {
+                          return (
+                            <NInput
+                              readonly
+                              placeholder="选择需要自动压缩的图片目录"
+                              onClick={() => {
+                                electronAPI.selectDirectory("选择需要自动压缩的图片目录", value).then(data => {
+                                  if (data) {
+                                    compressDirs.value.splice(index, 1, data);
+                                  }
+                                });
+                              }}
+                              value={value}
+                            />
+                          );
+                        },
+                      }}
+                    </NDynamicInput>
+                    <div class="d-flex justify-between align-items-center mar-b-6-item">
+                      <span class="font-gray font-small mar-r-7">图片压缩成功后通知</span>
+                      <NSwitch
+                        value={electronConfig.compressNotify}
+                        onUpdateValue={val => {
+                          showConfigDialog(
+                            {
+                              title: "图片压缩成功后通知",
+                              content: `确认要${val ? "开启" : "取消"}图片压缩成功后通知吗？`,
+                            },
+                            { compressNotify: val }
+                          );
+                        }}
+                      />
                     </div>
                   </div>
                 </>

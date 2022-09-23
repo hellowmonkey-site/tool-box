@@ -1,4 +1,6 @@
 {
   "keyboard": "Alt+CommandOrControl+E",
-  "openAtLogin": true
+  "openAtLogin": false,
+  "compressDirs": [],
+  "compressNotify": true
 }

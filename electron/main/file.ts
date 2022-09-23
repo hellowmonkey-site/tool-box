@@ -27,8 +27,8 @@ export async function saveBase64File(base64Str: string, name = "") {
 }
 
 // 选择文件夹
-export function selectDirectory(title = "选择文件夹") {
-  return dialog.showOpenDialog({ title, properties: ["openDirectory"] }).then(data => data.filePaths[0]);
+export function selectDirectory(title = "选择文件夹", defaultPath?: string) {
+  return dialog.showOpenDialog({ title, defaultPath, properties: ["openDirectory"] }).then(data => data.filePaths[0]);
 }
 
 // 打开文件夹

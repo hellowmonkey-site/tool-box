@@ -1,5 +1,6 @@
 import { sep } from "path";
 import { Notification } from "electron";
+import config from "../config";
 
 // 获取文件路径
 export function getFilePath(fullPath: string) {
@@ -20,5 +21,6 @@ export function notification(title: string, body: string) {
   return new Notification({
     title,
     body,
+    icon: config.icon,
   }).show();
 }
