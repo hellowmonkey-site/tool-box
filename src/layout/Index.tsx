@@ -621,21 +621,23 @@ export default defineComponent({
                         },
                       }}
                     </NDynamicInput>
-                    <div class="d-flex justify-between align-items-center mar-b-6-item">
-                      <span class="font-gray font-small mar-r-7">图片压缩成功后通知</span>
-                      <NSwitch
-                        value={electronConfig.compressNotify}
-                        onUpdateValue={val => {
-                          showConfigDialog(
-                            {
-                              title: "图片压缩成功后通知",
-                              content: `确认要${val ? "开启" : "取消"}图片压缩成功后通知吗？`,
-                            },
-                            { compressNotify: val }
-                          );
-                        }}
-                      />
-                    </div>
+                    {compressDirs.value.length ? (
+                      <div class="d-flex justify-between align-items-center mar-b-6-item">
+                        <span class="font-gray font-small mar-r-7">图片压缩成功后通知</span>
+                        <NSwitch
+                          value={electronConfig.compressNotify}
+                          onUpdateValue={val => {
+                            showConfigDialog(
+                              {
+                                title: "图片压缩成功后通知",
+                                content: `确认要${val ? "开启" : "取消"}图片压缩成功后通知吗？`,
+                              },
+                              { compressNotify: val }
+                            );
+                          }}
+                        />
+                      </div>
+                    ) : null}
                   </div>
                 </>
               ) : null}
