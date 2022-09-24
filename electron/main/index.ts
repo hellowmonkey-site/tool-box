@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut, ipcMain, Menu, SaveDialogOptions, Tray, Notification } from "electron";
+import { app, BrowserWindow, globalShortcut, ipcMain, Menu, SaveDialogOptions, Tray, Notification, shell } from "electron";
 import { join } from "path";
 import { writeJSONSync, readJSONSync, existsSync, mkdirSync } from "fs-extra";
 import chokidar from "chokidar";
@@ -266,3 +266,6 @@ ipcMain.handle("set-config", (e, data: unknown) => {
 
 // 获取config
 ipcMain.handle("get-config", () => userConfig);
+
+// 打开链接
+ipcMain.handle("open-url", (e, url: string) => shell.openExternal(url));

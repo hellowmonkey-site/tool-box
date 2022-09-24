@@ -22,8 +22,9 @@ declare let electronAPI: {
   pngToIco: (filePath: string, size?: number) => Promise<string>;
   notification: (title: string, content: string) => Promise<void>;
   writeFile: (filePath: string, buf: NodeJS.ArrayBufferView) => Promise<void>;
-  setConfig: (data: unknown) => void;
+  setConfig: (data: unknown) => Promise<void>;
   getConfig: () => Promise<{ keyboard: string; openAtLogin: boolean; compressDirs: string[]; compressNotify: boolean }>;
+  openUrl: (url: string) => Promise<void>;
 };
 
 declare module "qrcode-decoder";

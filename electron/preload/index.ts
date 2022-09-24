@@ -26,4 +26,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
   getConfig: (...args: any[]) => ipcRenderer.invoke("get-config", ...args),
   // 通知
   notification: (...args: any[]) => ipcRenderer.invoke("notification", ...args),
+  // 打开链接
+  openUrl: (...args: any[]) => ipcRenderer.invoke("open-url", ...args),
 });

@@ -1,3 +1,4 @@
+import config from "@/config";
 import { copyText } from "@/helper";
 import { message } from "@/service/common";
 import { circuits, videoList } from "@/service/video";
@@ -84,8 +85,11 @@ export default defineComponent({
                       secondary
                       type={item.type}
                       onClick={() => {
-                        copyText(item.url);
-                        message.success("复制成功");
+                        if (config.isElectron) {
+                          electronAPI.openUrl(item.url);
+                        } else {
+                          window.open(item.url);
+                        }
                       }}
                     >
                       {item.name}
