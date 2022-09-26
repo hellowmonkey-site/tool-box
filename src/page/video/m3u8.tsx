@@ -1,5 +1,5 @@
 import config from "@/config";
-import { downLoad, getFullUrl } from "@/helper";
+import { downLoad, getFullUrl, openUrl } from "@/helper";
 import ajax from "@/helper/ajax";
 import { dialog, message } from "@/service/common";
 import { DownloadStatus, downloadStatusList, IM3u8Item, ITsItem } from "@/service/video";
@@ -233,18 +233,31 @@ export default defineComponent({
               />
             </NInputGroup>
           </div>
-          <NButton
-            block
-            class="mar-b-4-item"
-            size="large"
-            type="primary"
-            loading={loading.value}
-            onClick={() => {
-              downloadM3u8();
-            }}
-          >
-            解析
-          </NButton>
+          <div class="mar-b-4-item d-flex">
+            <NButton
+              class="mar-r-3-item"
+              size="large"
+              ghost
+              onClick={() => {
+                openUrl(config.movieUrl);
+              }}
+            >
+              前往沃德影视
+            </NButton>
+            <NButton
+              block
+              class="mar-r-3-item flex-item-extend"
+              size="large"
+              type="primary"
+              loading={loading.value}
+              onClick={() => {
+                downloadM3u8();
+              }}
+            >
+              解析
+            </NButton>
+          </div>
+
           {config.isElectron ? (
             <NAlert type="info" class="mar-b-4-item" showIcon title={`视频下载后保存在：${form.filePath || "下载后询问"}`}>
               <div class="d-flex justify-end">

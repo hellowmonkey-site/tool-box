@@ -1,5 +1,4 @@
-import config from "@/config";
-import { copyText } from "@/helper";
+import { openUrl } from "@/helper";
 import { message } from "@/service/common";
 import { circuits, videoList } from "@/service/video";
 import { NButton, NInput, NInputGroup, NInputGroupLabel, NSelect, NTooltip } from "naive-ui";
@@ -85,11 +84,7 @@ export default defineComponent({
                       secondary
                       type={item.type}
                       onClick={() => {
-                        if (config.isElectron) {
-                          electronAPI.openUrl(item.url);
-                        } else {
-                          window.open(item.url);
-                        }
+                        openUrl(item.url);
                       }}
                     >
                       {item.name}

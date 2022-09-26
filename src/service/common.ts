@@ -98,11 +98,13 @@ export interface IConfig {
   // 主题
   themeType: ThemeTypes;
   themeColor: ThemeColors;
+  os: "dark" | "light" | null;
 }
 
 export const defaultConfig: IConfig = {
   themeType: ThemeTypes.OS,
   themeColor: ThemeColors.GREEN,
+  os: os.value,
 };
 let localConfig = localStorage.get<IConfig>("appConfig") || defaultConfig;
 if (typeof localConfig === "string" || Array.isArray(localConfig)) {
@@ -127,7 +129,7 @@ export function setAppConfig(params: Partial<IConfig>) {
 setAppConfig(localConfig);
 
 export const globalTheme = computed<GlobalTheme | null>(() => {
-  if (appConfig.value.themeType === ThemeTypes.DARK || (appConfig.value.themeType === ThemeTypes.OS && os.value === "dark")) {
+  if (appConfig.value.themeType === ThemeTypes.DARK || (appConfig.value.themeType === ThemeTypes.OS && appConfig.value.os === "dark")) {
     return darkTheme;
   }
   return null;

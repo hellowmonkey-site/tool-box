@@ -25,37 +25,38 @@ export default defineComponent({
 
     return () => (
       <div class="d-flex direction-column">
-        <NInput
-          placeholder="请输入金额，回车转换"
-          class="mar-b-4-item"
-          value={num.value}
-          onInput={val => {
-            if (Number(val)) {
-              num.value = val;
-            }
-          }}
-          size="large"
-          ref={iptEl}
-          onKeydown={e => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              handleSubmit();
-            }
-          }}
-        />
-        {num.value ? (
-          <NButton
-            type="primary"
-            size="large"
-            class="mar-b-4-item"
-            block
-            onClick={() => {
-              handleSubmit();
+        <div class="d-flex">
+          <NInput
+            placeholder="请输入金额，回车转换"
+            class="mar-r-3-item"
+            value={num.value}
+            onInput={val => {
+              if (Number(val)) {
+                num.value = val;
+              }
             }}
-          >
-            转换
-          </NButton>
-        ) : null}
+            size="large"
+            ref={iptEl}
+            onKeydown={e => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }}
+          />
+          {num.value ? (
+            <NButton
+              type="primary"
+              size="large"
+              class="mar-r-3-item"
+              onClick={() => {
+                handleSubmit();
+              }}
+            >
+              转换
+            </NButton>
+          ) : null}
+        </div>
         {ret.value ? (
           <NAlert type="success" showIcon title={ret.value}>
             <div class="d-flex justify-end">

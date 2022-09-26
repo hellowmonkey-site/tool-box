@@ -346,3 +346,12 @@ export function getFilePathInfo(fileName: string): [string, string] {
   const ext = arr[arr.length - 1];
   return [str, ext];
 }
+
+// 打开链接
+export function openUrl(url: string) {
+  if (config.isElectron) {
+    electronAPI.openUrl(url);
+  } else {
+    window.open(url);
+  }
+}

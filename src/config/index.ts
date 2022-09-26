@@ -15,4 +15,5 @@ export default {
   productName,
   releaseName,
   releaseUrl,
+  movieUrl: "https://movie.hellowmonkey.cc",
 };
