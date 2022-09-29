@@ -25,7 +25,7 @@ export default defineComponent({
 
     return () => (
       <div class="d-flex direction-column">
-        <div class="d-flex">
+        <div class="d-flex mar-b-5-item">
           <NInput
             placeholder="请输入金额，回车转换"
             class="mar-r-3-item"
