@@ -33,12 +33,11 @@ export default defineComponent({
     }
 
     async function handleClip() {
-      const src = cropper
-        ?.getCroppedCanvas({
-          imageSmoothingQuality: "high",
-        })
-        .toDataURL("image/png");
-      const { width, height } = cropper.getCanvasData();
+      const croppedCanvas = cropper?.getCroppedCanvas({
+        imageSmoothingQuality: "high",
+      });
+      const src = croppedCanvas.toDataURL("image/png");
+      const { width, height } = croppedCanvas;
       const [name, ext] = getFilePathInfo(fileName);
       loading.value = true;
       try {
@@ -72,7 +71,7 @@ export default defineComponent({
         //   message.error("请先输入文件名称");
         //   return;
         // }
-        await downLoadBase64File(src, `${name}-${width}x${height}.${ext}`);
+        await downLoadBase64File(src, `${name}--${width}x${height}.${ext}`);
       } finally {
         loading.value = false;
       }
