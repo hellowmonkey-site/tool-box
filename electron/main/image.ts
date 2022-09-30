@@ -1,24 +1,28 @@
 import tinify from "tinify";
 import { join } from "path";
 import * as fse from "fs-extra";
-import { getFilePath } from "./helper";
+import { getFilePath, getFilePathInfo } from "./helper";
 import toIco from "png-to-ico";
 import config from "../config";
 
 // 压缩图片
-export async function compressImage(filePath: string, targetPath?: string, width?: number) {
+export async function compressImage(orgPath: string, targetPath?: string, width?: number) {
   let i = 0;
-  const path = getFilePath(filePath);
+  const { fileName, filePath } = getFilePath(orgPath);
   if (!targetPath) {
-    targetPath = path.filePath;
+    targetPath = filePath;
   }
-  const fileName = path.fileName;
-  targetPath = join(targetPath, fileName);
-  const fileSize = fse.statSync(filePath).size;
+  if (width) {
+    const [name, ext] = getFilePathInfo(fileName);
+    targetPath = join(targetPath, `${name}--width-${width}.${ext}`);
+  } else {
+    targetPath = join(targetPath, fileName);
+  }
+  const fileSize = fse.statSync(orgPath).size;
   while (i < config.tinifyKeys.length) {
     tinify.key = config.tinifyKeys[i];
     try {
-      let source = tinify.fromFile(filePath);
+      let source = tinify.fromFile(orgPath);
       if (width) {
         source = source.resize({
           method: "scale",

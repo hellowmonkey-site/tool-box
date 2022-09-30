@@ -13,6 +13,14 @@ export function getFilePath(fullPath: string) {
   };
 }
 
+// 获取文件名和扩展名
+export function getFilePathInfo(fileName: string): [string, string] {
+  const arr = fileName.split(".");
+  const str = arr.slice(0, arr.length - 1).join("");
+  const ext = arr[arr.length - 1];
+  return [str, ext];
+}
+
 // 通知
 export function notification(title: string, body: string) {
   if (!Notification.isSupported()) {

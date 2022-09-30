@@ -44,7 +44,7 @@ export default defineComponent({
         timer = setTimeout(resolve, 100);
       });
       const list = fileList.value.filter(v => v.status === "pending");
-      const hide = loadingProgressBar();
+      const hide = loadingProgressBar(4000);
       try {
         await Promise.all(
           list
@@ -64,8 +64,9 @@ export default defineComponent({
                   fileList.value.splice(index, 1, { ...item, status: "finished", file: undefined, percentage: 100, ...e });
                 })
                 .catch(e => {
-                  fileList.value.splice(index, 1, { ...item, status: "error" });
+                  fileList.value.splice(index, 1);
                   message.error(`${item.name}压缩失败`);
+                  return Promise.reject(new Error(`${item.name}压缩失败`));
                 })
                 .finally(() => {
                   clearInterval(t);
@@ -175,7 +176,7 @@ export default defineComponent({
             <NCard class="mar-b-3-item">
               <div class="d-flex justify-between align-items-center" key={item.id}>
                 <div class="d-flex align-items-center justify-between mar-r-4-item" style="width: 440px">
-                  <NText class="text-elip mar-r-4-item" style="width: 330px">
+                  <NText class="text-elip mar-r-4-item" style="width: 320px">
                     {item.name}
                   </NText>
                   <NText type="primary" class="mar-r-4-item">
@@ -190,13 +191,13 @@ export default defineComponent({
                   status={item.status === "finished" ? "success" : "default"}
                   percentage={item.percentage as number}
                 />
-                <div class="d-flex align-items-center justify-between mar-r-4-item" style="width: 130px">
+                <div class="d-flex align-items-center justify-between mar-r-4-item" style="width: 160px">
                   {item.status === "finished" ? (
                     <>
                       <NText type="primary" class="mar-r-4-item">
                         {(item.targetSize / 1024).toFixed(2)}kb
                       </NText>
-                      <NText>-{Math.ceil(item.targetSize / item.fileSize)}%</NText>
+                      <NText>-{(((item.fileSize - item.targetSize) / item.fileSize) * 100).toFixed(2)}%</NText>
                     </>
                   ) : null}
                 </div>
