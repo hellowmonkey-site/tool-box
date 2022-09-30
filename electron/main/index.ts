@@ -5,6 +5,7 @@ import chokidar from "chokidar";
 import { compressImage, pngToIco } from "./image";
 import { openDirectory, saveDialog, saveBase64File, selectDirectory, writeFile } from "./file";
 import { getFilePath, notification } from "./helper";
+import { youdaoTranslate } from "./developer";
 import config from "../config";
 import defaultUserConfig from "../data/config.json";
 
@@ -270,3 +271,6 @@ ipcMain.handle("get-config", () => userConfig);
 
 // 打开链接
 ipcMain.handle("open-url", (e, url: string) => shell.openExternal(url));
+
+// 翻译
+ipcMain.handle("youdao-translate", (e, words: string) => youdaoTranslate(words));

@@ -25,6 +25,7 @@ declare let electronAPI: {
   setConfig: (data: unknown) => Promise<void>;
   getConfig: () => Promise<{ keyboard: string; openAtLogin: boolean; compressDirs: string[]; compressNotify: boolean }>;
   openUrl: (url: string) => Promise<void>;
+  youdaoTranslate: (words: string) => Promise<string[]>;
 };
 
 declare module "qrcode-decoder";

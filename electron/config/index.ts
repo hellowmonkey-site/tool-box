@@ -9,4 +9,6 @@ export default {
   title: "沃德工具箱",
   icon: join(__dirname, "../resource/image/logo.png"),
   url: isDev ? "http://127.0.0.1:3030" : "https://tool.hellowmonkey.cc",
+  youdaoAppId: "4942fc478d27c774",
+  youdaoKey: "qLDdY5g9qUNQN8WV1WBSVOGYjRfug0mq",
 };
