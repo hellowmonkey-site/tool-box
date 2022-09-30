@@ -169,12 +169,18 @@ export const setTitle = (title: string) => {
 };
 
 // 设置进度条
-export function loadingProgressBar() {
+export function loadingProgressBar(duration = 3 * 1000) {
+  const interval = 10;
+  const step = 100 / (duration / interval);
   let progress = 0;
   const timer = setInterval(() => {
-    progress = Math.min(99, progress + random(1, 4));
+    progress = progress + step;
+    if (progress > 99) {
+      progress = 99;
+      clearInterval(timer);
+    }
     electronAPI.setProgressBar(progress / 100);
-  }, 50);
+  }, interval);
   return () => {
     clearInterval(timer);
     electronAPI.setProgressBar(0);
