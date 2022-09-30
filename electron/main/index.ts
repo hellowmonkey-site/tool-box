@@ -77,21 +77,51 @@ function createWindow() {
     parent: win,
   });
 
+  const { openAsHidden } = app.getLoginItemSettings();
+  const hidden = process.argv.indexOf("--openAsHidden") !== -1 || openAsHidden;
+
   loading.loadFile(join(__dirname, "../resource/html/loading.html"));
   loading.setIcon(config.icon);
   loading.once("ready-to-show", () => {
-    if (!loading.isDestroyed()) {
+    if (!hidden && !loading.isDestroyed()) {
       loading.show();
     }
   });
   loading.on("close", () => {
-    const { openAsHidden } = app.getLoginItemSettings();
-    if (!(process.argv.indexOf("--openAsHidden") !== -1 || openAsHidden)) {
+    if (!hidden) {
       showWin();
-      if (config.isDev) {
-        win.webContents.openDevTools();
-      }
     }
+    if (config.isDev) {
+      win.webContents.openDevTools();
+    }
+    // 新建托盘
+    tray = new Tray(config.icon);
+    // 托盘名称
+    tray.setToolTip(config.title);
+    // 托盘菜单
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: "显示",
+        click: () => {
+          showWin();
+        },
+      },
+      {
+        type: "separator",
+      },
+      {
+        label: "退出",
+        click: () => {
+          destroyApp();
+        },
+      },
+    ]);
+    // 载入托盘菜单
+    tray.setContextMenu(contextMenu);
+
+    tray.on("click", () => {
+      toggleWin();
+    });
   });
 
   win.setIcon(config.icon);
@@ -104,35 +134,6 @@ function createWindow() {
   win.on("close", e => {
     e.preventDefault();
     hideWin();
-  });
-
-  // 新建托盘
-  tray = new Tray(config.icon);
-  // 托盘名称
-  tray.setToolTip(config.title);
-  // 托盘菜单
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: "显示",
-      click: () => {
-        showWin();
-      },
-    },
-    {
-      type: "separator",
-    },
-    {
-      label: "退出",
-      click: () => {
-        destroyApp();
-      },
-    },
-  ]);
-  // 载入托盘菜单
-  tray.setContextMenu(contextMenu);
-
-  tray.on("click", () => {
-    toggleWin();
   });
 }
 
