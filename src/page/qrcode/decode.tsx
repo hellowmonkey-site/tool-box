@@ -28,8 +28,9 @@ export default defineComponent({
         content: data,
         positiveText: "复制",
         onPositiveClick() {
-          copyText(data);
-          message.success("复制成功");
+          copyText(data).then(() => {
+            message.success("复制成功");
+          });
         },
       });
     }

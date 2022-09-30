@@ -19,8 +19,9 @@ export default defineComponent({
                 <NButton
                   class="mar-l-4"
                   onClick={() => {
-                    copyText(item.code);
-                    message.success("复制成功");
+                    copyText(item.code).then(() => {
+                      message.success("复制成功");
+                    });
                   }}
                 >
                   复制

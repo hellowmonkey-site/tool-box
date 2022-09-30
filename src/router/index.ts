@@ -67,6 +67,15 @@ export const menuRoutes: RouteRecordRaw[] = [
     },
     component: () => import("@/page/developer/regex"),
   },
+  {
+    path: "developer/translate",
+    name: "developer-translate",
+    meta: {
+      title: "程序变量命名",
+      electron: true,
+    },
+    component: () => import("@/page/developer/translate"),
+  },
   // {
   //   path: "developer/javascript",
   //   name: "developer-javascript",

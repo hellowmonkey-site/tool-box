@@ -1,3 +1,5 @@
+import { TypeItem } from "@/config/type";
+
 export const regList: { title: string; code: string }[] = [
   {
     title: "邮箱",
@@ -32,3 +34,26 @@ export const regList: { title: string; code: string }[] = [
     code: "^[\\u4e00-\\u9fa5]{0,}$",
   },
 ];
+
+// 变量名类型
+export const enum VariableType {
+  HUMP, // 驼峰
+  LINE, // 中横线
+  UNDERLINE, // 下划线
+}
+export const variableTypeList: TypeItem[] = [
+  {
+    text: "驼峰命名",
+    value: VariableType.HUMP,
+  },
+  {
+    text: "中横线命名",
+    value: VariableType.LINE,
+  },
+  {
+    text: "下划线命名",
+    value: VariableType.UNDERLINE,
+  },
+];
+
+export const colors = ["yellow", "#ff4848", "blue", "#18a058", "purple", "#8a2be2", "#ff69b4"];

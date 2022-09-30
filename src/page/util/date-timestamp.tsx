@@ -85,8 +85,9 @@ export default defineComponent({
               <NButton
                 type="primary"
                 onClick={() => {
-                  copyText(String(ret.value));
-                  message.success("复制成功");
+                  copyText(String(ret.value)).then(() => {
+                    message.success("复制成功");
+                  });
                 }}
                 size="small"
               >
