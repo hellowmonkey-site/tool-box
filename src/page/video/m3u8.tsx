@@ -237,7 +237,8 @@ export default defineComponent({
             <NButton
               class="mar-r-3-item"
               size="large"
-              ghost
+              type="primary"
+              quaternary
               onClick={() => {
                 openUrl(config.movieUrl);
               }}
