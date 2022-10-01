@@ -22,18 +22,17 @@ export default defineComponent({
           data.value.map(v =>
             v
               .split("")
-              .map(val => val.toLocaleLowerCase())
+              .map(val => val.toLocaleLowerCase().replace(/[\.\,\?\!\~\/]/g, ""))
               .join("")
           )
         ),
       ];
       return list.map(text => {
+        text = text.replace(/\s/g, "-");
         if (form.type === VariableType.HUMP) {
-          text = lineToHump(text.replace(/\s/g, "-"), "-");
-        } else if (form.type === VariableType.LINE) {
-          text = text.replace(/\s/g, "-");
+          text = lineToHump(text);
         } else if (form.type === VariableType.UNDERLINE) {
-          text = text.replace(/\s/g, "_");
+          text = text.replace(/-/g, "_");
         }
         return {
           text,
@@ -52,6 +51,9 @@ export default defineComponent({
         .youdaoTranslate(form.words)
         .then(list => {
           data.value = list;
+          if (!dataList.value.length) {
+            message.error("未匹配到相关数据");
+          }
         })
         .finally(() => {
           loading.value = false;

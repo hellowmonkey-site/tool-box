@@ -48,11 +48,10 @@ export function youdaoTranslate(q = "") {
         arr.push(...data.basic.explains);
       }
       if (data.web?.length) {
-        data.web.forEach(v => {
-          if (v?.value?.length) {
-            arr.push(...v.value);
-          }
-        });
+        const value = data.web.find(v => v.key === q)?.value;
+        if (value?.length) {
+          arr.push(...value);
+        }
       }
       return arr;
     } else {
