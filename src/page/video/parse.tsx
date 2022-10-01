@@ -1,4 +1,5 @@
 import { openUrl } from "@/helper";
+import { isUrl } from "@/helper/validate";
 import { message } from "@/service/common";
 import { circuits, videoList } from "@/service/video";
 import { NButton, NInput, NInputGroup, NInputGroupLabel, NSelect, NTooltip } from "naive-ui";
@@ -14,11 +15,15 @@ export default defineComponent({
     const iptEl = ref<HTMLInputElement>();
 
     function handleParse(check = true) {
-      if (!url.value) {
-        if (check) {
+      if (check) {
+        if (!url.value) {
           message.error("请先输入播放地址");
+          return;
         }
-        return;
+        if (!isUrl(url.value)) {
+          message.error("播放地址输入错误");
+          return;
+        }
       }
       iframeSrc.value = circuit.value.replace("__URL__", url.value);
     }
@@ -28,7 +33,7 @@ export default defineComponent({
     });
 
     return () => (
-      <div class="content">
+      <div>
         <div class="mar-b-5-item">
           <NInputGroup>
             <NInputGroupLabel size="large">播放地址</NInputGroupLabel>
@@ -96,11 +101,13 @@ export default defineComponent({
             ))}
           </div>
         </div>
-        {iframeSrc.value ? (
-          <div style="background-color: #000; margin-bottom: 100px">
-            <iframe src={iframeSrc.value} frameborder="0" class="full-width" style="height: calc(100vh - 300px)" scrolling="no"></iframe>
-          </div>
-        ) : null}
+        <div class="content">
+          {iframeSrc.value ? (
+            <div style="background-color: #000; margin-bottom: 100px">
+              <iframe src={iframeSrc.value} frameborder="0" class="full-width" style="height: calc(100vh - 300px)" scrolling="no"></iframe>
+            </div>
+          ) : null}
+        </div>
       </div>
     );
   },

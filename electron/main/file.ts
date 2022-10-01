@@ -38,5 +38,5 @@ export function openDirectory(path: string) {
 
 // 保存文件
 export async function writeFile(filePath: string, buf: NodeJS.ArrayBufferView) {
-  writeFileSync(filePath, buf);
+  return writeFileSync(filePath, buf);
 }
