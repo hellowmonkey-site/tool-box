@@ -1,13 +1,16 @@
 import { copyText, lineToHump, random } from "@/helper";
+import { isEmpty } from "@/helper/validate";
 import { globalTheme, message } from "@/service/common";
 import { colors, VariableType, variableTypeList } from "@/service/devoloper";
 import { NButton, NInput, NInputGroup, NInputGroupLabel, NSelect } from "naive-ui";
-import { computed, defineComponent, onActivated, reactive, ref } from "vue";
+import { computed, defineComponent, onActivated, onMounted, reactive, ref } from "vue";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   props: {},
   emits: [],
   setup: (props, ctx) => {
+    const route = useRoute();
     const form = reactive({
       words: "",
       type: VariableType.HUMP,
@@ -59,6 +62,16 @@ export default defineComponent({
           loading.value = false;
         });
     }
+
+    onMounted(() => {
+      const { words, type } = route.query;
+      if (words) {
+        form.words = words as string;
+      }
+      if (!isEmpty(type)) {
+        form.type = Number(type);
+      }
+    });
 
     onActivated(() => {
       iptEl.value?.focus();

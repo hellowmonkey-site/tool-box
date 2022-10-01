@@ -1,14 +1,16 @@
 import { copyText } from "@/helper";
 import { message } from "@/service/common";
 import { NAlert, NButton, NInput, NInputGroup, NInputGroupLabel, NSelect } from "naive-ui";
-import { defineComponent, onActivated, reactive, ref } from "vue";
+import { defineComponent, onActivated, onMounted, reactive, ref } from "vue";
 import { DateType } from "@/service/util";
 import dayjs from "dayjs";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   props: {},
   emits: [],
   setup: (props, ctx) => {
+    const route = useRoute();
     const form = reactive<{ value: string; type: DateType }>({
       value: "",
       type: DateType.S,
@@ -26,6 +28,16 @@ export default defineComponent({
 
     onActivated(() => {
       iptEl.value?.focus();
+    });
+
+    onMounted(() => {
+      const { value, type } = route.query;
+      if (value) {
+        form.value = value as string;
+      }
+      if (type) {
+        form.type = type as DateType;
+      }
     });
 
     return () => (

@@ -3,33 +3,47 @@ import { isUrl } from "@/helper/validate";
 import { message } from "@/service/common";
 import { circuits, videoList } from "@/service/video";
 import { NButton, NInput, NInputGroup, NInputGroupLabel, NSelect, NTooltip } from "naive-ui";
-import { defineComponent, onActivated, ref } from "vue";
+import { defineComponent, onActivated, onMounted, reactive, ref } from "vue";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   props: {},
   emits: [],
   setup: (props, ctx) => {
-    const circuit = ref<string>(circuits[0].value);
-    const url = ref<string>("");
+    const route = useRoute();
+    const form = reactive({
+      circuit: circuits[0].value,
+      url: "",
+    });
     const iframeSrc = ref<string>("");
     const iptEl = ref<HTMLInputElement>();
 
     function handleParse(check = true) {
       if (check) {
-        if (!url.value) {
+        if (!form.url) {
           message.error("请先输入播放地址");
           return;
         }
-        if (!isUrl(url.value)) {
+        if (!isUrl(form.url)) {
           message.error("播放地址输入错误");
           return;
         }
       }
-      iframeSrc.value = circuit.value.replace("__URL__", url.value);
+      iframeSrc.value = form.circuit.replace("__URL__", form.url);
     }
 
     onActivated(() => {
       iptEl.value?.focus();
+    });
+
+    onMounted(() => {
+      const { url, circuit } = route.query;
+      if (url) {
+        form.url = url as string;
+      }
+      if (circuit) {
+        form.circuit = circuit as string;
+      }
     });
 
     return () => (
@@ -39,7 +53,7 @@ export default defineComponent({
             <NInputGroupLabel size="large">播放地址</NInputGroupLabel>
             <NInput
               size="large"
-              v-model={[url.value, "value"]}
+              v-model={[form.url, "value"]}
               onKeydown={e => {
                 if (e.key === "Enter") {
                   e.preventDefault();
@@ -60,12 +74,12 @@ export default defineComponent({
                 handleParse(false);
               }}
               options={circuits}
-              v-model={[circuit.value, "value"]}
+              v-model={[form.circuit, "value"]}
             />
           </NInputGroup>
         </div>
         <div class="mar-b-7-item d-flex direction-column">
-          {url.value ? (
+          {form.url ? (
             <NButton
               block
               size="large"

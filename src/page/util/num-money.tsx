@@ -1,8 +1,9 @@
 import { copyText } from "@/helper";
+import router from "@/router";
 import { message } from "@/service/common";
 import { digitUppercase } from "@/service/util";
 import { NAlert, NButton, NInput } from "naive-ui";
-import { defineComponent, onActivated, ref } from "vue";
+import { defineComponent, onActivated, onMounted, ref } from "vue";
 
 export default defineComponent({
   props: {},
@@ -21,6 +22,13 @@ export default defineComponent({
 
     onActivated(() => {
       iptEl.value?.focus();
+    });
+
+    onMounted(() => {
+      const { query } = router.currentRoute.value;
+      if (query.num) {
+        num.value = query.num as string;
+      }
     });
 
     return () => (

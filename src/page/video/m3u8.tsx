@@ -4,7 +4,7 @@ import ajax from "@/helper/ajax";
 import { dialog, message } from "@/service/common";
 import { DownloadStatus, downloadStatusList, IM3u8Item, ITsItem } from "@/service/video";
 import { NAlert, NButton, NCard, NInput, NInputGroup, NInputGroupLabel, NProgress, NTag, NText } from "naive-ui";
-import { computed, defineComponent, onActivated, reactive, ref } from "vue";
+import { computed, defineComponent, onActivated, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
 
 export default defineComponent({
@@ -186,7 +186,9 @@ export default defineComponent({
 
     onActivated(() => {
       iptEl.value?.focus();
+    });
 
+    onMounted(() => {
       const { url, name } = route.query;
       if (url) {
         form.url = url as string;

@@ -1,10 +1,11 @@
 import { NButton, NCard, NCheckbox, NDrawer, NDrawerContent, NIcon, NInput, NUpload, UploadFileInfo } from "naive-ui";
-import { defineComponent, onActivated, ref } from "vue";
+import { defineComponent, onActivated, onMounted, ref } from "vue";
 import { awaitLoadImg, awaitNextTick, copyImg, downLoadBase64File, fileToBase64, randomString } from "@/helper";
 import qrcode from "qrcode";
 import { DeleteOutlined, UploadFileOutlined, UploadOutlined } from "@vicons/material";
 import { addLogo, deleteLogo, getLogoList, logoList, logoOpts } from "@/service/qrcode";
 import { dialog, message } from "@/service/common";
+import router from "@/router";
 
 export default defineComponent({
   props: {},
@@ -120,6 +121,13 @@ export default defineComponent({
 
     onActivated(() => {
       iptEl.value?.focus();
+    });
+
+    onMounted(() => {
+      const { query } = router.currentRoute.value;
+      if (query.text) {
+        text.value = query.text as string;
+      }
     });
 
     return () => (
