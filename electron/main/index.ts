@@ -1,5 +1,5 @@
 import { app, BrowserWindow, globalShortcut, ipcMain, Menu, SaveDialogOptions, Tray, Notification, shell } from "electron";
-import { join } from "path";
+import { join, resolve } from "path";
 import { writeJSONSync, readJSONSync, existsSync, mkdirSync } from "fs-extra";
 import chokidar from "chokidar";
 import { compressImage, pngToIco } from "./image";
@@ -190,6 +190,16 @@ app
     }
   });
 
+// 设置注册表
+// app.removeAsDefaultProtocolClient(config.scheme, process.execPath, [resolve(process.argv[1])]);
+if (!app.isDefaultProtocolClient(config.scheme)) {
+  if (app.isPackaged) {
+    app.setAsDefaultProtocolClient(config.scheme);
+  } else {
+    app.setAsDefaultProtocolClient(config.scheme, process.execPath, [resolve(process.argv[1])]);
+  }
+}
+
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     destroyApp();
@@ -200,7 +210,12 @@ const gotTheLock = app.requestSingleInstanceLock();
 if (!gotTheLock) {
   destroyApp();
 } else {
-  app.on("second-instance", () => {
+  app.on("second-instance", (e, args) => {
+    const schemeUrl = args[args.length - 1];
+    const reg = new RegExp(`^${config.scheme}:\/\/`);
+    if (reg.test(schemeUrl)) {
+      win.loadURL(schemeUrl.replace(reg, config.url + "/"));
+    }
     showWin();
   });
 }
