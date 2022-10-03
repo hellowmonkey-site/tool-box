@@ -6,6 +6,7 @@ import { DownloadStatus, downloadStatusList, IM3u8Item, ITsItem } from "@/servic
 import { NAlert, NButton, NCard, NInput, NInputGroup, NInputGroupLabel, NProgress, NTag, NText } from "naive-ui";
 import { computed, defineComponent, onActivated, onMounted, reactive, ref } from "vue";
 import { useRoute } from "vue-router";
+import muxjs from "mux.js";
 
 export default defineComponent({
   props: {},
@@ -30,6 +31,7 @@ export default defineComponent({
         const total = list.length;
         const doneNum = list.filter(li => li.status === DownloadStatus.FINISHED).length;
         const percentage = Number(((doneNum / total) * 100).toFixed(2));
+        const duration = list.reduce((t, v) => t + v.duration, 0);
         if (tsList.value.some(t => t.status === DownloadStatus.DOWNLOADING)) {
           status = DownloadStatus.DOWNLOADING;
         } else if (tsList.value.some(t => t.status === DownloadStatus.ERROR)) {
@@ -45,6 +47,7 @@ export default defineComponent({
           percentage,
           total,
           doneNum,
+          duration,
         };
       });
       return data;
@@ -69,8 +72,16 @@ export default defineComponent({
         }
 
         const tempArr: ITsItem[] = [];
-        data.split(/\s/).forEach(item => {
+        const lines = data.split(/\s/);
+        lines.forEach((item, index) => {
           if (/((\.ts)|(\.jpg)|(\.png)|(\.gif)|(\.image))(\?.+)?$/i.test(item)) {
+            // 计算持续时间
+            let duration = 0;
+            const durationItem = lines[index - 1];
+            const extinf = "#EXTINF:";
+            if (durationItem.includes(extinf)) {
+              duration = parseFloat(durationItem.split(extinf)[1]) || 0;
+            }
             const src = getFullUrl(origin, item);
             tempArr.push({
               status: DownloadStatus.WAITING,
@@ -79,6 +90,7 @@ export default defineComponent({
               filePath: form.filePath,
               src,
               file: undefined,
+              duration,
             });
           }
         });
@@ -106,27 +118,50 @@ export default defineComponent({
         downloadTs();
       }
     }
-    function downloadTs() {
+    async function downloadTs() {
       const index = tsList.value.findIndex(v => v.status === DownloadStatus.WAITING);
       if (index === -1) {
         return;
       }
+      const item = tsList.value[index];
       tsList.value[index].status = DownloadStatus.DOWNLOADING;
-      ajax<Buffer>(tsList.value[index].src, "arraybuffer")
-        .then(data => {
-          tsList.value[index].status = DownloadStatus.FINISHED;
-          tsList.value[index].file = data;
-          const m3u8 = m3u8List.value.find(v => v.src === tsList.value[index].m3u8Src);
-          if (m3u8?.status === DownloadStatus.FINISHED) {
-            downloadFile(m3u8);
-          }
-        })
-        .catch(() => {
-          tsList.value[index].status = DownloadStatus.ERROR;
-        })
-        .finally(() => {
-          downloadTs();
+      try {
+        const data = await ajax<Buffer>(item.src, "arraybuffer");
+        // 转码mp4
+        const file: Uint8Array = await new Promise(resolve => {
+          const { duration } = m3u8List.value.find(v => v.src === item.m3u8Src)!;
+          const opts = duration
+            ? {
+                keepOriginalTimestamps: true,
+                duration,
+              }
+            : undefined;
+          const transmuxer = new muxjs.mp4.Transmuxer(opts);
+          const timer = setTimeout(() => {
+            resolve(data);
+          }, 2000);
+          transmuxer.on("data", (segment: any) => {
+            clearTimeout(timer);
+            const data = new Uint8Array(segment.initSegment.byteLength + segment.data.byteLength);
+            data.set(segment.initSegment, 0);
+            data.set(segment.data, segment.initSegment.byteLength);
+            resolve(data);
+          });
+          transmuxer.push(new Uint8Array(data));
+          transmuxer.flush();
         });
+
+        tsList.value[index].status = DownloadStatus.FINISHED;
+        tsList.value[index].file = file;
+        const m3u8 = m3u8List.value.find(v => v.src === item.m3u8Src);
+        if (m3u8?.status === DownloadStatus.FINISHED) {
+          downloadFile(m3u8);
+        }
+      } catch (e) {
+        tsList.value[index].status = DownloadStatus.ERROR;
+      } finally {
+        downloadTs();
+      }
     }
 
     // 文件下载
@@ -332,7 +367,16 @@ export default defineComponent({
                               downloadFile(item);
                             }}
                           >
-                            保存视频
+                            下载视频
+                          </NButton>
+                        ) : item.percentage > 0 ? (
+                          <NButton
+                            class="mar-r-3-item"
+                            onClick={() => {
+                              downloadFile(item);
+                            }}
+                          >
+                            强制下载
                           </NButton>
                         ) : null}
                         {config.isElectron ? (

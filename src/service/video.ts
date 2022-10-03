@@ -36,7 +36,8 @@ export interface ITsItem {
   m3u8Src: string;
   name: string;
   filePath: string;
-  file?: Buffer;
+  file?: Uint8Array;
+  duration: number;
 }
 export interface IM3u8Item {
   status: DownloadStatus;
@@ -46,6 +47,7 @@ export interface IM3u8Item {
   percentage: number;
   total: number;
   doneNum: number;
+  duration: number;
 }
 
 export const circuits: { label: string; value: string }[] = [

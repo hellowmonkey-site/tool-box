@@ -29,3 +29,5 @@ declare let electronAPI: {
 };
 
 declare module "qrcode-decoder";
+
+declare module "mux.js";

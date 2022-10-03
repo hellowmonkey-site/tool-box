@@ -19,6 +19,7 @@
   "dependencies": {
     "cropperjs": "^1.5.12",
     "dayjs": "^1.10.8",
+    "mux.js": "^6.2.0",
     "naive-ui": "^2.33.2",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
