@@ -25,7 +25,7 @@ export default defineComponent({
           data.value.map(v =>
             v
               .split("")
-              .map(val => val.toLocaleLowerCase().replace(/[\.\,\?\!\~\/]/g, ""))
+              .map(val => val.toLocaleLowerCase().replace(/[\.\,\?\!\~\/\-]/g, ""))
               .join("")
           )
         ),
@@ -51,7 +51,7 @@ export default defineComponent({
       }
       loading.value = true;
       electronAPI
-        .youdaoTranslate(form.words)
+        .translate(form.words)
         .then(list => {
           data.value = list;
           if (!dataList.value.length) {

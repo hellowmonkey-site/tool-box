@@ -11,5 +11,7 @@ export default {
   url: isDev ? "http://127.0.0.1:3030" : "https://tool.hellowmonkey.cc",
   youdaoAppId: "4942fc478d27c774",
   youdaoKey: "qLDdY5g9qUNQN8WV1WBSVOGYjRfug0mq",
+  baiduAppId: "20221003001368543",
+  baiduKey: "tVV9MC_Jdtse2oO3CAEU",
   scheme: "tool-box",
 };

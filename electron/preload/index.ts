@@ -29,5 +29,5 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // 打开链接
   openUrl: (...args: any[]) => ipcRenderer.invoke("open-url", ...args),
   // 翻译
-  youdaoTranslate: (...args: any[]) => ipcRenderer.invoke("youdao-translate", ...args),
+  translate: (...args: any[]) => ipcRenderer.invoke("translate", ...args),
 });

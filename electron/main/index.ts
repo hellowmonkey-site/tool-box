@@ -1,11 +1,11 @@
-import { app, BrowserWindow, globalShortcut, ipcMain, Menu, SaveDialogOptions, Tray, Notification, shell, dialog } from "electron";
+import { app, BrowserWindow, globalShortcut, ipcMain, Menu, SaveDialogOptions, Tray, Notification, shell } from "electron";
 import { join, resolve } from "path";
 import { writeJSONSync, readJSONSync, existsSync, mkdirSync } from "fs-extra";
 import chokidar from "chokidar";
 import { compressImage, pngToIco } from "./image";
 import { openDirectory, saveDialog, saveBase64File, selectDirectory, writeFile } from "./file";
 import { getFilePath, notification } from "./helper";
-import { youdaoTranslate } from "./developer";
+import { translate } from "./developer";
 import config from "../config";
 import defaultUserConfig from "../data/config.json";
 
@@ -295,4 +295,4 @@ ipcMain.handle("get-config", () => userConfig);
 ipcMain.handle("open-url", (e, url: string) => shell.openExternal(url));
 
 // 翻译
-ipcMain.handle("youdao-translate", (e, words: string) => youdaoTranslate(words));
+ipcMain.handle("translate", (e, words: string) => translate(words));
