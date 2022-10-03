@@ -1,4 +1,4 @@
-import { app, BrowserWindow, globalShortcut, ipcMain, Menu, SaveDialogOptions, Tray, Notification, shell } from "electron";
+import { app, BrowserWindow, globalShortcut, ipcMain, Menu, SaveDialogOptions, Tray, Notification, shell, dialog } from "electron";
 import { join, resolve } from "path";
 import { writeJSONSync, readJSONSync, existsSync, mkdirSync } from "fs-extra";
 import chokidar from "chokidar";
@@ -10,6 +10,8 @@ import config from "../config";
 import defaultUserConfig from "../data/config.json";
 
 let tray: Tray, win: BrowserWindow;
+
+const schemeReg = new RegExp(`^${config.scheme}:\/\/`);
 
 const userConfigPath = app.getPath("userData");
 const userConfigFile = join(userConfigPath, "config.json");
@@ -128,7 +130,13 @@ function createWindow() {
   win.setIcon(config.icon);
   win.removeMenu();
 
-  win.loadURL(config.url).then(() => {
+  let { url } = config;
+  const schemeUrl = process.argv[process.argv.length - 1];
+  if (schemeReg.test(schemeUrl)) {
+    url = schemeUrl.replace(schemeReg, config.url + "/");
+  }
+
+  win.loadURL(url).then(() => {
     loading.hide();
     loading.close();
   });
@@ -191,7 +199,6 @@ app
   });
 
 // 设置注册表
-// app.removeAsDefaultProtocolClient(config.scheme, process.execPath, [resolve(process.argv[1])]);
 if (!app.isDefaultProtocolClient(config.scheme)) {
   if (app.isPackaged) {
     app.setAsDefaultProtocolClient(config.scheme);
@@ -199,6 +206,7 @@ if (!app.isDefaultProtocolClient(config.scheme)) {
     app.setAsDefaultProtocolClient(config.scheme, process.execPath, [resolve(process.argv[1])]);
   }
 }
+// app.removeAsDefaultProtocolClient(config.scheme, process.execPath, [resolve(process.argv[1])]);
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
@@ -212,9 +220,8 @@ if (!gotTheLock) {
 } else {
   app.on("second-instance", (e, args) => {
     const schemeUrl = args[args.length - 1];
-    const reg = new RegExp(`^${config.scheme}:\/\/`);
-    if (reg.test(schemeUrl)) {
-      win.loadURL(schemeUrl.replace(reg, config.url + "/"));
+    if (schemeReg.test(schemeUrl)) {
+      win.loadURL(schemeUrl.replace(schemeReg, config.url + "/"));
     }
     showWin();
   });
