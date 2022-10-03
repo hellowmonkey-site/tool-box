@@ -1,7 +1,7 @@
 {
   "name": "tool-box",
   "private": true,
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "dist/electron/main/index.js",
   "author": "parker",
   "description": "沃德工具箱",
