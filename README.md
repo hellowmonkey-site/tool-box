@@ -8,14 +8,15 @@
   - [图片裁剪](https://tool.hellowmonkey.cc/image/clip)
   - [图片加水印](https://tool.hellowmonkey.cc/image/watermark)
   - [ico生成](https://tool.hellowmonkey.cc/image/ico)
-- 视频
-  - [m3u8下载](https://tool.hellowmonkey.cc/video/m3u8)
-  - [视频在线解析](https://tool.hellowmonkey.cc/video/parse)
 - 二维码
   - [生成二维码](https://tool.hellowmonkey.cc/qrcode/create)
   - [解析二维码](https://tool.hellowmonkey.cc/qrcode/decode)
+- 视频
+  - [m3u8下载](https://tool.hellowmonkey.cc/video/m3u8)
+  - [视频在线解析](https://tool.hellowmonkey.cc/video/parse)
 - 开发
   - [常用正则](https://tool.hellowmonkey.cc/developer/regex)
+  - [程序变量命名](https://tool.hellowmonkey.cc/developer/translate)
 - 日常
   - [数字转大写金额](https://tool.hellowmonkey.cc/util/num-money)
   - [时间戳转日期](https://tool.hellowmonkey.cc/util/timestamp-date)
